@@ -42,7 +42,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/rex/Desktop/work/linux/algo/DTW-approx
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/rex/Desktop/work/linux/algo/DTW-approx
+CMAKE_BINARY_DIR = /media/sf_work/linux/algo/DTW-approx
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,9 +69,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/rex/Desktop/work/linux/algo/DTW-approx/CMakeFiles /home/rex/Desktop/work/linux/algo/DTW-approx/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_work/linux/algo/DTW-approx/CMakeFiles /media/sf_work/linux/algo/DTW-approx/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/rex/Desktop/work/linux/algo/DTW-approx/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_work/linux/algo/DTW-approx/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -99,6 +99,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named QuadTree
+
+# Build rule for target.
+QuadTree: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 QuadTree
+.PHONY : QuadTree
+
+# fast build rule for target.
+QuadTree/fast:
+	$(MAKE) -f CMakeFiles/QuadTree.dir/build.make CMakeFiles/QuadTree.dir/build
+.PHONY : QuadTree/fast
+
+#=============================================================================
 # Target rules for targets named executable
 
 # Build rule for target.
@@ -111,29 +124,53 @@ executable/fast:
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/build
 .PHONY : executable/fast
 
-try.o: try.cpp.o
-.PHONY : try.o
+QuadTree.o: QuadTree.cpp.o
+.PHONY : QuadTree.o
 
 # target to build an object file
-try.cpp.o:
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/try.cpp.o
-.PHONY : try.cpp.o
+QuadTree.cpp.o:
+	$(MAKE) -f CMakeFiles/QuadTree.dir/build.make CMakeFiles/QuadTree.dir/QuadTree.cpp.o
+.PHONY : QuadTree.cpp.o
 
-try.i: try.cpp.i
-.PHONY : try.i
+QuadTree.i: QuadTree.cpp.i
+.PHONY : QuadTree.i
 
 # target to preprocess a source file
-try.cpp.i:
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/try.cpp.i
-.PHONY : try.cpp.i
+QuadTree.cpp.i:
+	$(MAKE) -f CMakeFiles/QuadTree.dir/build.make CMakeFiles/QuadTree.dir/QuadTree.cpp.i
+.PHONY : QuadTree.cpp.i
 
-try.s: try.cpp.s
-.PHONY : try.s
+QuadTree.s: QuadTree.cpp.s
+.PHONY : QuadTree.s
 
 # target to generate assembly for a file
-try.cpp.s:
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/try.cpp.s
-.PHONY : try.cpp.s
+QuadTree.cpp.s:
+	$(MAKE) -f CMakeFiles/QuadTree.dir/build.make CMakeFiles/QuadTree.dir/QuadTree.cpp.s
+.PHONY : QuadTree.cpp.s
+
+main.o: main.cpp.o
+.PHONY : main.o
+
+# target to build an object file
+main.cpp.o:
+	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/main.cpp.o
+.PHONY : main.cpp.o
+
+main.i: main.cpp.i
+.PHONY : main.i
+
+# target to preprocess a source file
+main.cpp.i:
+	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/main.cpp.i
+.PHONY : main.cpp.i
+
+main.s: main.cpp.s
+.PHONY : main.s
+
+# target to generate assembly for a file
+main.cpp.s:
+	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/main.cpp.s
+.PHONY : main.cpp.s
 
 # Help Target
 help:
@@ -141,12 +178,16 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... QuadTree"
 	@echo "... edit_cache"
 	@echo "... executable"
 	@echo "... rebuild_cache"
-	@echo "... try.o"
-	@echo "... try.i"
-	@echo "... try.s"
+	@echo "... QuadTree.o"
+	@echo "... QuadTree.i"
+	@echo "... QuadTree.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
 .PHONY : help
 
 

@@ -27,3 +27,13 @@
 *.out
 *.app
 executable
+
+# CMake files
+CMakeFiles/*
+CMakeCache.txt
+
+
+# temp files
+*.~
+*.sw?
+

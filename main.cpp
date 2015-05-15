@@ -1,11 +1,16 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <CGAL/Simple_cartesian.h>
+
+#include "QuadTree.h"
 using namespace std;
 
 typedef CGAL::Simple_cartesian<double> Kernel;
 typedef Kernel::Point_2 Point_2;
 typedef Kernel::Segment_2 Segment_2;
+
+typedef vector<Point_2> Curve;
 
 void deallocDouble2D(double** arr, int l)
 {
@@ -14,6 +19,25 @@ void deallocDouble2D(double** arr, int l)
        delete[] arr[i];
    }
    delete[] arr;
+}
+
+Curve readCurve(ifstream &inFile, int dim)
+{
+    Curve curve;
+    int m; // curve length
+    inFile >> m;
+
+    for (int i = 0; i < m; i++)
+    {
+        int x, y;
+        if (dim == 2)
+        {
+            inFile >> x >> y;
+            Point_2 p(x, y);
+            curve.push_back(p);
+        }
+    }
+    return curve;
 }
 
 
@@ -51,28 +75,12 @@ int main(int argc, char* argv[])
     int d; // dimension
     int m; // num points on first curve
     int n; // num points on second curve
-    double** alpha;
-    double** beta;
 
-    inFile >> d >> m;
-    alpha = new double*[m];
-    for (int i = 0; i < m; i++)
-    {
-        alpha[i] = new double[d];
-        for (int j = 0; j < d; j++)
-            inFile >> alpha[i][j];
-    }
+    inFile >> d;
+    Curve alpha = readCurve(inFile, d);
+    Curve beta = readCurve(inFile, d);
 
-    inFile >> n;
-    beta = new double*[n];
-    for (int i = 0; i < n; i++)
-    {
-        beta[i] = new double[d];
-        for (int j = 0; j < d; j++)
-            inFile >> beta[i][j];
-    }
+    QuadTree qt(alpha);
 
-    deallocDouble2D(alpha, m);
-    deallocDouble2D(beta, n);
     return 0;
 }
