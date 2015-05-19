@@ -1,7 +1,8 @@
-#include <math.h>
-#include <QuadTree.h>
 #include <CGAL/bounding_box.h>
+#include <CGAL/number_utils.h>
+
 #include "easylogging++.h"
+#include "QuadTree.h"
 using namespace std;
 
 QuadTree::QuadTree(vector<Point_2> &point_set)
@@ -13,10 +14,11 @@ QuadTree::QuadTree(vector<Point_2> &point_set)
 
 
     VLOG(7) << ("creating quad tree...");
-    VLOG(8) << stringify_bbox(bbox);
     switch (point_set.size())
     {
         case 0:
+            center_ = Point_2(0, 0);
+            radius_ = -1; // empty: radius is invalid
             node_type = EMPTY;
             break;
         case 1:
@@ -30,6 +32,12 @@ QuadTree::QuadTree(vector<Point_2> &point_set)
             p = point_set[0];
             subdivide(point_set);
     }
+    VLOG(8) << to_string();
+}
+
+double QuadTree::quadtree_dist(QuadTree that)
+{
+    return CGAL::sqrt(CGAL::squared_distance(this->get_center(), that.get_center()));
 }
 
 void QuadTree::calcBBox(vector<Point_2> &point_set)
@@ -39,7 +47,7 @@ void QuadTree::calcBBox(vector<Point_2> &point_set)
                       (bbox.ymin() + bbox.ymax()) / 2);
 
     Vector_2 v(bbox.max() - center_);
-    radius_ = sqrt(v.squared_length());
+    radius_ = CGAL::sqrt(v.squared_length());
 }
 
 
@@ -62,9 +70,7 @@ void QuadTree::subdivide(vector<Point_2> &point_set)
         else if ((dir >= neg_x_dir_) && (dir < neg_y_dir_))
         {
             VLOG(8) << "3st quadrant";
-            ch_point_sets[2].push_back(pt);
-        }
-        else
+            ch_point_sets[2].push_back(pt); } else
         {
             VLOG(8) << "4st quadrant";
             ch_point_sets[3].push_back(pt);
@@ -72,12 +78,13 @@ void QuadTree::subdivide(vector<Point_2> &point_set)
     }
     for (int i = 0; i < 4; i++)
     {
-        QuadTree qt = QuadTree(ch_point_sets[i]);
-        ch[i] = &qt;
+        //QuadTree qt = QuadTree(ch_point_sets[i]);
+        //ch[i] = &qt;
+        ch[i] = new QuadTree(ch_point_sets[i]);
     }
 }
 
-Kernel QuadTree::get_radius()
+double QuadTree::get_radius()
 {
     return radius_;
 }
@@ -86,4 +93,6 @@ Point_2 QuadTree::get_center()
 {
     return center_;
 }
+
+
 

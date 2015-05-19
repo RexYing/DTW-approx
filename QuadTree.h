@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <CGAL/Simple_cartesian.h>
+#include "easylogging++.h"
 
 using namespace std;
 
@@ -29,6 +30,8 @@ class QuadTree
 
 		QuadTree(vector<Point_2> &point_set);
 
+    double quadtree_dist(QuadTree that);
+
     string stringify_point_2(Point_2 p)
     {
         stringstream sstm;
@@ -44,19 +47,28 @@ class QuadTree
         sstm << "Bounding box: " << bbox;
         return sstm.str();
     }
+    string to_string()
+    {
+        stringstream sstm;
+        CGAL::set_pretty_mode(sstm);
+        sstm << "QuadTree: {center=" << center_ << ", radius=" << radius_ << ", rep_pt=" << p << "}";
+        return sstm.str();
+    }
 
-    Kernel get_radius();
+    double get_radius();
     Point_2 get_center();
 
   private:
 
-    Kernel radius_;
+    double radius_;
     Point_2 center_;
 
     Direction_2 pos_x_dir_;
     Direction_2 pos_y_dir_;
     Direction_2 neg_x_dir_;
     Direction_2 neg_y_dir_;
+
+    void calcBBox(vector<Point_2> &point_set);
 
     void subdivide(vector<Point_2> &point_set);
 };

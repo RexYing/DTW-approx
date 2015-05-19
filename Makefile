@@ -99,17 +99,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named QuadTree
+# Target rules for targets named WSPD
 
 # Build rule for target.
-QuadTree: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 QuadTree
-.PHONY : QuadTree
+WSPD: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 WSPD
+.PHONY : WSPD
 
 # fast build rule for target.
-QuadTree/fast:
-	$(MAKE) -f CMakeFiles/QuadTree.dir/build.make CMakeFiles/QuadTree.dir/build
-.PHONY : QuadTree/fast
+WSPD/fast:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/build
+.PHONY : WSPD/fast
 
 #=============================================================================
 # Target rules for targets named executable
@@ -129,7 +129,7 @@ QuadTree.o: QuadTree.cpp.o
 
 # target to build an object file
 QuadTree.cpp.o:
-	$(MAKE) -f CMakeFiles/QuadTree.dir/build.make CMakeFiles/QuadTree.dir/QuadTree.cpp.o
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/QuadTree.cpp.o
 .PHONY : QuadTree.cpp.o
 
 QuadTree.i: QuadTree.cpp.i
@@ -137,7 +137,7 @@ QuadTree.i: QuadTree.cpp.i
 
 # target to preprocess a source file
 QuadTree.cpp.i:
-	$(MAKE) -f CMakeFiles/QuadTree.dir/build.make CMakeFiles/QuadTree.dir/QuadTree.cpp.i
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/QuadTree.cpp.i
 .PHONY : QuadTree.cpp.i
 
 QuadTree.s: QuadTree.cpp.s
@@ -145,8 +145,32 @@ QuadTree.s: QuadTree.cpp.s
 
 # target to generate assembly for a file
 QuadTree.cpp.s:
-	$(MAKE) -f CMakeFiles/QuadTree.dir/build.make CMakeFiles/QuadTree.dir/QuadTree.cpp.s
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/QuadTree.cpp.s
 .PHONY : QuadTree.cpp.s
+
+WSPD.o: WSPD.cpp.o
+.PHONY : WSPD.o
+
+# target to build an object file
+WSPD.cpp.o:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/WSPD.cpp.o
+.PHONY : WSPD.cpp.o
+
+WSPD.i: WSPD.cpp.i
+.PHONY : WSPD.i
+
+# target to preprocess a source file
+WSPD.cpp.i:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/WSPD.cpp.i
+.PHONY : WSPD.cpp.i
+
+WSPD.s: WSPD.cpp.s
+.PHONY : WSPD.s
+
+# target to generate assembly for a file
+WSPD.cpp.s:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/WSPD.cpp.s
+.PHONY : WSPD.cpp.s
 
 main.o: main.cpp.o
 .PHONY : main.o
@@ -178,13 +202,16 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... QuadTree"
+	@echo "... WSPD"
 	@echo "... edit_cache"
 	@echo "... executable"
 	@echo "... rebuild_cache"
 	@echo "... QuadTree.o"
 	@echo "... QuadTree.i"
 	@echo "... QuadTree.s"
+	@echo "... WSPD.o"
+	@echo "... WSPD.i"
+	@echo "... WSPD.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
