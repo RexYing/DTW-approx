@@ -13,8 +13,11 @@ class WSPD
     // separation constant
     double s;
 
+    vector<double> distances();
+
   private:
-    vector<double> distances;
+    vector<double> distances_;
+    void collect_distances();
 
 };
 

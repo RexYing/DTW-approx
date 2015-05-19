@@ -19,7 +19,7 @@ typedef Kernel::Segment_2 Segment_2;
 
 double dist_rectangles(BBox b1, BBox b2)
 {
-    double min_dist = -1;
+    /*double min_dist = -1;
     for (int i = 0; i < 4; i++)
     {
         Segment_2 seg1(b1.vertex(i), b1.vertex(i+1));
@@ -33,15 +33,22 @@ double dist_rectangles(BBox b1, BBox b2)
             }
         }
     }
-    return min_dist;
+    return min_dist;*/
+    double x_coord_dist = CGAL::max(CGAL::max(b1.xmin() - b2.xmax(),
+                                       b2.xmin() - b1.xmax()),
+                             0.0);
+    double y_coord_dist = CGAL::max(CGAL::max(b1.ymin() - b2.ymax(),
+                                       b2.ymin() - b1.ymax()),
+                             0.0);
+    return CGAL::sqrt(x_coord_dist * x_coord_dist + y_coord_dist * y_coord_dist);
 }
-
 
 WSPD::WSPD(QuadTree tree, double s)
 {
     VLOG(7) << "Constructing WSPD";
     this->s = s;
     pairs = pairing(tree, tree);
+    collect_distances();
 }
 
 vector<pair<QuadTree, QuadTree>> WSPD::pairing(QuadTree t1, QuadTree t2)
@@ -60,7 +67,8 @@ vector<pair<QuadTree, QuadTree>> WSPD::pairing(QuadTree t1, QuadTree t2)
         SWAP(t1, t2);
     }
     // t1 has larger radius by now
-    if (s * t1.get_radius() <= dist)
+    // Well-separated condition: diameter * s <= dist between bbox
+    if (2 * s * t1.get_radius() <= dist)
     {
         pairs.push_back(make_pair(t1, t2));
     }
@@ -85,4 +93,16 @@ vector<pair<QuadTree, QuadTree>> WSPD::pairing(QuadTree t1, QuadTree t2)
     return pairs;
 }
 
+void WSPD::collect_distances()
+{
+    for (auto& qt_pair : pairs)
+    {
+        distances_.push_back(qt_pair.first.quadtree_dist(qt_pair.second));
+    }
+}
+
+vector<double> WSPD::distances()
+{
+    return distances_;
+}
 

@@ -64,6 +64,12 @@ int main(int argc, char* argv[])
     double s = 1; // need n-approx only
     WSPD wspd(qt, s);
     vector<pair<QuadTree, QuadTree>> pairs = wspd.pairs;
+    vector<double> dists = wspd.distances();
+    VLOG(6) << "WSPD dists:";
+    for (int i = 0; i < dists.size(); i++)
+    {
+        VLOG(6) << dists[i];
+    }
 
     return 0;
 }
