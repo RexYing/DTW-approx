@@ -1,10 +1,14 @@
 #pragma once
+#include <sstream>
 #include <vector>
 #include <CGAL/Simple_cartesian.h>
+
 using namespace std;
 
 typedef CGAL::Simple_cartesian<double> Kernel;
 typedef Kernel::Point_2 Point_2;
+typedef Kernel::Direction_2 Direction_2;
+typedef Kernel::Vector_2 Vector_2;
 typedef Kernel::Iso_rectangle_2 BBox; //bounding box for 2D point sets
 
 class QuadTree
@@ -15,9 +19,44 @@ class QuadTree
 
 		BBox bbox;
 
+    // representative point (an arbitrary point in a non-empty node
 		Point_2 p;
+
+    enum NodeType {EMPTY, LEAF, NODE};
+    NodeType node_type;
 
 		QuadTree* ch[4];
 
-		QuadTree(vector<Point_2> &pointSet);
+		QuadTree(vector<Point_2> &point_set);
+
+    string stringify_point_2(Point_2 p)
+    {
+        stringstream sstm;
+        CGAL::set_pretty_mode(sstm);
+        sstm << p;
+        return sstm.str();
+    }
+
+    string stringify_bbox(BBox bbox)
+    {
+        stringstream sstm;
+        CGAL::set_pretty_mode(sstm);
+        sstm << "Bounding box: " << bbox;
+        return sstm.str();
+    }
+
+    Kernel get_radius();
+    Point_2 get_center();
+
+  private:
+
+    Kernel radius_;
+    Point_2 center_;
+
+    Direction_2 pos_x_dir_;
+    Direction_2 pos_y_dir_;
+    Direction_2 neg_x_dir_;
+    Direction_2 neg_y_dir_;
+
+    void subdivide(vector<Point_2> &point_set);
 };

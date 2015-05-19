@@ -1,0 +1,170 @@
+2015-05-18 13:26:07,420 INFO  [default] creating quad tree...
+2015-05-18 13:26:07,420 INFO  [default] creating quad tree...
+2015-05-18 13:26:07,420 INFO  [default] creating quad tree...
+2015-05-18 13:26:07,421 INFO  [default] creating quad tree...
+2015-05-18 13:26:07,421 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2015-05-18 13:26:07,421 WARN  [default] Aborting application. Reason: Fatal log at [/home/rex/Desktop/work/linux/algo/DTW-approx/easylogging++.h:5583]
+2015-05-18 13:27:33,512 INFO  [default] creating quad tree...
+2015-05-18 13:27:33,512 VER-1 [default] 3st quadrant
+2015-05-18 13:27:33,512 VER-1 [default] 3st quadrant
+2015-05-18 13:27:33,512 VER-1 [default] 2st quadrant
+2015-05-18 13:27:33,512 VER-1 [default] 1st quadrant
+2015-05-18 13:27:33,512 VER-1 [default] 1st quadrant
+2015-05-18 13:27:33,512 INFO  [default] creating quad tree...
+2015-05-18 13:27:33,512 VER-1 [default] 3st quadrant
+2015-05-18 13:27:33,513 VER-1 [default] 1st quadrant
+2015-05-18 13:27:33,513 INFO  [default] creating quad tree...
+2015-05-18 13:27:33,513 INFO  [default] creating quad tree...
+2015-05-18 13:27:33,513 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2015-05-18 13:27:33,513 WARN  [default] Aborting application. Reason: Fatal log at [/home/rex/Desktop/work/linux/algo/DTW-approx/easylogging++.h:5583]
+2015-05-18 13:29:16,358 INFO  [default] creating quad tree...
+2015-05-18 13:29:16,428 VER-1 [default] 3st quadrant
+2015-05-18 13:29:16,428 VER-1 [default] 3st quadrant
+2015-05-18 13:29:16,428 VER-1 [default] 2st quadrant
+2015-05-18 13:29:16,428 VER-1 [default] 1st quadrant
+2015-05-18 13:29:16,428 VER-1 [default] 1st quadrant
+2015-05-18 13:29:16,429 VER-1 [default] HERE
+2015-05-18 13:29:16,429 INFO  [default] creating quad tree...
+2015-05-18 13:29:16,429 VER-1 [default] 3st quadrant
+2015-05-18 13:29:16,429 VER-1 [default] 1st quadrant
+2015-05-18 13:29:16,429 VER-1 [default] HERE
+2015-05-18 13:29:16,429 INFO  [default] creating quad tree...
+2015-05-18 13:29:16,429 VER-1 [default] HERE
+2015-05-18 13:29:16,429 INFO  [default] creating quad tree...
+2015-05-18 13:29:16,429 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2015-05-18 13:29:16,429 WARN  [default] Aborting application. Reason: Fatal log at [/home/rex/Desktop/work/linux/algo/DTW-approx/easylogging++.h:5583]
+2015-05-18 13:31:32,484 INFO  [default] creating quad tree...
+2015-05-18 13:31:32,484 VER-1 [default] 3st quadrant
+2015-05-18 13:31:32,484 VER-1 [default] 3st quadrant
+2015-05-18 13:31:32,484 VER-1 [default] 2st quadrant
+2015-05-18 13:31:32,484 VER-1 [default] 1st quadrant
+2015-05-18 13:31:32,484 VER-1 [default] 1st quadrant
+2015-05-18 13:31:32,484 INFO  [default] creating quad tree...
+2015-05-18 13:31:32,484 VER-1 [default] 3st quadrant
+2015-05-18 13:31:32,485 VER-1 [default] 1st quadrant
+2015-05-18 13:31:32,485 INFO  [default] creating quad tree...
+2015-05-18 13:31:32,485 VER-1 [default] before
+2015-05-18 13:31:32,485 VER-1 [default] after
+2015-05-18 13:31:32,485 INFO  [default] creating quad tree...
+2015-05-18 13:31:32,485 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2015-05-18 13:31:32,485 WARN  [default] Aborting application. Reason: Fatal log at [/home/rex/Desktop/work/linux/algo/DTW-approx/easylogging++.h:5583]
+2015-05-18 13:32:27,816 INFO  [default] creating quad tree...
+2015-05-18 13:32:27,816 VER-1 [default] 3st quadrant
+2015-05-18 13:32:27,816 VER-1 [default] 3st quadrant
+2015-05-18 13:32:27,817 VER-1 [default] 2st quadrant
+2015-05-18 13:32:27,817 VER-1 [default] 1st quadrant
+2015-05-18 13:32:27,817 VER-1 [default] 1st quadrant
+2015-05-18 13:32:27,817 INFO  [default] creating quad tree...
+2015-05-18 13:32:27,817 VER-1 [default] 3st quadrant
+2015-05-18 13:32:27,817 VER-1 [default] 1st quadrant
+2015-05-18 13:32:27,817 INFO  [default] creating quad tree...
+2015-05-18 13:32:27,817 VER-1 [default] before
+2015-05-18 13:32:27,817 VER-1 [default] after
+2015-05-18 13:32:27,817 INFO  [default] creating quad tree...
+2015-05-18 13:32:27,817 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2015-05-18 13:32:27,817 WARN  [default] Aborting application. Reason: Fatal log at [/home/rex/Desktop/work/linux/algo/DTW-approx/easylogging++.h:5583]
+2015-05-18 13:32:59,739 INFO  [default] creating quad tree...
+2015-05-18 13:32:59,747 VER-1 [default] 3st quadrant
+2015-05-18 13:32:59,747 VER-1 [default] 3st quadrant
+2015-05-18 13:32:59,747 VER-1 [default] 2st quadrant
+2015-05-18 13:32:59,747 VER-1 [default] 1st quadrant
+2015-05-18 13:32:59,748 VER-1 [default] 1st quadrant
+2015-05-18 13:32:59,748 INFO  [default] creating quad tree...
+2015-05-18 13:32:59,748 VER-1 [default] 3st quadrant
+2015-05-18 13:32:59,748 VER-1 [default] 1st quadrant
+2015-05-18 13:32:59,748 INFO  [default] creating quad tree...
+2015-05-18 13:32:59,748 VER-1 [default] leaf
+2015-05-18 13:32:59,748 VER-1 [default] before
+2015-05-18 13:32:59,748 VER-1 [default] after
+2015-05-18 13:32:59,748 INFO  [default] creating quad tree...
+2015-05-18 13:32:59,750 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2015-05-18 13:32:59,750 WARN  [default] Aborting application. Reason: Fatal log at [/home/rex/Desktop/work/linux/algo/DTW-approx/easylogging++.h:5583]
+2015-05-18 13:34:16,592 INFO  [default] creating quad tree...
+2015-05-18 13:34:16,616 VER-1 [default] node
+2015-05-18 13:34:16,616 VER-1 [default] 3st quadrant
+2015-05-18 13:34:16,616 VER-1 [default] 3st quadrant
+2015-05-18 13:34:16,616 VER-1 [default] 2st quadrant
+2015-05-18 13:34:16,616 VER-1 [default] 1st quadrant
+2015-05-18 13:34:16,616 VER-1 [default] 1st quadrant
+2015-05-18 13:34:16,616 INFO  [default] creating quad tree...
+2015-05-18 13:34:16,616 VER-1 [default] node
+2015-05-18 13:34:16,616 VER-1 [default] 3st quadrant
+2015-05-18 13:34:16,617 VER-1 [default] 1st quadrant
+2015-05-18 13:34:16,617 INFO  [default] creating quad tree...
+2015-05-18 13:34:16,617 VER-1 [default] leaf
+2015-05-18 13:34:16,617 VER-1 [default] before
+2015-05-18 13:34:16,618 VER-1 [default] after
+2015-05-18 13:34:16,618 INFO  [default] creating quad tree...
+2015-05-18 13:34:16,618 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2015-05-18 13:34:16,618 WARN  [default] Aborting application. Reason: Fatal log at [/home/rex/Desktop/work/linux/algo/DTW-approx/easylogging++.h:5583]
+2015-05-18 13:36:34,309 INFO  [default] creating quad tree...
+2015-05-18 13:36:34,335 VER-1 [default] node
+2015-05-18 13:36:34,336 VER-1 [default] 3st quadrant
+2015-05-18 13:36:34,336 VER-1 [default] 3st quadrant
+2015-05-18 13:36:34,336 VER-1 [default] 2st quadrant
+2015-05-18 13:36:34,336 VER-1 [default] 1st quadrant
+2015-05-18 13:36:34,336 VER-1 [default] 1st quadrant
+2015-05-18 13:36:34,336 INFO  [default] creating quad tree...
+2015-05-18 13:36:34,336 VER-1 [default] node
+2015-05-18 13:36:34,336 VER-1 [default] 3st quadrant
+2015-05-18 13:36:34,336 VER-1 [default] 1st quadrant
+2015-05-18 13:36:34,336 INFO  [default] creating quad tree...
+2015-05-18 13:36:34,336 VER-1 [default] leaf
+2015-05-18 13:36:34,336 VER-1 [default] before
+2015-05-18 13:36:34,336 VER-1 [default] after
+2015-05-18 13:36:34,337 INFO  [default] creating quad tree...
+2015-05-18 13:36:34,337 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2015-05-18 13:36:34,337 WARN  [default] Aborting application. Reason: Fatal log at [/home/rex/Desktop/work/linux/algo/DTW-approx/easylogging++.h:5583]
+2015-05-18 13:42:07,079 INFO  [default] creating quad tree...
+2015-05-18 13:42:07,080 VER-1 [default] node
+2015-05-18 13:42:07,080 VER-1 [default] 0
+2015-05-18 13:42:07,080 VER-1 [default] 3st quadrant
+2015-05-18 13:42:07,081 VER-1 [default] 3st quadrant
+2015-05-18 13:42:07,081 VER-1 [default] 2st quadrant
+2015-05-18 13:42:07,081 VER-1 [default] 1st quadrant
+2015-05-18 13:42:07,081 VER-1 [default] 1st quadrant
+2015-05-18 13:42:07,081 INFO  [default] creating quad tree...
+2015-05-18 13:42:07,081 VER-1 [default] node
+2015-05-18 13:42:07,081 VER-1 [default] 0
+2015-05-18 13:42:07,081 VER-1 [default] 3st quadrant
+2015-05-18 13:42:07,081 VER-1 [default] 1st quadrant
+2015-05-18 13:42:07,082 INFO  [default] creating quad tree...
+2015-05-18 13:42:07,082 VER-1 [default] leaf
+2015-05-18 13:42:07,082 INFO  [default] creating quad tree...
+2015-05-18 13:42:07,082 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2015-05-18 13:42:07,082 WARN  [default] Aborting application. Reason: Fatal log at [/home/rex/Desktop/work/linux/algo/DTW-approx/easylogging++.h:5583]
+2015-05-18 13:43:23,478 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,510 VER-1 [default] node
+2015-05-18 13:43:23,510 VER-1 [default] 3st quadrant
+2015-05-18 13:43:23,510 VER-1 [default] 3st quadrant
+2015-05-18 13:43:23,510 VER-1 [default] 2st quadrant
+2015-05-18 13:43:23,511 VER-1 [default] 1st quadrant
+2015-05-18 13:43:23,511 VER-1 [default] 1st quadrant
+2015-05-18 13:43:23,511 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,511 VER-1 [default] node
+2015-05-18 13:43:23,511 VER-1 [default] 3st quadrant
+2015-05-18 13:43:23,512 VER-1 [default] 1st quadrant
+2015-05-18 13:43:23,512 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,512 VER-1 [default] leaf
+2015-05-18 13:43:23,512 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,512 VER-1 [default] empty
+2015-05-18 13:43:23,513 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,513 VER-1 [default] leaf
+2015-05-18 13:43:23,513 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,513 VER-1 [default] empty
+2015-05-18 13:43:23,513 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,513 VER-1 [default] leaf
+2015-05-18 13:43:23,514 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,514 VER-1 [default] node
+2015-05-18 13:43:23,514 VER-1 [default] 3st quadrant
+2015-05-18 13:43:23,514 VER-1 [default] 1st quadrant
+2015-05-18 13:43:23,514 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,515 VER-1 [default] leaf
+2015-05-18 13:43:23,515 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,515 VER-1 [default] empty
+2015-05-18 13:43:23,515 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,516 VER-1 [default] leaf
+2015-05-18 13:43:23,516 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,516 VER-1 [default] empty
+2015-05-18 13:43:23,517 INFO  [default] creating quad tree...
+2015-05-18 13:43:23,517 VER-1 [default] empty

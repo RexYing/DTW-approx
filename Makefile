@@ -42,7 +42,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/rex/Desktop/work/linux/algo/DTW-approx
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /media/sf_work/linux/algo/DTW-approx
+CMAKE_BINARY_DIR = /home/rex/Desktop/work/linux/algo/DTW-approx
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,9 +69,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_work/linux/algo/DTW-approx/CMakeFiles /media/sf_work/linux/algo/DTW-approx/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/rex/Desktop/work/linux/algo/DTW-approx/CMakeFiles /home/rex/Desktop/work/linux/algo/DTW-approx/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_work/linux/algo/DTW-approx/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/rex/Desktop/work/linux/algo/DTW-approx/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
