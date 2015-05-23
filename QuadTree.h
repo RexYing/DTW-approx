@@ -55,11 +55,16 @@ class QuadTree
         return sstm.str();
     }
 
+    int id();
     double get_radius();
     Point_2 get_center();
 
   private:
 
+    // each node has a unique id property.
+    // a node closer to root always receives a small id.
+    static int max_id_;
+    int id_;
     double radius_;
     Point_2 center_;
 

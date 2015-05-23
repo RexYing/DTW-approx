@@ -5,8 +5,13 @@
 #include "QuadTree.h"
 using namespace std;
 
+int QuadTree::max_id_ = -1;
+
 QuadTree::QuadTree(vector<Point_2> &point_set)
 {
+    max_id_++;
+    id_ = max_id_;
+
     pos_x_dir_ = Direction_2(1, 0);
     pos_y_dir_ = Direction_2(0, 1);
     neg_x_dir_ = Direction_2(-1, 0);
@@ -70,7 +75,8 @@ void QuadTree::subdivide(vector<Point_2> &point_set)
         else if ((dir >= neg_x_dir_) && (dir < neg_y_dir_))
         {
             VLOG(8) << "3st quadrant";
-            ch_point_sets[2].push_back(pt); } else
+            ch_point_sets[2].push_back(pt);
+        } else
         {
             VLOG(8) << "4st quadrant";
             ch_point_sets[3].push_back(pt);
@@ -82,6 +88,11 @@ void QuadTree::subdivide(vector<Point_2> &point_set)
         //ch[i] = &qt;
         ch[i] = new QuadTree(ch_point_sets[i]);
     }
+}
+
+int QuadTree::id()
+{
+    return id_;
 }
 
 double QuadTree::get_radius()
