@@ -148,6 +148,30 @@ QuadTree.cpp.s:
 	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/QuadTree.cpp.s
 .PHONY : QuadTree.cpp.s
 
+QuadTreeTwoClasses.o: QuadTreeTwoClasses.cpp.o
+.PHONY : QuadTreeTwoClasses.o
+
+# target to build an object file
+QuadTreeTwoClasses.cpp.o:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/QuadTreeTwoClasses.cpp.o
+.PHONY : QuadTreeTwoClasses.cpp.o
+
+QuadTreeTwoClasses.i: QuadTreeTwoClasses.cpp.i
+.PHONY : QuadTreeTwoClasses.i
+
+# target to preprocess a source file
+QuadTreeTwoClasses.cpp.i:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/QuadTreeTwoClasses.cpp.i
+.PHONY : QuadTreeTwoClasses.cpp.i
+
+QuadTreeTwoClasses.s: QuadTreeTwoClasses.cpp.s
+.PHONY : QuadTreeTwoClasses.s
+
+# target to generate assembly for a file
+QuadTreeTwoClasses.cpp.s:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/QuadTreeTwoClasses.cpp.s
+.PHONY : QuadTreeTwoClasses.cpp.s
+
 WSPD.o: WSPD.cpp.o
 .PHONY : WSPD.o
 
@@ -209,6 +233,9 @@ help:
 	@echo "... QuadTree.o"
 	@echo "... QuadTree.i"
 	@echo "... QuadTree.s"
+	@echo "... QuadTreeTwoClasses.o"
+	@echo "... QuadTreeTwoClasses.i"
+	@echo "... QuadTreeTwoClasses.s"
 	@echo "... WSPD.o"
 	@echo "... WSPD.i"
 	@echo "... WSPD.s"

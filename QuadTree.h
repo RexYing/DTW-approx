@@ -28,7 +28,9 @@ class QuadTree
 
 		QuadTree* ch[4];
 
+
 		QuadTree(vector<Point_2> &point_set);
+    virtual void init();
 
     double quadtree_dist(QuadTree that);
 
@@ -67,6 +69,8 @@ class QuadTree
     int id_;
     double radius_;
     Point_2 center_;
+
+    vector<Point_2> point_set1_;
 
     Direction_2 pos_x_dir_;
     Direction_2 pos_y_dir_;

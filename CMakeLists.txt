@@ -68,7 +68,12 @@ endif()
 
 include_directories ("${PROJECT_SOURCE_DIR}")
 
-add_library( WSPD QuadTree.cpp QuadTree.h WSPD.cpp WSPD.h )
+add_library(
+  WSPD
+  QuadTree.cpp QuadTree.h
+  QuadTreeTwoClasses.cpp QuadTreeTwoClasses.h
+  WSPD.cpp WSPD.h
+)
 add_executable( executable  main.cpp )
 # target_compile_features(executable PRIVATE cxx_range_for)
 
