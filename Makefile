@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/rex/Desktop/work/linux/algo/DTW-approx
+CMAKE_SOURCE_DIR = /home/rex/Programming/DTW-approx
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/rex/Desktop/work/linux/algo/DTW-approx
+CMAKE_BINARY_DIR = /home/rex/Programming/DTW-approx
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,9 +69,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/rex/Desktop/work/linux/algo/DTW-approx/CMakeFiles /home/rex/Desktop/work/linux/algo/DTW-approx/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/rex/Programming/DTW-approx/CMakeFiles /home/rex/Programming/DTW-approx/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/rex/Desktop/work/linux/algo/DTW-approx/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/rex/Programming/DTW-approx/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -185,6 +185,30 @@ QuadTree.cpp.s:
 	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/QuadTree.cpp.s
 .PHONY : QuadTree.cpp.s
 
+QuadTreeTwoClasses.o: QuadTreeTwoClasses.cpp.o
+.PHONY : QuadTreeTwoClasses.o
+
+# target to build an object file
+QuadTreeTwoClasses.cpp.o:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/QuadTreeTwoClasses.cpp.o
+.PHONY : QuadTreeTwoClasses.cpp.o
+
+QuadTreeTwoClasses.i: QuadTreeTwoClasses.cpp.i
+.PHONY : QuadTreeTwoClasses.i
+
+# target to preprocess a source file
+QuadTreeTwoClasses.cpp.i:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/QuadTreeTwoClasses.cpp.i
+.PHONY : QuadTreeTwoClasses.cpp.i
+
+QuadTreeTwoClasses.s: QuadTreeTwoClasses.cpp.s
+.PHONY : QuadTreeTwoClasses.s
+
+# target to generate assembly for a file
+QuadTreeTwoClasses.cpp.s:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/QuadTreeTwoClasses.cpp.s
+.PHONY : QuadTreeTwoClasses.cpp.s
+
 WSPD.o: WSPD.cpp.o
 .PHONY : WSPD.o
 
@@ -250,6 +274,9 @@ help:
 	@echo "... QuadTree.o"
 	@echo "... QuadTree.i"
 	@echo "... QuadTree.s"
+	@echo "... QuadTreeTwoClasses.o"
+	@echo "... QuadTreeTwoClasses.i"
+	@echo "... QuadTreeTwoClasses.s"
 	@echo "... WSPD.o"
 	@echo "... WSPD.i"
 	@echo "... WSPD.s"

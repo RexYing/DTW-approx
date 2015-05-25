@@ -5,16 +5,25 @@
 #include "QuadTree.h"
 using namespace std;
 
+int QuadTree::max_id_ = -1;
+
 QuadTree::QuadTree(vector<Point_2> &point_set)
 {
+    max_id_++;
+    id_ = max_id_;
+
     pos_x_dir_ = Direction_2(1, 0);
     pos_y_dir_ = Direction_2(0, 1);
     neg_x_dir_ = Direction_2(-1, 0);
     neg_y_dir_ = Direction_2(0, -1);
 
+    point_set1_ = point_set;
+}
 
+void QuadTree::init()
+{
     VLOG(7) << ("creating quad tree...");
-    switch (point_set.size())
+    switch (point_set1_.size())
     {
         case 0:
             center_ = Point_2(0, 0);
@@ -23,14 +32,14 @@ QuadTree::QuadTree(vector<Point_2> &point_set)
             break;
         case 1:
             node_type = LEAF;
-            calcBBox(point_set);
-            p = point_set[0];
+            calcBBox(point_set1_);
+            p = point_set1_[0];
             break;
         default:
             node_type = NODE;
-            calcBBox(point_set);
-            p = point_set[0];
-            subdivide(point_set);
+            calcBBox(point_set1_);
+            p = point_set1_[0];
+            subdivide(point_set1_);
     }
     VLOG(8) << to_string();
 }
@@ -51,6 +60,9 @@ void QuadTree::calcBBox(vector<Point_2> &point_set)
 }
 
 
+/*
+ * Currently point_set1_ will not be used after calling this function
+ */
 void QuadTree::subdivide(vector<Point_2> &point_set)
 {
     vector<vector<Point_2>> ch_point_sets(4, vector<Point_2>());
@@ -70,7 +82,8 @@ void QuadTree::subdivide(vector<Point_2> &point_set)
         else if ((dir >= neg_x_dir_) && (dir < neg_y_dir_))
         {
             VLOG(8) << "3st quadrant";
-            ch_point_sets[2].push_back(pt); } else
+            ch_point_sets[2].push_back(pt);
+        } else
         {
             VLOG(8) << "4st quadrant";
             ch_point_sets[3].push_back(pt);
@@ -82,6 +95,11 @@ void QuadTree::subdivide(vector<Point_2> &point_set)
         //ch[i] = &qt;
         ch[i] = new QuadTree(ch_point_sets[i]);
     }
+}
+
+int QuadTree::id()
+{
+    return id_;
 }
 
 double QuadTree::get_radius()

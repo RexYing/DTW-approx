@@ -28,7 +28,9 @@ class QuadTree
 
 		QuadTree* ch[4];
 
+
 		QuadTree(vector<Point_2> &point_set);
+    virtual void init();
 
     double quadtree_dist(QuadTree that);
 
@@ -55,13 +57,20 @@ class QuadTree
         return sstm.str();
     }
 
+    int id();
     double get_radius();
     Point_2 get_center();
 
   private:
 
+    // each node has a unique id property.
+    // a node closer to root always receives a small id.
+    static int max_id_;
+    int id_;
     double radius_;
     Point_2 center_;
+
+    vector<Point_2> point_set1_;
 
     Direction_2 pos_x_dir_;
     Direction_2 pos_y_dir_;

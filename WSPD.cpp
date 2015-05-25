@@ -1,4 +1,5 @@
 #include <utility>
+#include <set>
 #include <string.h>
 #include <CGAL/number_utils.h>
 #include <CGAL/squared_distance_2.h>
@@ -93,11 +94,19 @@ vector<pair<QuadTree, QuadTree>> WSPD::pairing(QuadTree t1, QuadTree t2)
     return pairs;
 }
 
+/*
+ * Resulting distances are sorted in ascending order.
+ */
 void WSPD::collect_distances()
 {
+    set<double> dist_set;
     for (auto& qt_pair : pairs)
     {
-        distances_.push_back(qt_pair.first.quadtree_dist(qt_pair.second));
+        dist_set.insert(qt_pair.first.quadtree_dist(qt_pair.second));
+    }
+    for (auto& dist : dist_set)
+    {
+        distances_.push_back(dist);
     }
 }
 
