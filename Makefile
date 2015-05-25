@@ -99,6 +99,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named Frechet
+
+# Build rule for target.
+Frechet: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Frechet
+.PHONY : Frechet
+
+# fast build rule for target.
+Frechet/fast:
+	$(MAKE) -f CMakeFiles/Frechet.dir/build.make CMakeFiles/Frechet.dir/build
+.PHONY : Frechet/fast
+
+#=============================================================================
 # Target rules for targets named WSPD
 
 # Build rule for target.
@@ -123,6 +136,30 @@ executable: cmake_check_build_system
 executable/fast:
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/build
 .PHONY : executable/fast
+
+FrechetDecider.o: FrechetDecider.cpp.o
+.PHONY : FrechetDecider.o
+
+# target to build an object file
+FrechetDecider.cpp.o:
+	$(MAKE) -f CMakeFiles/Frechet.dir/build.make CMakeFiles/Frechet.dir/FrechetDecider.cpp.o
+.PHONY : FrechetDecider.cpp.o
+
+FrechetDecider.i: FrechetDecider.cpp.i
+.PHONY : FrechetDecider.i
+
+# target to preprocess a source file
+FrechetDecider.cpp.i:
+	$(MAKE) -f CMakeFiles/Frechet.dir/build.make CMakeFiles/Frechet.dir/FrechetDecider.cpp.i
+.PHONY : FrechetDecider.cpp.i
+
+FrechetDecider.s: FrechetDecider.cpp.s
+.PHONY : FrechetDecider.s
+
+# target to generate assembly for a file
+FrechetDecider.cpp.s:
+	$(MAKE) -f CMakeFiles/Frechet.dir/build.make CMakeFiles/Frechet.dir/FrechetDecider.cpp.s
+.PHONY : FrechetDecider.cpp.s
 
 QuadTree.o: QuadTree.cpp.o
 .PHONY : QuadTree.o
@@ -202,10 +239,14 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... Frechet"
 	@echo "... WSPD"
 	@echo "... edit_cache"
 	@echo "... executable"
 	@echo "... rebuild_cache"
+	@echo "... FrechetDecider.o"
+	@echo "... FrechetDecider.i"
+	@echo "... FrechetDecider.s"
 	@echo "... QuadTree.o"
 	@echo "... QuadTree.i"
 	@echo "... QuadTree.s"

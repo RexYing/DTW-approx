@@ -69,6 +69,7 @@ endif()
 include_directories ("${PROJECT_SOURCE_DIR}")
 
 add_library( WSPD QuadTree.cpp QuadTree.h WSPD.cpp WSPD.h )
+add_library( Frechet FrechetDecider.cpp FrechetDecider.h )
 add_executable( executable  main.cpp )
 # target_compile_features(executable PRIVATE cxx_range_for)
 
@@ -78,6 +79,7 @@ add_to_cached_list( CGAL_EXECUTABLE_TARGETS executable )
 target_link_libraries(
 	executable   ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES}
 	WSPD
+	Frechet
 	)
 
 
