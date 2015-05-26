@@ -19,6 +19,15 @@ class FrechetDecider
     // i.e. there exists a feasible path in free space diagram.
     bool is_at_least_frechet(double dist);
 
+    /*
+     * Perform binary search on the distances. Return the smallest number in the list
+     * that is at least Frechet distance.
+     *
+     * Params:
+     * dists: Vector of distance candidates, sorted in ascending order.
+     */
+    double bin_search_frechet(vector<double> &dists);
+
   private:
     vector<Point_2> curve1;
     vector<Point_2> curve2;

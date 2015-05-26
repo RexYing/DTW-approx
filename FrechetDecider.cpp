@@ -45,3 +45,35 @@ bool FrechetDecider::is_at_least_frechet(double dist)
     return dfs(dist * dist, curve1.begin(), curve2.begin());
 }
 
+double FrechetDecider::bin_search_frechet(vector<double> &dists)
+{
+    int low = 0;
+    int high = dists.size();
+    if (dists.empty())
+    {
+        LOG(ERROR) << "List of candidate distances is empty";
+        return 0;
+    }
+    int mid;
+    while (low < high)
+    {
+        mid = (low + high) / 2;
+        if (is_at_least_frechet(dists[mid]))
+        {
+            high = mid;
+        }
+        else
+        {
+            low = mid + 1;
+        }
+    }
+    VLOG(1) << " low " << low << " high " << high;
+    if (high == dists.size())
+    {
+        LOG(WARNING) <<
+            "The largest distance candidate is still less than Frechet distance, returning -1";
+        return -1;
+    }
+    return dists[high];
+}
+

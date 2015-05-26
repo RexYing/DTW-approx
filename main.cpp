@@ -54,12 +54,13 @@ int main(int argc, char* argv[])
     inFile.open(argv[1]);
 
     int d; // dimension
-    int m; // num points on first curve
-    int n; // num points on second curve
 
     inFile >> d;
     Curve alpha = readCurve(inFile, d);
     Curve beta = readCurve(inFile, d);
+
+    int m = alpha.size();
+    int n = beta.size();
 
     vector<Point_2> all_points(alpha);
     all_points.reserve(alpha.size() + beta.size());
@@ -80,10 +81,12 @@ int main(int argc, char* argv[])
     }
 
     FrechetDecider fd(alpha, beta);
-    VLOG(1) << fd.is_at_least_frechet(2);
-    VLOG(1) << fd.is_at_least_frechet(3);
-    VLOG(1) << fd.is_at_least_frechet(4.2);
+    double approx_frechet = fd.bin_search_frechet(dists);
+    LOG(INFO) << "Approximate Frechet distance: " << approx_frechet;
 
+    double dtw_lb = approx_frechet / (s + 1);
+    double dtw_ub = approx_frechet * (s + 1) * max(m, n);
+    LOG(INFO) << "Dynamic Time Warping range: [" << dtw_lb << ", " << dtw_ub << "]";
 
     return 0;
 }
