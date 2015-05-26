@@ -5,6 +5,7 @@
 
 #include "QuadTree.h"
 #include "WSPD.h"
+#include "FrechetDecider.h"
 #include "easylogging++.h"
 using namespace std;
 
@@ -60,16 +61,29 @@ int main(int argc, char* argv[])
     Curve alpha = readCurve(inFile, d);
     Curve beta = readCurve(inFile, d);
 
-    QuadTree qt(alpha);
+    vector<Point_2> all_points(alpha);
+    all_points.reserve(alpha.size() + beta.size());
+    all_points.insert(all_points.end(), beta.begin(), beta.end());
+
+    QuadTree qt(all_points);
+    qt.init();
     double s = 1; // need n-approx only
+
     WSPD wspd(qt, s);
     vector<pair<QuadTree, QuadTree>> pairs = wspd.pairs;
     vector<double> dists = wspd.distances();
+
     VLOG(6) << "WSPD dists:";
     for (int i = 0; i < dists.size(); i++)
     {
         VLOG(6) << dists[i];
     }
+
+    FrechetDecider fd(alpha, beta);
+    VLOG(1) << fd.is_at_least_frechet(2);
+    VLOG(1) << fd.is_at_least_frechet(3);
+    VLOG(1) << fd.is_at_least_frechet(4.2);
+
 
     return 0;
 }

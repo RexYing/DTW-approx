@@ -15,7 +15,17 @@ class QuadTreeTwoClasses: public QuadTree
 
     void init();
 
+    int get_size(int index);
+    Point_2 get_representative(int index);
+
   private:
     vector<Point_2> point_set2_;
+
+    int set_sizes_[2];
+    // representatives in point_set1 and point_set2
+    Point_2 representatives_[2];
+
+    void choose_representatives();
+
 };
 

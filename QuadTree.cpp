@@ -20,26 +20,34 @@ QuadTree::QuadTree(vector<Point_2> &point_set)
     point_set1_ = point_set;
 }
 
+/*
+ * Set properties for empty tree
+ */
+void QuadTree::set_empty()
+{
+    center_ = Point_2(0, 0);
+    radius_ = -1; // empty: radius is invalid
+    node_type = EMPTY;
+}
+
 void QuadTree::init()
 {
     VLOG(7) << ("creating quad tree...");
     switch (point_set1_.size())
     {
         case 0:
-            center_ = Point_2(0, 0);
-            radius_ = -1; // empty: radius is invalid
-            node_type = EMPTY;
+            set_empty();
             break;
         case 1:
             node_type = LEAF;
-            calcBBox(point_set1_);
+            calc_bbox(point_set1_);
             p = point_set1_[0];
             break;
         default:
             node_type = NODE;
-            calcBBox(point_set1_);
+            calc_bbox(point_set1_);
             p = point_set1_[0];
-            subdivide(point_set1_);
+            subdivide();
     }
     VLOG(8) << to_string();
 }
@@ -49,7 +57,7 @@ double QuadTree::quadtree_dist(QuadTree that)
     return CGAL::sqrt(CGAL::squared_distance(this->get_center(), that.get_center()));
 }
 
-void QuadTree::calcBBox(vector<Point_2> &point_set)
+void QuadTree::calc_bbox(vector<Point_2> &point_set)
 {
     bbox = CGAL::bounding_box(point_set.begin(), point_set.end());
     center_ = Point_2((bbox.xmin() + bbox.xmax()) / 2,
@@ -63,10 +71,9 @@ void QuadTree::calcBBox(vector<Point_2> &point_set)
 /*
  * Currently point_set1_ will not be used after calling this function
  */
-void QuadTree::subdivide(vector<Point_2> &point_set)
-{
+void QuadTree::subdivide() {
     vector<vector<Point_2>> ch_point_sets(4, vector<Point_2>());
-    for (auto& pt : point_set)
+    for (auto& pt : point_set1_)
     {
         Direction_2 dir(pt - center_);
         if ((dir >= pos_x_dir_) && (dir < pos_y_dir_))
@@ -89,11 +96,27 @@ void QuadTree::subdivide(vector<Point_2> &point_set)
             ch_point_sets[3].push_back(pt);
         }
     }
+    // continue to subdivide if more than 1 quadrant has points
+    int num_ch = 0;
+    for (int i = 0; i < 4; i++)
+    {
+        if (!ch_point_sets[i].empty())
+        {
+            num_ch++;
+        }
+    }
+    if (num_ch <= 1)
+    {
+        return;
+    }
+
+    //subdivide
     for (int i = 0; i < 4; i++)
     {
         //QuadTree qt = QuadTree(ch_point_sets[i]);
         //ch[i] = &qt;
         ch[i] = new QuadTree(ch_point_sets[i]);
+        ch[i]->init();
     }
 }
 

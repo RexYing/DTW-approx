@@ -4,6 +4,7 @@
 #include "QuadTree.h"
 using namespace std;
 
+typedef vector<Point_2> Curve;
 /*
  * Solver for discrete Frechet distance decision problem.
  *
@@ -12,7 +13,7 @@ using namespace std;
 class FrechetDecider
 {
   public:
-    FrechetDecider(vector<Point_2> curve1, vector<Point_2> curve2);
+    FrechetDecider(const vector<Point_2> &curve1, const vector<Point_2> &curve2);
 
     // Test if Frechet distance is at least dist,
     // i.e. there exists a feasible path in free space diagram.
@@ -21,5 +22,8 @@ class FrechetDecider
   private:
     vector<Point_2> curve1;
     vector<Point_2> curve2;
+
+    bool dfs(double sq_dist, Curve::iterator it1, Curve::iterator it2);
+
 };
 

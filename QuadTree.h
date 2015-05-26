@@ -61,6 +61,16 @@ class QuadTree
     double get_radius();
     Point_2 get_center();
 
+
+  protected:
+
+    vector<Point_2> point_set1_;
+
+    void set_empty();
+    void calc_bbox(vector<Point_2> &point_set);
+    virtual void subdivide();
+
+
   private:
 
     // each node has a unique id property.
@@ -70,14 +80,9 @@ class QuadTree
     double radius_;
     Point_2 center_;
 
-    vector<Point_2> point_set1_;
-
     Direction_2 pos_x_dir_;
     Direction_2 pos_y_dir_;
     Direction_2 neg_x_dir_;
     Direction_2 neg_y_dir_;
 
-    void calcBBox(vector<Point_2> &point_set);
-
-    void subdivide(vector<Point_2> &point_set);
 };
