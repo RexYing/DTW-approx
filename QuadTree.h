@@ -29,8 +29,10 @@ class QuadTree
 		QuadTree* ch[4];
 
 
-		QuadTree(vector<Point_2> &point_set);
-    virtual void init();
+		QuadTree(const vector<Point_2> &point_set);
+
+    void init();
+    //virtual void init();
 
     double quadtree_dist(QuadTree that);
 
@@ -61,14 +63,13 @@ class QuadTree
     double get_radius();
     Point_2 get_center();
 
-
   protected:
 
     vector<Point_2> point_set1_;
 
     void set_empty();
     void calc_bbox(vector<Point_2> &point_set);
-    virtual void subdivide();
+    void subdivide();
 
 
   private:

@@ -7,7 +7,7 @@ using namespace std;
 
 int QuadTree::max_id_ = -1;
 
-QuadTree::QuadTree(vector<Point_2> &point_set)
+QuadTree::QuadTree(const vector<Point_2> &point_set)
 {
     max_id_++;
     id_ = max_id_;

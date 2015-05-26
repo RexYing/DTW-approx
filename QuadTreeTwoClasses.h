@@ -11,9 +11,9 @@ using namespace std;
 class QuadTreeTwoClasses: public QuadTree
 {
   public:
-    QuadTreeTwoClasses(vector<Point_2> &point_set1, vector<Point_2> &point_set2);
+    QuadTreeTwoClasses(const vector<Point_2> &point_set1, const vector<Point_2> &point_set2);
 
-    void init();
+    //void init();
 
     int get_size(int index);
     Point_2 get_representative(int index);

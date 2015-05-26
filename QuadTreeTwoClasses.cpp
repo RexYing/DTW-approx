@@ -3,10 +3,9 @@
 #include "QuadTreeTwoClasses.h"
 
 using namespace std;
-
-QuadTreeTwoClasses::QuadTreeTwoClasses(vector<Point_2> &point_set1,
-                                       vector<Point_2> &point_set2):
-  QuadTree(point_set1), point_set2_(point_set2)
+QuadTreeTwoClasses::QuadTreeTwoClasses(const vector<Point_2> &point_set1,
+                                       const vector<Point_2> &point_set2):
+    QuadTree(point_set1), point_set2_(point_set2)
 { }
 
 void QuadTreeTwoClasses::choose_representatives()
@@ -16,7 +15,7 @@ void QuadTreeTwoClasses::choose_representatives()
     if (!point_set2_.empty())
         representatives_[1] = point_set2_[0];
 }
-
+/*
 void QuadTreeTwoClasses::init()
 {
     set_sizes_[0] = point_set1_.size();
@@ -42,7 +41,7 @@ void QuadTreeTwoClasses::init()
     }
     choose_representatives();
 }
-
+*/
 int QuadTreeTwoClasses::get_size(int index)
 {
     return set_sizes_[index];

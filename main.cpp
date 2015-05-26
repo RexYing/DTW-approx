@@ -6,6 +6,7 @@
 #include "QuadTree.h"
 #include "WSPD.h"
 #include "FrechetDecider.h"
+#include "Sampling.h"
 #include "easylogging++.h"
 using namespace std;
 
@@ -16,6 +17,8 @@ typedef Kernel::Point_2 Point_2;
 typedef Kernel::Segment_2 Segment_2;
 
 typedef vector<Point_2> Curve;
+
+const double DEFAULT_EPS = 0.1;
 
 void deallocDouble2D(double** arr, int l)
 {
@@ -87,6 +90,8 @@ int main(int argc, char* argv[])
     double dtw_lb = approx_frechet / (s + 1);
     double dtw_ub = approx_frechet * (s + 1) * max(m, n);
     LOG(INFO) << "Dynamic Time Warping range: [" << dtw_lb << ", " << dtw_ub << "]";
+
+    Sampling sampling(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
 
     return 0;
 }

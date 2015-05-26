@@ -73,8 +73,10 @@ add_library(
   QuadTree.cpp QuadTree.h
   QuadTreeTwoClasses.cpp QuadTreeTwoClasses.h
   WSPD.cpp WSPD.h
+	Sampling.cpp Sampling.h
 )
 add_library( Frechet FrechetDecider.cpp FrechetDecider.h )
+#add_library( DTW Sampling.cpp Sampling.h)
 
 add_executable( executable  main.cpp )
 # target_compile_features(executable PRIVATE cxx_range_for)
