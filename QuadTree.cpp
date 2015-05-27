@@ -54,7 +54,7 @@ void QuadTree::init()
 
 double QuadTree::quadtree_dist(QuadTree that)
 {
-    return CGAL::sqrt(CGAL::squared_distance(this->get_center(), that.get_center()));
+    return CGAL::sqrt(CGAL::squared_distance(this->center(), that.center()));
 }
 
 void QuadTree::calc_bbox(vector<Point_2> &point_set)
@@ -67,13 +67,10 @@ void QuadTree::calc_bbox(vector<Point_2> &point_set)
     radius_ = CGAL::sqrt(v.squared_length());
 }
 
-
-/*
- * Currently point_set1_ will not be used after calling this function
- */
-void QuadTree::subdivide() {
+vector<vector<Point_2>> QuadTree::partition(vector<Point_2> point_set)
+{
     vector<vector<Point_2>> ch_point_sets(4, vector<Point_2>());
-    for (auto& pt : point_set1_)
+    for (auto& pt : point_set)
     {
         Direction_2 dir(pt - center_);
         if ((dir >= pos_x_dir_) && (dir < pos_y_dir_))
@@ -96,6 +93,16 @@ void QuadTree::subdivide() {
             ch_point_sets[3].push_back(pt);
         }
     }
+    return ch_point_sets;
+}
+
+
+/*
+ * Currently point_set1_ will not be used after calling this function
+ */
+void QuadTree::subdivide() {
+    vector<vector<Point_2>> ch_point_sets = partition(point_set1_);
+
     // continue to subdivide if more than 1 quadrant has points
     int num_ch = 0;
     for (int i = 0; i < 4; i++)
@@ -115,8 +122,8 @@ void QuadTree::subdivide() {
     {
         //QuadTree qt = QuadTree(ch_point_sets[i]);
         //ch[i] = &qt;
-        ch[i] = new QuadTree(ch_point_sets[i]);
-        ch[i]->init();
+        ch_[i] = new QuadTree(ch_point_sets[i]);
+        ch_[i]->init();
     }
 }
 
@@ -125,12 +132,25 @@ int QuadTree::id()
     return id_;
 }
 
-double QuadTree::get_radius()
+QuadTree* QuadTree::child(int index)
+{
+    return ch_[index];
+}
+
+/*
+ * Return an array of quad-trees (children of current node).
+ */
+QuadTree** QuadTree::children()
+{
+    return ch_;
+}
+
+double QuadTree::radius()
 {
     return radius_;
 }
 
-Point_2 QuadTree::get_center()
+Point_2 QuadTree::center()
 {
     return center_;
 }

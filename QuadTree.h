@@ -26,13 +26,14 @@ class QuadTree
     enum NodeType {EMPTY, LEAF, NODE};
     NodeType node_type;
 
-		QuadTree* ch[4];
+    QuadTree** children();
+    QuadTree* child(int index);
+		QuadTree* ch_[4];
 
 
 		QuadTree(const vector<Point_2> &point_set);
 
-    void init();
-    //virtual void init();
+    virtual void init();
 
     double quadtree_dist(QuadTree that);
 
@@ -60,8 +61,8 @@ class QuadTree
     }
 
     int id();
-    double get_radius();
-    Point_2 get_center();
+    double radius();
+    Point_2 center();
 
   protected:
 
@@ -69,7 +70,8 @@ class QuadTree
 
     void set_empty();
     void calc_bbox(vector<Point_2> &point_set);
-    void subdivide();
+    vector<vector<Point_2>> partition(vector<Point_2> point_set);
+    virtual void subdivide();
 
 
   private:

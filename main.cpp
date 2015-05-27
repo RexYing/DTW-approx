@@ -4,7 +4,6 @@
 #include <CGAL/Simple_cartesian.h>
 
 #include "QuadTree.h"
-#include "WSPD.h"
 #include "FrechetDecider.h"
 #include "Sampling.h"
 #include "easylogging++.h"
@@ -92,6 +91,7 @@ int main(int argc, char* argv[])
     LOG(INFO) << "Dynamic Time Warping range: [" << dtw_lb << ", " << dtw_ub << "]";
 
     Sampling sampling(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
+
 
     return 0;
 }

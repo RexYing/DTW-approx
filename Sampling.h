@@ -1,5 +1,5 @@
 
-#include "QuadTreeTwoClasses.h"
+#include "WSPD.h"
 
 using namespace std;
 
@@ -21,5 +21,4 @@ class Sampling
 
     QuadTreeTwoClasses* qt_;
 
-    void build_quadtree();
 };

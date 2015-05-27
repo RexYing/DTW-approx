@@ -52,31 +52,73 @@ WSPD::WSPD(QuadTree tree, double s)
     collect_distances();
 }
 
+// WSPD with lower/upper bound using QuadTreeTwoClasses
+WSPD::WSPD(QuadTreeTwoClasses tree, double s, double lb, double ub):
+    s(s), lb_(lb), ub_(ub)
+{
+}
+
+/*
+ * Append second vector to the first vector
+ */
+void append_vector(NodePairs &p1, NodePairs &p2)
+{
+    p1.reserve(p1.size() + p2.size());
+    p1.insert(p1.end(), p2.begin(), p2.end());
+}
+
+/* No longer needed.
+ * use grid at the level of ub to avoid building the entire tree.
+ */
+NodePairs WSPD::traverse(QuadTreeTwoClasses tree)
+{
+    NodePairs node_pairs;
+    // radius of current node is at least the diameter of its children
+    if (tree.radius() > ub_)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            QuadTreeTwoClasses* qt_ptr = dynamic_cast<QuadTreeTwoClasses *>(tree.child(i));
+            NodePairs ch_pairs = traverse(*qt_ptr);
+            append_vector(node_pairs, ch_pairs);
+        }
+        return node_pairs;
+    }
+    else
+    {
+        return pairing_lb(tree, tree);
+    }
+}
+
+NodePairs WSPD::pairing_lb(QuadTreeTwoClasses t1, QuadTreeTwoClasses t2)
+{
+}
+
 vector<pair<QuadTree, QuadTree>> WSPD::pairing(QuadTree t1, QuadTree t2)
 {
     vector<pair<QuadTree, QuadTree>> pairs;
 
-    Vector_2 v = t1.get_center() - t2.get_center();
+    Vector_2 v = t1.center() - t2.center();
     double dist = dist_rectangles(t1.bbox, t2.bbox);
     VLOG(8) << t1.to_string() << endl << t2.to_string();
     VLOG(8) << "rect distances: " << dist << endl;
 
     bool swapped = false;
-    if (t1.get_radius() < t2.get_radius())
+    if (t1.radius() < t2.radius())
     {
         swapped = true;
         SWAP(t1, t2);
     }
     // t1 has larger radius by now
     // Well-separated condition: diameter * s <= dist between bbox
-    if (2 * s * t1.get_radius() <= dist)
+    if (2 * s * t1.radius() <= dist)
     {
         pairs.push_back(make_pair(t1, t2));
     }
     else
     {
         // pairing the children of t1 with t2
-        for (auto& qt : t1.ch)
+        for (auto& qt : t1.ch_)
         {
             if ((*qt).node_type == QuadTree::EMPTY)
             {

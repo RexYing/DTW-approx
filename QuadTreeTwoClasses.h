@@ -13,10 +13,13 @@ class QuadTreeTwoClasses: public QuadTree
   public:
     QuadTreeTwoClasses(const vector<Point_2> &point_set1, const vector<Point_2> &point_set2);
 
-    //void init();
+    void init();
 
     int get_size(int index);
     Point_2 get_representative(int index);
+
+  protected:
+    void subdivide();
 
   private:
     vector<Point_2> point_set2_;
