@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
     LOG(INFO) << "Dynamic Time Warping range: [" << dtw_lb << ", " << dtw_ub << "]";
 
     Sampling sampling(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
-
+    sampling.init();
 
     return 0;
 }

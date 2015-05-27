@@ -1,3 +1,6 @@
+#include <math.h>
+#include <CGAL/bounding_box.h>
+#include <CGAL/number_utils.h>
 
 #include "Sampling.h"
 #include "easylogging++.h"
@@ -10,7 +13,86 @@ Sampling::Sampling(const Curve &curve1, const Curve &curve2, double lb, double u
     ub_(ub),
     eps_(eps)
 {
-    qt_ = new QuadTreeTwoClasses(curve1, curve2);
-    qt_->init();
+    len_cell_ = round(ceil(log2(2 * ub_)));
+    /*qt_ = new QuadTreeTwoClasses(curve1, curve2);
+    qt_->init();*/
+}
+
+/*
+ * Insert points on one curve into grid
+ */
+void Sampling::insert_grid()
+{
+    for (auto& pt : curve1_)
+    {
+        long i = pt.x() / len_cell_;
+        long j = pt.y() / len_cell_;
+        GridIndex ind = make_pair(i, j);
+        Grid::const_iterator it = grid_.find(ind);
+        if (it == grid_.end()) { Curve* c1 = new vector<Point_2>();
+            Curve* c2 = new vector<Point_2>();
+            c1->push_back(pt);
+            SetPair set_pair = make_pair(c1, c2);
+            grid_.emplace(ind, set_pair);
+            VLOG(1) << "new";
+        }
+        else
+        {
+            Curve* pt_set_ptr = it->second.first;
+            pt_set_ptr->push_back(pt);
+        }
+    }
+
+    for (auto& pt : curve2_)
+    {
+        long i = pt.x() / len_cell_;
+        long j = pt.y() / len_cell_;
+        GridIndex ind = make_pair(i, j);
+        Grid::const_iterator it = grid_.find(ind);
+        if (it == grid_.end())
+        {
+            Curve* c1;
+            Curve* c2;
+            c2->push_back(pt);
+            SetPair set_pair = make_pair(c1, c2);
+            grid_.emplace(ind, set_pair);
+        }
+        else
+        {
+            Curve* pt_set_ptr = it->second.second;
+            pt_set_ptr->push_back(pt);
+        }
+    }
+}
+
+void Sampling::print_grid(Grid grid)
+{
+    for (auto& x: grid)
+    {
+        VLOG(5) << "(" << x.first.first << ", " << x.first.second << ") -> " <<
+            x.second.first->size() << " points curve1 " <<
+            x.second.second->size() << " points curve2 " << std::endl;
+    }
+}
+
+/*
+ * Construct grid for WSPD
+ */
+void Sampling::init()
+{
+    vector<Point_2> all_points(curve1_);
+    all_points.reserve(curve1_.size() + curve2_.size());
+    all_points.insert(all_points.end(), curve2_.begin(), curve2_.end());
+    BBox bbox = CGAL::bounding_box(all_points.begin(), all_points.end());
+
+    VLOG(7) << "insert grid";
+    insert_grid();
+    VLOG(7) << "print grid";
+    print_grid(grid_);
+    VLOG(7) << "finish grid";
+}
+
+Sampling::~Sampling()
+{//TODO
 }
 
