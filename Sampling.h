@@ -28,6 +28,7 @@ class Sampling
 	public:
 		Sampling(const Curve &curve1, const Curve &curve2, double lb, double ub, double eps);
     void init();
+    void sample();
 
     ~Sampling();
 
@@ -44,6 +45,9 @@ class Sampling
 
     unordered_map<GridIndex, SetPair, pairhash> grid_;
     unordered_map<GridIndex, QuadTreeTwoClasses*, pairhash> quadtrees_;
+
+    // map from diagonal number to sample points
+    unordered_map<long, pair<long, long>> diagonal_samples;
 
     void insert_grid();
     void print_grid(Grid grid);

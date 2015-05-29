@@ -14,12 +14,12 @@ class WSPD
 {
 	public:
 		WSPD(QuadTree tree, double s);
-    WSPD(QuadTreeTwoClasses tree, double s, double lb, double ub);
+    WSPD(QuadTree tree, double s, double lb);
 
 		vector<pair<QuadTree, QuadTree>> pairing(QuadTree t1, QuadTree t2);
 		vector<pair<QuadTree, QuadTree>> pairs;
 
-		vector<pair<QuadTree, QuadTree>> traverse(QuadTreeTwoClasses tree);
+		vector<pair<QuadTree, QuadTree>> traverse(QuadTreeTwoClasses tree, double ub);
 		vector<pair<QuadTree, QuadTree>> pairing_lb(QuadTreeTwoClasses t1,
                                                 QuadTreeTwoClasses t2);
 
@@ -30,7 +30,6 @@ class WSPD
 
   private:
     double lb_;
-    double ub_;
 
     vector<double> distances_;
     void collect_distances();

@@ -3,19 +3,27 @@
 #include "QuadTreeTwoClasses.h"
 
 using namespace std;
+
+QuadTreeTwoClasses::QuadTreeTwoClasses(const vector<Point_2> &point_set1,
+                                       const vector<int> &indices1,
+                                       const vector<Point_2> &point_set2,
+                                       const vector<int> &indices2):
+    QuadTree(point_set1, indices1), point_set2_(point_set2), indices2_(indices2)
+{ }
+
 QuadTreeTwoClasses::QuadTreeTwoClasses(const vector<Point_2> &point_set1,
                                        const vector<Point_2> &point_set2):
     QuadTree(point_set1), point_set2_(point_set2)
-{ }
+{
+    indices2_.assign(indices_.begin(), indices_.end());
+}
 
 void QuadTreeTwoClasses::choose_representatives()
 {
     if (!point_set1_.empty())
         representatives_[0] = point_set1_[0];
     if (!point_set2_.empty())
-        representatives_[1] = point_set2_[0];
-}
-
+        representatives_[1] = point_set2_[0]; }
 void QuadTreeTwoClasses::init()
 {
     set_sizes_[0] = point_set1_.size();
@@ -44,8 +52,11 @@ void QuadTreeTwoClasses::init()
 
 void QuadTreeTwoClasses::subdivide()
 {
-    vector<vector<Point_2>> ch_point_sets1 = partition(point_set1_);
-    vector<vector<Point_2>> ch_point_sets2 = partition(point_set2_);
+    vector<vector<int>> indices1;
+    vector<vector<Point_2>> ch_point_sets1 = partition(point_set1_, indices1);
+
+    vector<vector<int>> indices2;
+    vector<vector<Point_2>> ch_point_sets2 = partition(point_set2_, indices2);
 
     // continue to subdivide if more than 1 quadrant has points
     int num_ch = 0;
@@ -64,7 +75,8 @@ void QuadTreeTwoClasses::subdivide()
     //subdivide
     for (int i = 0; i < 4; i++)
     {
-        ch_[i] = new QuadTreeTwoClasses(ch_point_sets1[i], ch_point_sets2[i]);
+        ch_[i] = new QuadTreeTwoClasses(ch_point_sets1[i], indices1[i],
+                                        ch_point_sets2[i], indices2[i]);
         ch_[i]->init();
     }
 }

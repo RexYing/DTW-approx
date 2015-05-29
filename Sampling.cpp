@@ -92,7 +92,22 @@ void Sampling::init()
     VLOG(7) << "finish grid";
 }
 
+void Sampling::sample()
+{
+    qt_ = new QuadTreeTwoClasses(curve1_, curve2_);
+    qt_->init();
+    WSPD wspd(*qt_, 1.0/eps_, lb_);
+    vector<pair<QuadTree, QuadTree>> pairs = wspd.pairs;
+
+    // sample from WSPD pairs
+}
+
 Sampling::~Sampling()
-{//TODO
+{
+    for (auto& entry : grid_)
+    {
+        delete entry.second.first;
+        delete entry.second.second;
+    }
 }
 

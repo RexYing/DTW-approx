@@ -92,6 +92,7 @@ int main(int argc, char* argv[])
 
     Sampling sampling(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
     sampling.init();
+    sampling.sample();
 
     return 0;
 }

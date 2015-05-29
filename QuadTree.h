@@ -12,6 +12,7 @@ typedef Kernel::Direction_2 Direction_2;
 typedef Kernel::Vector_2 Vector_2;
 typedef Kernel::Iso_rectangle_2 BBox; //bounding box for 2D point sets
 
+
 class QuadTree
 {
 	public:
@@ -32,6 +33,7 @@ class QuadTree
 
 
 		QuadTree(const vector<Point_2> &point_set);
+		QuadTree(const vector<Point_2> &point_set, const vector<int> &indices);
 
     virtual void init();
 
@@ -63,14 +65,17 @@ class QuadTree
     int id();
     double radius();
     Point_2 center();
+    vector<int> indices();
 
   protected:
 
     vector<Point_2> point_set1_;
+    vector<int> indices_;
 
     void set_empty();
     void calc_bbox(vector<Point_2> &point_set);
-    vector<vector<Point_2>> partition(vector<Point_2> point_set);
+    vector<vector<Point_2>> partition(vector<Point_2> point_set,
+                                      vector<vector<int>> &indices);
     virtual void subdivide();
 
 

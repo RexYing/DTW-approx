@@ -44,18 +44,17 @@ double dist_rectangles(BBox b1, BBox b2)
     return CGAL::sqrt(x_coord_dist * x_coord_dist + y_coord_dist * y_coord_dist);
 }
 
-WSPD::WSPD(QuadTree tree, double s)
+WSPD::WSPD(QuadTree tree, double s): WSPD(tree, s, -1)
 {
-    VLOG(7) << "Constructing WSPD";
-    this->s = s;
-    pairs = pairing(tree, tree);
-    collect_distances();
 }
 
-// WSPD with lower/upper bound using QuadTreeTwoClasses
-WSPD::WSPD(QuadTreeTwoClasses tree, double s, double lb, double ub):
-    s(s), lb_(lb), ub_(ub)
+// WSPD with lower bound using QuadTree
+WSPD::WSPD(QuadTree tree, double s, double lb):
+    s(s), lb_(lb)
 {
+    VLOG(7) << "Constructing WSPD";
+    pairs = pairing(tree, tree);
+    collect_distances();
 }
 
 /*
@@ -70,28 +69,24 @@ void append_vector(NodePairs &p1, NodePairs &p2)
 /* No longer needed.
  * use grid at the level of ub to avoid building the entire tree.
  */
-NodePairs WSPD::traverse(QuadTreeTwoClasses tree)
+NodePairs WSPD::traverse(QuadTreeTwoClasses tree, double ub)
 {
     NodePairs node_pairs;
     // radius of current node is at least the diameter of its children
-    if (tree.radius() > ub_)
+    if (tree.radius() > ub)
     {
         for (int i = 0; i < 4; i++)
         {
             QuadTreeTwoClasses* qt_ptr = dynamic_cast<QuadTreeTwoClasses *>(tree.child(i));
-            NodePairs ch_pairs = traverse(*qt_ptr);
+            NodePairs ch_pairs = traverse(*qt_ptr, ub);
             append_vector(node_pairs, ch_pairs);
         }
         return node_pairs;
     }
     else
     {
-        return pairing_lb(tree, tree);
+        return pairing(tree, tree);
     }
-}
-
-NodePairs WSPD::pairing_lb(QuadTreeTwoClasses t1, QuadTreeTwoClasses t2)
-{
 }
 
 vector<pair<QuadTree, QuadTree>> WSPD::pairing(QuadTree t1, QuadTree t2)
@@ -109,6 +104,13 @@ vector<pair<QuadTree, QuadTree>> WSPD::pairing(QuadTree t1, QuadTree t2)
         swapped = true;
         SWAP(t1, t2);
     }
+
+    // lower bound is defined
+    if (lb_ != -1)
+    {
+        dist = max(dist, lb_);
+    }
+
     // t1 has larger radius by now
     // Well-separated condition: diameter * s <= dist between bbox
     if (2 * s * t1.radius() <= dist)
