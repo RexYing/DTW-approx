@@ -32,6 +32,11 @@ class QuadTreeTwoClasses: public QuadTree
         return indices2_;
     }
 
+    Point_2 point2(int idx)
+    {
+        return point_set2_[idx];
+    }
+
   protected:
     void subdivide();
 

@@ -100,6 +100,37 @@ void Sampling::sample()
     vector<pair<QuadTree, QuadTree>> pairs = wspd.pairs;
 
     // sample from WSPD pairs
+    for (auto& p : pairs)
+    {
+        VLOG(1) << p.first.to_string();
+        VLOG(1) << p.second.to_string();
+
+        QuadTreeTwoClasses qt1 = dynamic_cast<QuadTreeTwoClasses&>(p.first);
+        QuadTreeTwoClasses qt2 = dynamic_cast<QuadTreeTwoClasses&>(p.second);
+
+        vector<int> indices2 = qt2.indices2();
+
+        vector<int> sample_row_idx;
+        for (auto& idx : qt1.indices1())
+        {
+            sample_row_idx.push_back(idx);
+            VLOG(2) << idx;
+        }
+
+        vector<int> sample_col_idx;
+        sample_col_idx.push_back(indices2[0]);
+        Point_2 prev = qt2.point2(indices2[0]);
+        for (int i = 1; i < indices2.size(); i++)
+        {
+            if (CGAL::squared_distance(prev, qt2.point2(indices2[i])) > qt2.radius())
+            {
+                prev = qt2.point2(indices2[i] - 1);
+                sample_col_idx.push_back(indices2[i] - 1);
+                VLOG(3) << indices2[i] - 1;
+            }
+        }
+    }
+
 }
 
 Sampling::~Sampling()
