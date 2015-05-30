@@ -37,6 +37,25 @@ class QuadTreeTwoClasses: public QuadTree
         return point_set2_[idx];
     }
 
+    string to_string()
+    {
+        stringstream sstm;
+        CGAL::set_pretty_mode(sstm);
+        sstm << "QuadTree: {center=" << center() << ", radius=" << radius() << ", curve1=[";
+        for (auto& pt : point_set1_)
+        {
+            sstm << pt << " ";
+        }
+        sstm << "], curve2=[";
+        for (auto& pt : point_set2_)
+        {
+            sstm << pt << " ";
+        }
+        sstm << "]}";
+
+        return sstm.str();
+    }
+
   protected:
     void subdivide();
 

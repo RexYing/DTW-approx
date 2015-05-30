@@ -44,16 +44,20 @@ double dist_rectangles(BBox b1, BBox b2)
     return CGAL::sqrt(x_coord_dist * x_coord_dist + y_coord_dist * y_coord_dist);
 }
 
-WSPD::WSPD(QuadTree tree, double s): WSPD(tree, s, -1)
-{
-}
-
-// WSPD with lower bound using QuadTree
-WSPD::WSPD(QuadTree tree, double s, double lb):
-    s(s), lb_(lb)
+WSPD::WSPD(QuadTree* tree, double s) :
+    s(s), lb_(-1) // default (no lower bound)
 {
     VLOG(7) << "Constructing WSPD";
     pairs = pairing(tree, tree);
+    collect_distances();
+}
+
+// WSPD with lower bound using QuadTreeTwoClasses
+WSPD::WSPD(QuadTreeTwoClasses* tree, double s, double lb):
+    s(s), lb_(lb)
+{
+    VLOG(7) << "Constructing WSPD";
+    pairs = pairing2(tree, tree);
     collect_distances();
 }
 
@@ -69,16 +73,16 @@ void append_vector(NodePairs &p1, NodePairs &p2)
 /* No longer needed.
  * use grid at the level of ub to avoid building the entire tree.
  */
-NodePairs WSPD::traverse(QuadTreeTwoClasses tree, double ub)
+NodePairs WSPD::traverse(QuadTreeTwoClasses* tree, double ub)
 {
     NodePairs node_pairs;
     // radius of current node is at least the diameter of its children
-    if (tree.radius() > ub)
+    if (tree->radius() > ub)
     {
         for (int i = 0; i < 4; i++)
         {
-            QuadTreeTwoClasses* qt_ptr = dynamic_cast<QuadTreeTwoClasses *>(tree.child(i));
-            NodePairs ch_pairs = traverse(*qt_ptr, ub);
+            QuadTreeTwoClasses* qt_ptr = dynamic_cast<QuadTreeTwoClasses *>(tree->child(i));
+            NodePairs ch_pairs = traverse(qt_ptr, ub);
             append_vector(node_pairs, ch_pairs);
         }
         return node_pairs;
@@ -89,17 +93,17 @@ NodePairs WSPD::traverse(QuadTreeTwoClasses tree, double ub)
     }
 }
 
-vector<pair<QuadTree, QuadTree>> WSPD::pairing(QuadTree t1, QuadTree t2)
+vector<pair<QuadTree*, QuadTree*>> WSPD::pairing(QuadTree* t1, QuadTree* t2)
 {
-    vector<pair<QuadTree, QuadTree>> pairs;
+    vector<pair<QuadTree*, QuadTree*>> pairs;
 
-    Vector_2 v = t1.center() - t2.center();
-    double dist = dist_rectangles(t1.bbox, t2.bbox);
-    VLOG(8) << t1.to_string() << endl << t2.to_string();
+    Vector_2 v = t1->center() - t2->center();
+    double dist = dist_rectangles(t1->bbox, t2->bbox);
+    VLOG(8) << t1->to_string() << endl << t2->to_string();
     VLOG(8) << "rect distances: " << dist << endl;
 
     bool swapped = false;
-    if (t1.radius() < t2.radius())
+    if (t1->radius() < t2->radius())
     {
         swapped = true;
         SWAP(t1, t2);
@@ -113,22 +117,76 @@ vector<pair<QuadTree, QuadTree>> WSPD::pairing(QuadTree t1, QuadTree t2)
 
     // t1 has larger radius by now
     // Well-separated condition: diameter * s <= dist between bbox
-    if (2 * s * t1.radius() <= dist)
+    if (2 * s * t1->radius() <= dist)
     {
-        pairs.push_back(make_pair(t1, t2));
+        pair<QuadTree*, QuadTree*> pair = swapped ? make_pair(t2, t1) : make_pair(t1, t2);
+        pairs.push_back(pair);
     }
     else
     {
         // pairing the children of t1 with t2
-        for (auto& qt : t1.ch_)
+        for (auto& qt : t1->ch_)
         {
-            if ((*qt).node_type == QuadTree::EMPTY)
+            if (qt->node_type == QuadTree::EMPTY)
             {
                 VLOG(9) << "EMPTY";
                 continue;
             }
-            vector<pair<QuadTree, QuadTree>> p = swapped ?
-                    pairing(t2, *qt) : pairing(*qt, t2);
+            vector<pair<QuadTree*, QuadTree*>> p = swapped ?
+                    pairing(t2, qt) : pairing(qt, t2);
+
+            pairs.reserve(pairs.size() + p.size());
+            pairs.insert(pairs.end(), p.begin(), p.end());
+            p.clear();
+        }
+    }
+    return pairs;
+}
+
+vector<pair<QuadTree*, QuadTree*>> WSPD::pairing2(QuadTreeTwoClasses* t1, QuadTreeTwoClasses* t2)
+{
+    vector<pair<QuadTree*, QuadTree*>> pairs;
+
+    if ((t1->get_size(0) == 0) || (t2->get_size(1) == 0))
+    {
+        VLOG(9) << "EMPTY";
+        return pairs;
+    }
+
+    Vector_2 v = t1->center() - t2->center();
+    double dist = dist_rectangles(t1->bbox, t2->bbox);
+    VLOG(8) << t1->to_string() << endl << t2->to_string();
+    VLOG(8) << "rect distances: " << dist << endl;
+
+    bool swapped = false;
+    if (t1->radius() < t2->radius())
+    {
+        swapped = true;
+        SWAP(t1, t2);
+    }
+
+    // lower bound is defined
+    if (lb_ != -1)
+    {
+        dist = max(dist, lb_);
+    }
+
+    // t1 has larger radius by now
+    // Well-separated condition: diameter * s <= dist between bbox
+    if (2 * s * t1->radius() <= dist)
+    {
+        pair<QuadTree*, QuadTree*> pair = swapped ? make_pair(t2, t1) : make_pair(t1, t2);
+        pairs.push_back(pair);
+    }
+    else
+    {
+        // pairing the children of t1 with t2
+        for (auto& qt : t1->ch_)
+        {
+
+            QuadTreeTwoClasses* qttc = dynamic_cast<QuadTreeTwoClasses*>(qt);
+            vector<pair<QuadTree*, QuadTree*>> p = swapped ?
+                    pairing2(t2, qttc) : pairing2(qttc, t2);
 
             pairs.reserve(pairs.size() + p.size());
             pairs.insert(pairs.end(), p.begin(), p.end());
@@ -146,7 +204,7 @@ void WSPD::collect_distances()
     set<double> dist_set;
     for (auto& qt_pair : pairs)
     {
-        dist_set.insert(qt_pair.first.quadtree_dist(qt_pair.second));
+        dist_set.insert(qt_pair.first->quadtree_dist(*(qt_pair.second)));
     }
     for (auto& dist : dist_set)
     {

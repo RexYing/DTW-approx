@@ -96,41 +96,62 @@ void Sampling::sample()
 {
     qt_ = new QuadTreeTwoClasses(curve1_, curve2_);
     qt_->init();
-    WSPD wspd(*qt_, 1.0/eps_, lb_);
-    vector<pair<QuadTree, QuadTree>> pairs = wspd.pairs;
+/*
+    pair<QuadTree*, QuadTree*> p = make_pair(qt_, qt_);
+    QuadTreeTwoClasses* qttc = dynamic_cast<QuadTreeTwoClasses*>(p.first);
+    if (qttc == NULL)
+        VLOG(1) << "GOT ITTTT";
+        */
+
+    WSPD wspd(qt_, 1.0/eps_, lb_);
+    vector<pair<QuadTree*, QuadTree*>> pairs = wspd.pairs;
 
     // sample from WSPD pairs
     for (auto& p : pairs)
     {
-        VLOG(1) << p.first.to_string();
-        VLOG(1) << p.second.to_string();
+        VLOG(8) << p.first->to_string();
+        VLOG(8) << p.second->to_string();
 
-        QuadTreeTwoClasses qt1 = dynamic_cast<QuadTreeTwoClasses&>(p.first);
-        QuadTreeTwoClasses qt2 = dynamic_cast<QuadTreeTwoClasses&>(p.second);
+        QuadTreeTwoClasses* qt1 = dynamic_cast<QuadTreeTwoClasses*>(p.first);
+        if (qt1 == NULL)
+        {
+            LOG(WARNING) << "qt1 null pointer";
+        }
+        QuadTreeTwoClasses* qt2 = dynamic_cast<QuadTreeTwoClasses*>(p.second);
+        if (qt2 == NULL)
+        {
+            LOG(WARNING) << "qt2 null pointer";
+        }
 
-        vector<int> indices2 = qt2.indices2();
+
+        vector<int> indices2 = qt2->indices2();
 
         vector<int> sample_row_idx;
-        for (auto& idx : qt1.indices1())
+        for (auto& idx : qt1->indices1())
         {
             sample_row_idx.push_back(idx);
             VLOG(2) << idx;
         }
 
+        if (indices2.size() == 0)
+        {
+            // the second quad tree node should contain at least a point from the second curve
+            LOG(FATAL) << "indices2 is empty";
+        }
+
         vector<int> sample_col_idx;
         sample_col_idx.push_back(indices2[0]);
-        Point_2 prev = qt2.point2(indices2[0]);
+        Point_2 prev = qt2->point2(indices2[0]);
         for (int i = 1; i < indices2.size(); i++)
         {
-            if (CGAL::squared_distance(prev, qt2.point2(indices2[i])) > qt2.radius())
+            if (CGAL::squared_distance(prev, qt2->point2(indices2[i])) > qt2->radius())
             {
-                prev = qt2.point2(indices2[i] - 1);
+                prev = qt2->point2(indices2[i] - 1);
                 sample_col_idx.push_back(indices2[i] - 1);
                 VLOG(3) << indices2[i] - 1;
             }
         }
     }
-
 }
 
 Sampling::~Sampling()

@@ -54,7 +54,7 @@ class QuadTree
         sstm << "Bounding box: " << bbox;
         return sstm.str();
     }
-    string to_string()
+    virtual string to_string()
     {
         stringstream sstm;
         CGAL::set_pretty_mode(sstm);
@@ -75,7 +75,8 @@ class QuadTree
     void set_empty();
     void calc_bbox(vector<Point_2> &point_set);
     vector<vector<Point_2>> partition(vector<Point_2> point_set,
-                                      vector<vector<int>> &indices);
+                                      vector<int> indices,
+                                      vector<vector<int>> &ch_indices);
     virtual void subdivide();
 
 

@@ -23,7 +23,9 @@ void QuadTreeTwoClasses::choose_representatives()
     if (!point_set1_.empty())
         representatives_[0] = point_set1_[0];
     if (!point_set2_.empty())
-        representatives_[1] = point_set2_[0]; }
+        representatives_[1] = point_set2_[0];
+}
+
 void QuadTreeTwoClasses::init()
 {
     set_sizes_[0] = point_set1_.size();
@@ -31,9 +33,7 @@ void QuadTreeTwoClasses::init()
 
     int tot_size = point_set1_.size() + point_set2_.size();
     vector<Point_2> all_points(point_set1_);
-    all_points.reserve(tot_size);
-    all_points.insert(all_points.end(), point_set2_.begin(), point_set2_.end());
-    switch (tot_size)
+    all_points.reserve(tot_size); all_points.insert(all_points.end(), point_set2_.begin(), point_set2_.end()); switch (tot_size)
     {
         case 0:
             set_empty();
@@ -52,11 +52,11 @@ void QuadTreeTwoClasses::init()
 
 void QuadTreeTwoClasses::subdivide()
 {
-    vector<vector<int>> indices1;
-    vector<vector<Point_2>> ch_point_sets1 = partition(point_set1_, indices1);
+    vector<vector<int>> ch_indices1;
+    vector<vector<Point_2>> ch_point_sets1 = partition(point_set1_, indices_, ch_indices1);
 
-    vector<vector<int>> indices2;
-    vector<vector<Point_2>> ch_point_sets2 = partition(point_set2_, indices2);
+    vector<vector<int>> ch_indices2;
+    vector<vector<Point_2>> ch_point_sets2 = partition(point_set2_, indices2_, ch_indices2);
 
     // continue to subdivide if more than 1 quadrant has points
     int num_ch = 0;
@@ -75,8 +75,8 @@ void QuadTreeTwoClasses::subdivide()
     //subdivide
     for (int i = 0; i < 4; i++)
     {
-        ch_[i] = new QuadTreeTwoClasses(ch_point_sets1[i], indices1[i],
-                                        ch_point_sets2[i], indices2[i]);
+        ch_[i] = new QuadTreeTwoClasses(ch_point_sets1[i], ch_indices1[i],
+                                        ch_point_sets2[i], ch_indices2[i]);
         ch_[i]->init();
     }
 }
@@ -90,4 +90,5 @@ Point_2 QuadTreeTwoClasses::get_representative(int index)
 {
     return representatives_[index];
 }
+
 

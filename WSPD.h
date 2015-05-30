@@ -8,20 +8,19 @@
 
 #endif
 
-typedef vector<pair<QuadTree, QuadTree>> NodePairs;
+typedef vector<pair<QuadTree*, QuadTree*>> NodePairs;
 
 class WSPD
 {
 	public:
-		WSPD(QuadTree tree, double s);
-    WSPD(QuadTree tree, double s, double lb);
+		WSPD(QuadTree* tree, double s);
+    WSPD(QuadTreeTwoClasses* tree, double s, double lb);
 
-		vector<pair<QuadTree, QuadTree>> pairing(QuadTree t1, QuadTree t2);
-		vector<pair<QuadTree, QuadTree>> pairs;
+		vector<pair<QuadTree*, QuadTree*>> pairing(QuadTree* t1, QuadTree* t2);
+		vector<pair<QuadTree*, QuadTree*>> pairing2(QuadTreeTwoClasses* t1, QuadTreeTwoClasses* t2);
+		vector<pair<QuadTree*, QuadTree*>> pairs;
 
-		vector<pair<QuadTree, QuadTree>> traverse(QuadTreeTwoClasses tree, double ub);
-		vector<pair<QuadTree, QuadTree>> pairing_lb(QuadTreeTwoClasses t1,
-                                                QuadTreeTwoClasses t2);
+		vector<pair<QuadTree*, QuadTree*>> traverse(QuadTreeTwoClasses* tree, double ub);
 
     // separation constant
     double s;
