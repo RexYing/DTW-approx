@@ -54,10 +54,15 @@ WSPD::WSPD(QuadTree* tree, double s) :
 
 // WSPD with lower bound using QuadTreeTwoClasses
 WSPD::WSPD(QuadTreeTwoClasses* tree, double s, double lb):
+    WSPD(tree, tree, s, lb)
+{
+}
+
+WSPD::WSPD(QuadTreeTwoClasses* tree1, QuadTreeTwoClasses* tree2, double s, double lb):
     s(s), lb_(lb)
 {
     VLOG(7) << "Constructing WSPD";
-    pairs = pairing2(tree, tree);
+    pairs = pairing2(tree1, tree2);
     collect_distances();
 }
 
@@ -146,17 +151,18 @@ vector<pair<QuadTree*, QuadTree*>> WSPD::pairing(QuadTree* t1, QuadTree* t2)
 vector<pair<QuadTree*, QuadTree*>> WSPD::pairing2(QuadTreeTwoClasses* t1, QuadTreeTwoClasses* t2)
 {
     vector<pair<QuadTree*, QuadTree*>> pairs;
+    VLOG(7) << "sizes: "<< t1->get_size(0) << " " << t2->get_size(1);
 
     if ((t1->get_size(0) == 0) || (t2->get_size(1) == 0))
     {
-        VLOG(9) << "EMPTY";
         return pairs;
     }
 
     Vector_2 v = t1->center() - t2->center();
     double dist = dist_rectangles(t1->bbox, t2->bbox);
-    VLOG(8) << t1->to_string() << endl << t2->to_string();
-    VLOG(8) << "rect distances: " << dist << endl;
+    VLOG(7) << "Tree1: " << t1->to_string();
+    VLOG(7) << "Tree2: " << t2->to_string();
+    VLOG(7) << "rect distances: " << dist << endl;
 
     bool swapped = false;
     if (t1->radius() < t2->radius())
@@ -183,8 +189,11 @@ vector<pair<QuadTree*, QuadTree*>> WSPD::pairing2(QuadTreeTwoClasses* t1, QuadTr
         // pairing the children of t1 with t2
         for (auto& qt : t1->ch_)
         {
-
+    VLOG(1) << "why2  " << qt;
+    VLOG(1) << qt->to_string();
+    VLOG(1) << "why2  " << qt;
             QuadTreeTwoClasses* qttc = dynamic_cast<QuadTreeTwoClasses*>(qt);
+            VLOG(1) << "HERE   " ;
             vector<pair<QuadTree*, QuadTree*>> p = swapped ?
                     pairing2(t2, qttc) : pairing2(qttc, t2);
 

@@ -82,6 +82,10 @@ add_executable(
   Sampling.cpp Sampling.h
   main.cpp
 )
+add_executable(
+	gen_tests
+	gen_tests.cpp
+)
 # target_compile_features(executable PRIVATE cxx_range_for)
 
 add_to_cached_list( CGAL_EXECUTABLE_TARGETS executable )

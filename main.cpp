@@ -55,10 +55,13 @@ int main(int argc, char* argv[])
     ifstream inFile;
     inFile.open(argv[1]);
 
-    int d; // dimension
+    int d = 2; // dimension
 
-    inFile >> d;
+    //inFile >> d;
     Curve alpha = readCurve(inFile, d);
+    inFile.close();
+
+    inFile.open(argv[2]);
     Curve beta = readCurve(inFile, d);
 
     int m = alpha.size();
@@ -93,6 +96,10 @@ int main(int argc, char* argv[])
     Sampling sampling(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
     sampling.init();
     sampling.sample();
+
+    ofstream outFile;
+    outFile.open("samples.out");
+    outFile << sampling.view_samples();
 
     return 0;
 }

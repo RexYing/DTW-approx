@@ -1,7 +1,6 @@
 #include <unordered_map>
 
 #include "WSPD.h"
-
 using namespace std;
 
 struct pairhash {
@@ -20,6 +19,8 @@ typedef pair<long, long> GridIndex;
 typedef pair<Curve*, Curve*> SetPair;
 
 typedef unordered_map<GridIndex, SetPair, pairhash> Grid;
+typedef unordered_map<GridIndex, QuadTreeTwoClasses*, pairhash> QuadTreeGrid;
+
 /*
  * Sampling from the dynamic programming matrix for dtw, edit distance
  */
@@ -29,6 +30,7 @@ class Sampling
 		Sampling(const Curve &curve1, const Curve &curve2, double lb, double ub, double eps);
     void init();
     void sample();
+    string view_samples();
 
     ~Sampling();
 
@@ -47,8 +49,9 @@ class Sampling
     unordered_map<GridIndex, QuadTreeTwoClasses*, pairhash> quadtrees_;
 
     // map from diagonal number to sample points
-    unordered_map<long, pair<long, long>> diagonal_samples;
+    unordered_map<long, pair<long, long>> diagonal_samples_;
 
     void insert_grid();
     void print_grid(Grid grid);
+    void add_samples_WSPD(QuadTreeTwoClasses* grid_qt1, QuadTreeTwoClasses* grid_qt2);
 };

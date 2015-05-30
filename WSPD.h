@@ -15,6 +15,7 @@ class WSPD
 	public:
 		WSPD(QuadTree* tree, double s);
     WSPD(QuadTreeTwoClasses* tree, double s, double lb);
+    WSPD(QuadTreeTwoClasses* tree1, QuadTreeTwoClasses* tree2, double s, double lb);
 
 		vector<pair<QuadTree*, QuadTree*>> pairing(QuadTree* t1, QuadTree* t2);
 		vector<pair<QuadTree*, QuadTree*>> pairing2(QuadTreeTwoClasses* t1, QuadTreeTwoClasses* t2);

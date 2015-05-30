@@ -67,7 +67,7 @@ double FrechetDecider::bin_search_frechet(vector<double> &dists)
             low = mid + 1;
         }
     }
-    VLOG(1) << " low " << low << " high " << high;
+    VLOG(6) << "Frechet decider binary search result: low " << low << " high " << high;
     if (high == dists.size())
     {
         LOG(WARNING) <<

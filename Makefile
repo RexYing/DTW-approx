@@ -137,6 +137,19 @@ executable/fast:
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/build
 .PHONY : executable/fast
 
+#=============================================================================
+# Target rules for targets named gen_tests
+
+# Build rule for target.
+gen_tests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gen_tests
+.PHONY : gen_tests
+
+# fast build rule for target.
+gen_tests/fast:
+	$(MAKE) -f CMakeFiles/gen_tests.dir/build.make CMakeFiles/gen_tests.dir/build
+.PHONY : gen_tests/fast
+
 FrechetDecider.o: FrechetDecider.cpp.o
 .PHONY : FrechetDecider.o
 
@@ -257,6 +270,30 @@ WSPD.cpp.s:
 	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/WSPD.cpp.s
 .PHONY : WSPD.cpp.s
 
+gen_tests.o: gen_tests.cpp.o
+.PHONY : gen_tests.o
+
+# target to build an object file
+gen_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/gen_tests.dir/build.make CMakeFiles/gen_tests.dir/gen_tests.cpp.o
+.PHONY : gen_tests.cpp.o
+
+gen_tests.i: gen_tests.cpp.i
+.PHONY : gen_tests.i
+
+# target to preprocess a source file
+gen_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/gen_tests.dir/build.make CMakeFiles/gen_tests.dir/gen_tests.cpp.i
+.PHONY : gen_tests.cpp.i
+
+gen_tests.s: gen_tests.cpp.s
+.PHONY : gen_tests.s
+
+# target to generate assembly for a file
+gen_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/gen_tests.dir/build.make CMakeFiles/gen_tests.dir/gen_tests.cpp.s
+.PHONY : gen_tests.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -291,6 +328,7 @@ help:
 	@echo "... WSPD"
 	@echo "... edit_cache"
 	@echo "... executable"
+	@echo "... gen_tests"
 	@echo "... rebuild_cache"
 	@echo "... FrechetDecider.o"
 	@echo "... FrechetDecider.i"
@@ -307,6 +345,9 @@ help:
 	@echo "... WSPD.o"
 	@echo "... WSPD.i"
 	@echo "... WSPD.s"
+	@echo "... gen_tests.o"
+	@echo "... gen_tests.i"
+	@echo "... gen_tests.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

@@ -29,12 +29,12 @@ void Sampling::insert_grid()
         long j = pt.y() / len_cell_;
         GridIndex ind = make_pair(i, j);
         Grid::const_iterator it = grid_.find(ind);
-        if (it == grid_.end()) { Curve* c1 = new vector<Point_2>();
+        if (it == grid_.end()) {
+            Curve* c1 = new vector<Point_2>();
             Curve* c2 = new vector<Point_2>();
             c1->push_back(pt);
             SetPair set_pair = make_pair(c1, c2);
             grid_.emplace(ind, set_pair);
-            VLOG(1) << "new";
         }
         else
         {
@@ -51,8 +51,8 @@ void Sampling::insert_grid()
         Grid::const_iterator it = grid_.find(ind);
         if (it == grid_.end())
         {
-            Curve* c1;
-            Curve* c2;
+            Curve* c1 = new vector<Point_2>;
+            Curve* c2 = new vector<Point_2>;
             c2->push_back(pt);
             SetPair set_pair = make_pair(c1, c2);
             grid_.emplace(ind, set_pair);
@@ -85,32 +85,23 @@ void Sampling::init()
     all_points.insert(all_points.end(), curve2_.begin(), curve2_.end());
     BBox bbox = CGAL::bounding_box(all_points.begin(), all_points.end());
 
-    VLOG(7) << "insert grid";
+    VLOG(6) << "insert grid";
     insert_grid();
-    VLOG(7) << "print grid";
+    VLOG(6) << "print grid";
     print_grid(grid_);
-    VLOG(7) << "finish grid";
+    VLOG(6) << "finish grid";
 }
 
-void Sampling::sample()
+void Sampling::add_samples_WSPD(QuadTreeTwoClasses* grid_qt1, QuadTreeTwoClasses* grid_qt2)
 {
-    qt_ = new QuadTreeTwoClasses(curve1_, curve2_);
-    qt_->init();
-/*
-    pair<QuadTree*, QuadTree*> p = make_pair(qt_, qt_);
-    QuadTreeTwoClasses* qttc = dynamic_cast<QuadTreeTwoClasses*>(p.first);
-    if (qttc == NULL)
-        VLOG(1) << "GOT ITTTT";
-        */
-
-    WSPD wspd(qt_, 1.0/eps_, lb_);
+    WSPD wspd(grid_qt1, grid_qt2, 1.0/eps_, lb_);
     vector<pair<QuadTree*, QuadTree*>> pairs = wspd.pairs;
 
     // sample from WSPD pairs
     for (auto& p : pairs)
     {
-        VLOG(8) << p.first->to_string();
-        VLOG(8) << p.second->to_string();
+        VLOG(7) << p.first->to_string();
+        VLOG(7) << p.second->to_string();
 
         QuadTreeTwoClasses* qt1 = dynamic_cast<QuadTreeTwoClasses*>(p.first);
         if (qt1 == NULL)
@@ -130,7 +121,6 @@ void Sampling::sample()
         for (auto& idx : qt1->indices1())
         {
             sample_row_idx.push_back(idx);
-            VLOG(2) << idx;
         }
 
         if (indices2.size() == 0)
@@ -146,12 +136,90 @@ void Sampling::sample()
         {
             if (CGAL::squared_distance(prev, qt2->point2(indices2[i])) > qt2->radius())
             {
-                prev = qt2->point2(indices2[i] - 1);
-                sample_col_idx.push_back(indices2[i] - 1);
-                VLOG(3) << indices2[i] - 1;
+                prev = qt2->point2(indices2[i - 1]);
+                sample_col_idx.push_back(indices2[i - 1]);
+            }
+        }
+
+        for (auto& i : sample_row_idx)
+            for (auto& j : sample_col_idx)
+            {
+                diagonal_samples_.emplace(j - i, make_pair(i, j));
+            }
+    }
+}
+
+
+void Sampling::sample()
+{
+    qt_ = new QuadTreeTwoClasses(curve1_, curve2_);
+    qt_->init();
+
+    for (auto& grid_elem : grid_)
+    {
+        QuadTreeTwoClasses* qt = new QuadTreeTwoClasses(*(grid_elem.second.first),
+                                                        *(grid_elem.second.second));
+        quadtrees_.emplace(grid_elem.first, qt);
+    }
+
+//    add_samples_WSPD(qt_, qt_);
+
+    for (auto qt_map_elem : quadtrees_)
+    {
+        VLOG(7) << "Current grid cell: (" << qt_map_elem.first.first <<
+            ", " << qt_map_elem.first.second << ")";
+        GridIndex pos = qt_map_elem.first;
+
+        QuadTreeTwoClasses* curr_qt = qt_map_elem.second;
+        if (curr_qt->indices1().empty())
+        {
+            continue;
+        }
+
+        vector<GridIndex> neighbor_idx;
+        neighbor_idx.push_back(make_pair(pos.first - 1, pos.second - 1));
+        neighbor_idx.push_back(make_pair(pos.first - 1, pos.second));
+        neighbor_idx.push_back(make_pair(pos.first - 1, pos.second + 1));
+        neighbor_idx.push_back(make_pair(pos.first, pos.second - 1));
+        neighbor_idx.push_back(make_pair(pos.first, pos.second));
+        neighbor_idx.push_back(make_pair(pos.first, pos.second + 1));
+        neighbor_idx.push_back(make_pair(pos.first + 1, pos.second - 1));
+        neighbor_idx.push_back(make_pair(pos.first + 1, pos.second));
+        neighbor_idx.push_back(make_pair(pos.first + 1, pos.second + 1));
+
+        for (auto& idx : neighbor_idx)
+        {
+            QuadTreeGrid::const_iterator neighbor_it = quadtrees_.find(idx);
+            if ((neighbor_it != quadtrees_.end()) && (!neighbor_it->second->indices2().empty()))
+            {
+                VLOG(7) << "Add sample for node (" << idx.first << ", " << idx.second << ")";
+                add_samples_WSPD(curr_qt, neighbor_it->second);
             }
         }
     }
+
+}
+
+string Sampling::view_samples()
+{
+    int table[curve1_.size()][curve2_.size()];
+    for (auto& entry : diagonal_samples_)
+    {
+        table[entry.second.first][entry.second.second] = true;
+    }
+
+    stringstream sstm;
+    CGAL::set_pretty_mode(sstm);
+    for (auto& row : table)
+    {
+        for (auto& col : row)
+        {
+            char c = col ? '.' : ' ';
+            sstm << c;
+        }
+        sstm << '\n';
+    }
+    return sstm.str();
 }
 
 Sampling::~Sampling()
