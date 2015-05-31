@@ -7,7 +7,7 @@ using namespace std;
 
 int QuadTree::max_id_ = -1;
 
-vector<int> default_indices(int n)
+vector<int> QuadTree::default_indices(int n)
 {
     vector<int> inds;
     for (int i = 0; i < n; i++)
@@ -35,7 +35,8 @@ QuadTree::QuadTree(const vector<Point_2> &point_set,
 
 QuadTree::QuadTree(const vector<Point_2> &point_set):
     QuadTree(point_set, default_indices(point_set.size()))
-{ }
+{
+}
 
 /*
  * Set properties for empty tree

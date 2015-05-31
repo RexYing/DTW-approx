@@ -87,7 +87,6 @@ void Sampling::init()
 
     VLOG(6) << "insert grid";
     insert_grid();
-    VLOG(6) << "print grid";
     print_grid(grid_);
     VLOG(6) << "finish grid";
 }
@@ -146,6 +145,13 @@ void Sampling::add_samples_WSPD(QuadTreeTwoClasses* grid_qt1, QuadTreeTwoClasses
             {
                 diagonal_samples_.emplace(j - i, make_pair(i, j));
             }
+
+        for (auto& idx : sample_row_idx)
+            cout << idx << " ";
+        cout << endl;
+        for (auto& idx : sample_col_idx)
+            cout << idx << " ";
+        cout << endl;
     }
 }
 
@@ -159,6 +165,7 @@ void Sampling::sample()
     {
         QuadTreeTwoClasses* qt = new QuadTreeTwoClasses(*(grid_elem.second.first),
                                                         *(grid_elem.second.second));
+        qt->init();
         quadtrees_.emplace(grid_elem.first, qt);
     }
 
@@ -166,7 +173,7 @@ void Sampling::sample()
 
     for (auto qt_map_elem : quadtrees_)
     {
-        VLOG(7) << "Current grid cell: (" << qt_map_elem.first.first <<
+        VLOG(6) << "Current grid cell: (" << qt_map_elem.first.first <<
             ", " << qt_map_elem.first.second << ")";
         GridIndex pos = qt_map_elem.first;
 
@@ -192,7 +199,7 @@ void Sampling::sample()
             QuadTreeGrid::const_iterator neighbor_it = quadtrees_.find(idx);
             if ((neighbor_it != quadtrees_.end()) && (!neighbor_it->second->indices2().empty()))
             {
-                VLOG(7) << "Add sample for node (" << idx.first << ", " << idx.second << ")";
+                VLOG(6) << "Add sample for node (" << idx.first << ", " << idx.second << ")";
                 add_samples_WSPD(curr_qt, neighbor_it->second);
             }
         }

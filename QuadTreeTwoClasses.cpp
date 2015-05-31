@@ -9,13 +9,18 @@ QuadTreeTwoClasses::QuadTreeTwoClasses(const vector<Point_2> &point_set1,
                                        const vector<Point_2> &point_set2,
                                        const vector<int> &indices2):
     QuadTree(point_set1, indices1), point_set2_(point_set2), indices2_(indices2)
-{ }
+{
+    set_sizes_[0] = point_set1_.size();
+    set_sizes_[1] = point_set2_.size();
+}
 
 QuadTreeTwoClasses::QuadTreeTwoClasses(const vector<Point_2> &point_set1,
                                        const vector<Point_2> &point_set2):
     QuadTree(point_set1), point_set2_(point_set2)
 {
-    indices2_.assign(indices_.begin(), indices_.end());
+    set_sizes_[0] = point_set1_.size();
+    set_sizes_[1] = point_set2_.size();
+    indices2_ = default_indices(point_set2.size());
 }
 
 void QuadTreeTwoClasses::choose_representatives()
@@ -28,8 +33,6 @@ void QuadTreeTwoClasses::choose_representatives()
 
 void QuadTreeTwoClasses::init()
 {
-    set_sizes_[0] = point_set1_.size();
-    set_sizes_[1] = point_set2_.size();
 
     int tot_size = point_set1_.size() + point_set2_.size();
     vector<Point_2> all_points(point_set1_);

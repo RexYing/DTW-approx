@@ -189,11 +189,7 @@ vector<pair<QuadTree*, QuadTree*>> WSPD::pairing2(QuadTreeTwoClasses* t1, QuadTr
         // pairing the children of t1 with t2
         for (auto& qt : t1->ch_)
         {
-    VLOG(1) << "why2  " << qt;
-    VLOG(1) << qt->to_string();
-    VLOG(1) << "why2  " << qt;
             QuadTreeTwoClasses* qttc = dynamic_cast<QuadTreeTwoClasses*>(qt);
-            VLOG(1) << "HERE   " ;
             vector<pair<QuadTree*, QuadTree*>> p = swapped ?
                     pairing2(t2, qttc) : pairing2(qttc, t2);
 

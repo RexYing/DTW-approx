@@ -3,7 +3,6 @@
 #include <vector>
 #include <CGAL/Simple_cartesian.h>
 #include "easylogging++.h"
-
 using namespace std;
 
 typedef CGAL::Simple_cartesian<double> Kernel;
@@ -71,6 +70,8 @@ class QuadTree
 
     vector<Point_2> point_set1_;
     vector<int> indices_;
+
+    vector<int> default_indices(int n);
 
     void set_empty();
     void calc_bbox(vector<Point_2> &point_set);
