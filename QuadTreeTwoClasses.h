@@ -37,6 +37,11 @@ class QuadTreeTwoClasses: public QuadTree
         return point_set2_[idx];
     }
 
+    Point_2 point1(int idx)
+    {
+        return point_set1_[idx];
+    }
+
     string to_string()
     {
         stringstream sstm;

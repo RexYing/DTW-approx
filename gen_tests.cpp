@@ -3,7 +3,7 @@
 
 using namespace std;
 
-void gen_x(ofstream &outFile, int n, int offset, int step)
+void gen_x(ofstream &outFile, int n, int offset, double step)
 {
     for (int i = 0; i < n; i++)
     {
@@ -24,13 +24,13 @@ int main()
 		ofstream outFile;
 
 		outFile.open("tests/t3.dtw");
-		outFile << 100 << endl;
-    gen_x(outFile, 100, 0, 1);
+		outFile << 1000 << endl;
+    gen_x(outFile, 1000, 0, 50);
     outFile.close();
 
     outFile.open("tests/t4.dtw");
-    outFile << 100 << endl;
-    gen_x(outFile, 100, -5, 1);
+    outFile << 1000 << endl;
+    gen_x(outFile, 1000, -5, 50);
     outFile.close();
 }
 

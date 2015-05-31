@@ -13,7 +13,8 @@ Sampling::Sampling(const Curve &curve1, const Curve &curve2, double lb, double u
     ub_(ub),
     eps_(eps)
 {
-    len_cell_ = round(ceil(log2(2 * ub_)));
+    len_cell_ = 1 << (int)(round(ceil(log2(2 * ub_))));
+    cout << "LEN   " << len_cell_;
     /*qt_ = new QuadTreeTwoClasses(curve1, curve2);
     qt_->init();*/
 }
@@ -23,8 +24,9 @@ Sampling::Sampling(const Curve &curve1, const Curve &curve2, double lb, double u
  */
 void Sampling::insert_grid()
 {
-    for (auto& pt : curve1_)
+    for (int k = 0; k < curve1_.size(); k++)
     {
+        Point_2 pt = curve1_[k];
         long i = pt.x() / len_cell_;
         long j = pt.y() / len_cell_;
         GridIndex ind = make_pair(i, j);
@@ -35,16 +37,25 @@ void Sampling::insert_grid()
             c1->push_back(pt);
             SetPair set_pair = make_pair(c1, c2);
             grid_.emplace(ind, set_pair);
+
+            vector<int>* indices1 = new vector<int>();
+            vector<int>* indices2 = new vector<int>();
+            indices1->push_back(k);
+            grid_indices_.emplace(ind, make_pair(indices1, indices2));
         }
         else
         {
             Curve* pt_set_ptr = it->second.first;
             pt_set_ptr->push_back(pt);
+
+            vector<int>* indices1 = grid_indices_[ind].first;
+            indices1->push_back(k);
         }
     }
 
-    for (auto& pt : curve2_)
+    for (int k = 0; k < curve2_.size(); k++)
     {
+        Point_2 pt = curve2_[k];
         long i = pt.x() / len_cell_;
         long j = pt.y() / len_cell_;
         GridIndex ind = make_pair(i, j);
@@ -56,11 +67,19 @@ void Sampling::insert_grid()
             c2->push_back(pt);
             SetPair set_pair = make_pair(c1, c2);
             grid_.emplace(ind, set_pair);
+
+            vector<int>* indices1 = new vector<int>();
+            vector<int>* indices2 = new vector<int>();
+            indices2->push_back(k);
+            grid_indices_.emplace(ind, make_pair(indices1, indices2));
         }
         else
         {
             Curve* pt_set_ptr = it->second.second;
             pt_set_ptr->push_back(pt);
+
+            vector<int>* indices2 = grid_indices_[ind].second;
+            indices2->push_back(k);
         }
     }
 }
@@ -91,12 +110,14 @@ void Sampling::init()
     VLOG(6) << "finish grid";
 }
 
+bool output = false;
 void Sampling::add_samples_WSPD(QuadTreeTwoClasses* grid_qt1, QuadTreeTwoClasses* grid_qt2)
 {
     WSPD wspd(grid_qt1, grid_qt2, 1.0/eps_, lb_);
     vector<pair<QuadTree*, QuadTree*>> pairs = wspd.pairs;
 
     // sample from WSPD pairs
+    // sample J_i
     for (auto& p : pairs)
     {
         VLOG(7) << p.first->to_string();
@@ -114,10 +135,11 @@ void Sampling::add_samples_WSPD(QuadTreeTwoClasses* grid_qt1, QuadTreeTwoClasses
         }
 
 
+        vector<int> indices1 = qt1->indices1();
         vector<int> indices2 = qt2->indices2();
 
         vector<int> sample_row_idx;
-        for (auto& idx : qt1->indices1())
+        for (auto& idx : indices1)
         {
             sample_row_idx.push_back(idx);
         }
@@ -136,22 +158,158 @@ void Sampling::add_samples_WSPD(QuadTreeTwoClasses* grid_qt1, QuadTreeTwoClasses
             if (CGAL::squared_distance(prev, qt2->point2(indices2[i])) > qt2->radius())
             {
                 prev = qt2->point2(indices2[i - 1]);
-                sample_col_idx.push_back(indices2[i - 1]);
+                int idx = indices2[i - 1];
+                sample_col_idx.push_back(idx);
+                // expand
+                if (idx < curve2_.size() - 1)
+                    sample_col_idx.push_back(idx + 1);
+                if (idx > 0)
+                    sample_col_idx.push_back(idx - 1);
             }
         }
+
+        // reverse direction
+
+        int end_idx = indices2.size() - 1;
+        sample_col_idx.push_back(indices2[end_idx]);
+        prev = qt2->point2(end_idx);
+        for (int i = end_idx - 1; i >= 0; i--)
+        {
+            if (CGAL::squared_distance(prev, qt2->point2(indices2[i])) > qt2->radius())
+            {
+                prev = qt2->point2(indices2[i + 1]);
+                int idx = indices2[i + 1];
+                sample_col_idx.push_back(idx);
+                // expand
+                if (idx < curve2_.size() - 1)
+                    sample_col_idx.push_back(idx + 1);
+                if (idx > 0)
+                    sample_col_idx.push_back(idx - 1);
+            }
+        }
+
+
 
         for (auto& i : sample_row_idx)
             for (auto& j : sample_col_idx)
             {
-                diagonal_samples_.emplace(j - i, make_pair(i, j));
+                unordered_map<long, vector<pair<long, long>>* >::const_iterator it =
+                    diagonal_samples_.find(j - i);
+                if (it == diagonal_samples_.end())
+                {
+                    vector<pair<long, long>>* pairs = new vector<pair<long, long>>();
+                    pairs->push_back(make_pair(i, j));
+                    diagonal_samples_.emplace(j - i, pairs);
+                }
+                else
+                {
+                    it->second->push_back(make_pair(i, j));
+                }
             }
 
+        /*
+        if (output) {
         for (auto& idx : sample_row_idx)
             cout << idx << " ";
         cout << endl;
         for (auto& idx : sample_col_idx)
             cout << idx << " ";
         cout << endl;
+        }*/
+    }
+
+    // sample I_j
+    for (auto& p : pairs)
+    {
+        QuadTreeTwoClasses* qt1 = dynamic_cast<QuadTreeTwoClasses*>(p.first);
+        if (qt1 == NULL)
+        {
+            LOG(WARNING) << "qt1 null pointer";
+        }
+        QuadTreeTwoClasses* qt2 = dynamic_cast<QuadTreeTwoClasses*>(p.second);
+        if (qt2 == NULL)
+        {
+            LOG(WARNING) << "qt2 null pointer";
+        }
+
+        vector<int> indices1 = qt1->indices1();
+        vector<int> indices2 = qt2->indices2();
+
+        vector<int> sample_col_idx;
+        for (auto& idx : indices2)
+        {
+            sample_col_idx.push_back(idx);
+        }
+
+        if (indices1.size() == 0)
+        {
+            // the first quad tree node should contain at least a point from the first curve
+            LOG(FATAL) << "indices1 is empty";
+        }
+
+        vector<int> sample_row_idx;
+        sample_row_idx.push_back(indices1[0]);
+        Point_2 prev = qt1->point1(indices1[0]);
+        for (int i = 1; i < indices1.size(); i++)
+        {
+            if (CGAL::squared_distance(prev, qt1->point1(indices1[i])) > qt1->radius())
+            {
+                prev = qt1->point1(indices1[i - 1]);
+                int idx = indices1[i - 1];
+                sample_row_idx.push_back(idx);
+                // expand
+                if (idx < curve1_.size() - 1)
+                    sample_row_idx.push_back(idx + 1);
+                if (idx > 0)
+                    sample_row_idx.push_back(idx - 1);
+            }
+        }
+
+        // reverse direction
+        int end_idx = indices1.size() - 1;
+        sample_row_idx.push_back(indices1[end_idx]);
+        prev = qt1->point1(end_idx);
+        for (int i = end_idx - 1; i >= 0; i--)
+        {
+            if (CGAL::squared_distance(prev, qt1->point1(indices1[i])) > qt1->radius())
+            {
+                prev = qt1->point1(indices1[i + 1]);
+                int idx = indices1[i + 1];
+                sample_row_idx.push_back(idx);
+                // expand
+                if (idx < curve1_.size() - 1)
+                    sample_row_idx.push_back(idx + 1);
+                if (idx > 0)
+                    sample_row_idx.push_back(idx - 1);
+            }
+        }
+
+
+        for (auto& i : sample_row_idx)
+            for (auto& j : sample_col_idx)
+            {
+                unordered_map<long, vector<pair<long, long>>* >::const_iterator it =
+                    diagonal_samples_.find(j - i);
+                if (it == diagonal_samples_.end())
+                {
+                    vector<pair<long, long>>* pairs = new vector<pair<long, long>>();
+                    pairs->push_back(make_pair(i, j));
+                    diagonal_samples_.emplace(j - i, pairs);
+                }
+                else
+                {
+                    it->second->push_back(make_pair(i, j));
+                }
+            }
+
+        if (output) {
+        for (auto& idx : sample_row_idx)
+            cout << idx << " ";
+        cout << endl;
+        for (auto& idx : sample_col_idx)
+            cout << idx << " ";
+        cout << endl;
+        }
     }
 }
 
@@ -163,13 +321,17 @@ void Sampling::sample()
 
     for (auto& grid_elem : grid_)
     {
+        GridIndex idx = grid_elem.first;
+        pair<vector<int>*, vector<int>*> indices_pair = grid_indices_[idx];
+
         QuadTreeTwoClasses* qt = new QuadTreeTwoClasses(*(grid_elem.second.first),
-                                                        *(grid_elem.second.second));
+                                                        *(indices_pair.first),
+                                                        *(grid_elem.second.second),
+                                                        *(indices_pair.second));
         qt->init();
         quadtrees_.emplace(grid_elem.first, qt);
     }
 
-//    add_samples_WSPD(qt_, qt_);
 
     for (auto qt_map_elem : quadtrees_)
     {
@@ -199,7 +361,9 @@ void Sampling::sample()
             QuadTreeGrid::const_iterator neighbor_it = quadtrees_.find(idx);
             if ((neighbor_it != quadtrees_.end()) && (!neighbor_it->second->indices2().empty()))
             {
+                //if (idx.first == 8){ output = true;
                 VLOG(6) << "Add sample for node (" << idx.first << ", " << idx.second << ")";
+                //} else output = false;
                 add_samples_WSPD(curr_qt, neighbor_it->second);
             }
         }
@@ -209,24 +373,40 @@ void Sampling::sample()
 
 string Sampling::view_samples()
 {
-    int table[curve1_.size()][curve2_.size()];
-    for (auto& entry : diagonal_samples_)
-    {
-        table[entry.second.first][entry.second.second] = true;
-    }
-
     stringstream sstm;
     CGAL::set_pretty_mode(sstm);
-    for (auto& row : table)
+
+    vector<vector<bool>> table(curve1_.size(), vector<bool>(curve2_.size(), false));
+
+    for (auto& entry : diagonal_samples_)
     {
-        for (auto& col : row)
+        for (auto& pair : *(entry.second))
         {
-            char c = col ? '.' : ' ';
-            sstm << c;
+            table[pair.first][pair.second] = true;
+        }
+    }
+
+    long count = 0;
+    for (int i = 0; i < curve1_.size(); i++)
+    {
+        for (int j = 0; j < curve2_.size(); j++)
+        {
+            if (table[i][j])
+            {
+                sstm << '.';
+                count++;
+            }
+            else
+            {
+                sstm << ' ';
+            }
         }
         sstm << '\n';
     }
-    return sstm.str();
+
+    stringstream sstm_count;
+    sstm_count << "Total sample points: " << count << endl;
+    return sstm_count.str() + sstm.str();
 }
 
 Sampling::~Sampling()

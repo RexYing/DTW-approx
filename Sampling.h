@@ -46,10 +46,11 @@ class Sampling
     QuadTreeTwoClasses* qt_;
 
     unordered_map<GridIndex, SetPair, pairhash> grid_;
+    unordered_map<GridIndex, pair<vector<int>*, vector<int>*>, pairhash> grid_indices_;
     unordered_map<GridIndex, QuadTreeTwoClasses*, pairhash> quadtrees_;
 
     // map from diagonal number to sample points
-    unordered_map<long, pair<long, long>> diagonal_samples_;
+    unordered_map<long, vector<pair<long, long>>* > diagonal_samples_;
 
     void insert_grid();
     void print_grid(Grid grid);

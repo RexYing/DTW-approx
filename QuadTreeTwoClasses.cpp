@@ -33,10 +33,11 @@ void QuadTreeTwoClasses::choose_representatives()
 
 void QuadTreeTwoClasses::init()
 {
-
     int tot_size = point_set1_.size() + point_set2_.size();
     vector<Point_2> all_points(point_set1_);
-    all_points.reserve(tot_size); all_points.insert(all_points.end(), point_set2_.begin(), point_set2_.end()); switch (tot_size)
+    all_points.reserve(tot_size);
+    all_points.insert(all_points.end(), point_set2_.begin(), point_set2_.end());
+    switch (tot_size)
     {
         case 0:
             set_empty();

@@ -36,7 +36,7 @@ Curve readCurve(ifstream &inFile, int dim)
 
     for (int i = 0; i < m; i++)
     {
-        int x, y;
+        double x, y;
         if (dim == 2)
         {
             inFile >> x >> y;
