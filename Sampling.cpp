@@ -14,7 +14,7 @@ Sampling::Sampling(const Curve &curve1, const Curve &curve2, double lb, double u
     eps_(eps)
 {
     len_cell_ = 1 << (int)(round(ceil(log2(2 * ub_))));
-    cout << "LEN   " << len_cell_;
+    VLOG(6) << "Grid side length:   " << len_cell_;
     /*qt_ = new QuadTreeTwoClasses(curve1, curve2);
     qt_->init();*/
 }
@@ -406,6 +406,7 @@ string Sampling::view_samples()
 
     stringstream sstm_count;
     sstm_count << "Total sample points: " << count << endl;
+    VLOG(5) << "Total sample points: " << count << endl;
     return sstm_count.str() + sstm.str();
 }
 

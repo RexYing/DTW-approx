@@ -1,3 +1,6 @@
+#include <boost/program_options.hpp>
+namespace po = boost::program_options;
+
 #include<iostream>
 #include<fstream>
 
@@ -19,18 +22,45 @@ void gen_x_reverse(ofstream &outFile, int n, int offset, int step)
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-		ofstream outFile;
+  /*
+    po::options_description desc("Allowed options");
+    desc.add_options()
+        ("help", "produce help message")
+        ("compression", po::value<int>(), "set compression level");
 
-		outFile.open("tests/t3.dtw");
-		outFile << 1000 << endl;
-    gen_x(outFile, 1000, 0, 50);
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+
+    if (vm.count("help")) {
+      cout << desc << "\n";
+      return 0;
+    }
+
+    if (vm.count("compression")) {
+      cout << "Compression level was set to " 
+          << vm["compression"].as<double>() << ".\n";
+    } else {
+      cout << "Compression level was not set.\n";
+    }
+    */
+
+    ofstream outFile;
+
+    // parallel equidistance
+    int n = 20000;
+    outFile.open("tests/t3.dtw");
+    outFile << n << endl;
+    gen_x(outFile, n, 0, 50);
     outFile.close();
 
     outFile.open("tests/t4.dtw");
-    outFile << 1000 << endl;
-    gen_x(outFile, 1000, -5, 50);
+    outFile << n << endl;
+    gen_x(outFile, n, -5, 50);
     outFile.close();
+
+    return 0;
 }
 

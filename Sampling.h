@@ -26,20 +26,20 @@ typedef unordered_map<GridIndex, QuadTreeTwoClasses*, pairhash> QuadTreeGrid;
  */
 class Sampling
 {
-	public:
-		Sampling(const Curve &curve1, const Curve &curve2, double lb, double ub, double eps);
+  public:
+    Sampling(const Curve &curve1, const Curve &curve2, double lb, double ub, double eps);
     void init();
     void sample();
     string view_samples();
 
     ~Sampling();
 
-	private:
-		Curve curve1_;
-		Curve curve2_;
-		double lb_;
-		double ub_;
-		double eps_;
+  private:
+    Curve curve1_;
+    Curve curve2_;
+    double lb_;
+    double ub_;
+    double eps_;
     // the side length of individual grid cells
     long len_cell_;
 

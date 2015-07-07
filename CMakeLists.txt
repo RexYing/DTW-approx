@@ -14,6 +14,7 @@ if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" VERSION_GREATER 2.6)
 endif()
 
 set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
+set(CMAKE_CXX_FLAGS "-lboost_program_options")
 
 if ( COMMAND cmake_policy )
 
@@ -67,6 +68,8 @@ endif()
 # ############################
 
 include_directories ("${PROJECT_SOURCE_DIR}")
+INCLUDE_DIRECTORIES("${Boost_INCLUDE_DIR}")
+link_directories("${Boost_LIBRARY_DIR}")
 
 add_library(
   WSPD
@@ -83,8 +86,8 @@ add_executable(
   main.cpp
 )
 add_executable(
-	gen_tests
-	gen_tests.cpp
+  gen_tests
+  gen_tests.cpp
 )
 # target_compile_features(executable PRIVATE cxx_range_for)
 
@@ -95,6 +98,9 @@ target_link_libraries(
 	executable   ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES}
 	WSPD
 	Frechet
-	)
+)
 
+target_link_libraries(
+	gen_tests   ${Boost_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES}
+)
 
