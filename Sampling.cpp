@@ -114,7 +114,7 @@ bool output = false;
 void Sampling::add_samples_WSPD(QuadTreeTwoClasses* grid_qt1, QuadTreeTwoClasses* grid_qt2)
 {
     WSPD wspd(grid_qt1, grid_qt2, 1.0/eps_, lb_);
-    vector<pair<QuadTree*, QuadTree*>> pairs = wspd.pairs;
+    NodePairs pairs = wspd.pairs;
 
     // sample from WSPD pairs
     // sample J_i

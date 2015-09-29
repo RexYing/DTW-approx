@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
     double s = 1; // need n-approx only
 
     WSPD wspd(&qt, s);
-    vector<pair<QuadTree*, QuadTree*>> pairs = wspd.pairs;
+    NodePairs pairs = wspd.pairs;
     vector<double> dists = wspd.distances();
 
     VLOG(6) << "WSPD dists:";
@@ -93,13 +93,13 @@ int main(int argc, char* argv[])
     double dtw_ub = approx_frechet * (s + 1) * max(m, n);
     LOG(INFO) << "Dynamic Time Warping range: [" << dtw_lb << ", " << dtw_ub << "]";
 
-    Sampling sampling(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
-    sampling.init();
-    sampling.sample();
+    //Sampling sampling(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
+    //sampling.init();
+    //sampling.sample();
 
-    ofstream outFile;
-    outFile.open("samples.out");
-    outFile << sampling.view_samples();
+    //ofstream outFile;
+    //outFile.open("samples.out");
+    //outFile << sampling.view_samples();
 
     return 0;
 }

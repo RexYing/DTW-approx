@@ -50,6 +50,8 @@ WSPD::WSPD(QuadTree* tree, double s) :
     VLOG(7) << "Constructing WSPD";
     pairs = pairing(tree, tree);
     collect_distances();
+		VLOG(7) << to_string();
+		VLOG(7) << "Total pairs found: " << pairs.size();
 }
 
 // WSPD with lower bound using QuadTreeTwoClasses
@@ -66,18 +68,9 @@ WSPD::WSPD(QuadTreeTwoClasses* tree1, QuadTreeTwoClasses* tree2, double s, doubl
     collect_distances();
 }
 
-/*
- * Append second vector to the first vector
- */
-void append_vector(NodePairs &p1, NodePairs &p2)
-{
-    p1.reserve(p1.size() + p2.size());
-    p1.insert(p1.end(), p2.begin(), p2.end());
-}
-
 /* No longer needed.
  * use grid at the level of ub to avoid building the entire tree.
- */
+ *
 NodePairs WSPD::traverse(QuadTreeTwoClasses* tree, double ub)
 {
     NodePairs node_pairs;
@@ -97,10 +90,11 @@ NodePairs WSPD::traverse(QuadTreeTwoClasses* tree, double ub)
         return pairing(tree, tree);
     }
 }
+*/
 
-vector<pair<QuadTree*, QuadTree*>> WSPD::pairing(QuadTree* t1, QuadTree* t2)
+NodePairs WSPD::pairing(QuadTree* t1, QuadTree* t2)
 {
-    vector<pair<QuadTree*, QuadTree*>> pairs;
+    NodePairs pairs;
 
     Vector_2 v = t1->center() - t2->center();
     double dist = dist_rectangles(t1->bbox, t2->bbox);
@@ -124,8 +118,13 @@ vector<pair<QuadTree*, QuadTree*>> WSPD::pairing(QuadTree* t1, QuadTree* t2)
     // Well-separated condition: diameter * s <= dist between bbox
     if (2 * s * t1->radius() <= dist)
     {
-        pair<QuadTree*, QuadTree*> pair = swapped ? make_pair(t2, t1) : make_pair(t1, t2);
-        pairs.push_back(pair);
+				// for the pair of two trivial quadtrees with 1 point that is the same
+				// (the only case when radius = dist = 0), we do not insert the pair
+				if (dist != 0)
+				{
+					pair<QuadTree*, QuadTree*> pair = swapped ? make_pair(t2, t1) : make_pair(t1, t2);
+					pairs.insert(pair);
+				}
     }
     else
     {
@@ -137,22 +136,21 @@ vector<pair<QuadTree*, QuadTree*>> WSPD::pairing(QuadTree* t1, QuadTree* t2)
                 VLOG(9) << "EMPTY";
                 continue;
             }
-            vector<pair<QuadTree*, QuadTree*>> p = swapped ?
-                    pairing(t2, qt) : pairing(qt, t2);
+            NodePairs p = swapped ? pairing(t2, qt) : pairing(qt, t2);
 
-            pairs.reserve(pairs.size() + p.size());
-            pairs.insert(pairs.end(), p.begin(), p.end());
+            pairs.insert(p.begin(), p.end());
             p.clear();
         }
     }
     return pairs;
 }
 
-vector<pair<QuadTree*, QuadTree*>> WSPD::pairing2(QuadTreeTwoClasses* t1, QuadTreeTwoClasses* t2)
+NodePairs WSPD::pairing2(QuadTreeTwoClasses* t1, QuadTreeTwoClasses* t2)
 {
-    vector<pair<QuadTree*, QuadTree*>> pairs;
+    NodePairs pairs;
     VLOG(7) << "sizes: "<< t1->get_size(0) << " " << t2->get_size(1);
 
+		// check if t1 is active for curve 1, and if t2 is active for curve 2
     if ((t1->get_size(0) == 0) || (t2->get_size(1) == 0))
     {
         return pairs;
@@ -182,7 +180,7 @@ vector<pair<QuadTree*, QuadTree*>> WSPD::pairing2(QuadTreeTwoClasses* t1, QuadTr
     if (2 * s * t1->radius() <= dist)
     {
         pair<QuadTree*, QuadTree*> pair = swapped ? make_pair(t2, t1) : make_pair(t1, t2);
-        pairs.push_back(pair);
+        pairs.insert(pair);
     }
     else
     {
@@ -190,11 +188,9 @@ vector<pair<QuadTree*, QuadTree*>> WSPD::pairing2(QuadTreeTwoClasses* t1, QuadTr
         for (auto& qt : t1->ch_)
         {
             QuadTreeTwoClasses* qttc = dynamic_cast<QuadTreeTwoClasses*>(qt);
-            vector<pair<QuadTree*, QuadTree*>> p = swapped ?
-                    pairing2(t2, qttc) : pairing2(qttc, t2);
+            NodePairs p = swapped ? pairing2(t2, qttc) : pairing2(qttc, t2);
 
-            pairs.reserve(pairs.size() + p.size());
-            pairs.insert(pairs.end(), p.begin(), p.end());
+            pairs.insert(p.begin(), p.end());
             p.clear();
         }
     }

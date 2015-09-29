@@ -195,3 +195,7 @@ vector<int> QuadTree::indices()
     return indices_;
 }
 
+int QuadTree::size()
+{
+	return point_set1_.size();
+}

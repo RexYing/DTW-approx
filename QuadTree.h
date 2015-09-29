@@ -57,7 +57,7 @@ class QuadTree
     {
         stringstream sstm;
         CGAL::set_pretty_mode(sstm);
-        sstm << "QuadTree: {center=" << center_ << ", radius=" << radius_ << ", rep_pt=" << p << "}";
+        sstm << "QuadTree: {c=" << center_ << ", r=" << radius_ << ", size=" << size() << ", rep_pt=" << p << "}";
         return sstm.str();
     }
 
@@ -65,6 +65,7 @@ class QuadTree
     double radius();
     Point_2 center();
     vector<int> indices();
+		virtual int size();
 
   protected:
 
