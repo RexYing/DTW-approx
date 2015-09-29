@@ -118,6 +118,8 @@ NodePairs WSPD::pairing(QuadTree* t1, QuadTree* t2)
     // Well-separated condition: diameter * s <= dist between bbox
     if (2 * s * t1->radius() <= dist)
     {
+				LOG_IF(dist == 0 && t1->node_type != QuadTree::LEAF, WARNING) 
+						<< "none leaf node pairs satisfy the well-separated condition but has distance 0";
 				// for the pair of two trivial quadtrees with 1 point that is the same
 				// (the only case when radius = dist = 0), we do not insert the pair
 				if (dist != 0)
@@ -128,6 +130,8 @@ NodePairs WSPD::pairing(QuadTree* t1, QuadTree* t2)
     }
     else
     {
+				// find the children of this quadtree node
+				t1->subdivide();
         // pairing the children of t1 with t2
         for (auto& qt : t1->ch_)
         {

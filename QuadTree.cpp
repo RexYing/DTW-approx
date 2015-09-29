@@ -18,7 +18,8 @@ vector<int> QuadTree::default_indices(int n)
 }
 
 QuadTree::QuadTree(const vector<Point_2> &point_set,
-                   const vector<int> & indices)
+                   const vector<int> & indices):
+		has_subdivided_(false)
 {
     max_id_++;
     id_ = max_id_;
@@ -28,7 +29,7 @@ QuadTree::QuadTree(const vector<Point_2> &point_set,
     neg_x_dir_ = Direction_2(-1, 0);
     neg_y_dir_ = Direction_2(0, -1);
 
-   point_set1_ = point_set;
+    point_set1_ = point_set;
 
     indices_ = indices;
 }
@@ -50,7 +51,7 @@ void QuadTree::set_empty()
 
 void QuadTree::init()
 {
-    VLOG(7) << ("creating quad tree...");
+    VLOG(7) << ("creating quad tree... (does not subdivide)");
     switch (point_set1_.size())
     {
         case 0:
@@ -65,7 +66,7 @@ void QuadTree::init()
             node_type = NODE;
             calc_bbox(point_set1_);
             p = point_set1_[0];
-            subdivide();
+            //subdivide();
     }
 }
 
@@ -135,6 +136,10 @@ vector<vector<Point_2>> QuadTree::partition(vector<Point_2> point_set,
  * Currently point_set1_ will not be used after calling this function
  */
 void QuadTree::subdivide() {
+		if (has_subdivided_) {
+			return;
+		}
+	
     vector<vector<int>> ch_indices;
     vector<vector<Point_2>> ch_point_sets = partition(point_set1_, indices_, ch_indices);
 
@@ -160,6 +165,8 @@ void QuadTree::subdivide() {
         ch_[i] = new QuadTree(ch_point_sets[i], ch_indices[i]);
         ch_[i]->init();
     }
+		
+		has_subdivided_ = true;
 }
 
 int QuadTree::id()

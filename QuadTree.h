@@ -57,7 +57,8 @@ class QuadTree
     {
         stringstream sstm;
         CGAL::set_pretty_mode(sstm);
-        sstm << "QuadTree: {c=" << center_ << ", r=" << radius_ << ", size=" << size() << ", rep_pt=" << p << "}";
+        sstm << "QuadTree: {c=" << center_ << ", r=" << radius_ << ", size=" << size() 
+						<< ", rep_pt=" << p << "}";
         return sstm.str();
     }
 
@@ -66,6 +67,8 @@ class QuadTree
     Point_2 center();
     vector<int> indices();
 		virtual int size();
+		
+		virtual void subdivide();
 
   protected:
 
@@ -79,9 +82,7 @@ class QuadTree
     vector<vector<Point_2>> partition(vector<Point_2> point_set,
                                       vector<int> indices,
                                       vector<vector<int>> &ch_indices);
-    virtual void subdivide();
-
-
+																			
   private:
 
     // each node has a unique id property.
@@ -90,6 +91,9 @@ class QuadTree
     int id_;
     double radius_;
     Point_2 center_;
+		
+		// flag indicating if the cell has been subdivided
+		bool has_subdivided_;
 
     Direction_2 pos_x_dir_;
     Direction_2 pos_y_dir_;

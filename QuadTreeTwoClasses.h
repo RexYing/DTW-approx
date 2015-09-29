@@ -60,9 +60,11 @@ class QuadTreeTwoClasses: public QuadTree
 
         return sstm.str();
     }
+		
+		void subdivide();
 
   protected:
-    void subdivide();
+
 
   private:
     vector<Point_2> point_set2_;
