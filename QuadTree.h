@@ -70,6 +70,7 @@ class QuadTree
     Point_2 center();
     vector<int> indices();
 		virtual int size();
+		bool is_empty();
 		
 		virtual void subdivide();
 

@@ -48,10 +48,14 @@ double dist_rectangles(BBox b1, BBox b2)
 WSPD::WSPD(double s) : s(s) {}
 
 WSPD::WSPD(QuadTree* tree, double s) :
+    WSPD(tree, tree, s)
+{ }
+
+WSPD::WSPD(QuadTree* tree1, QuadTree* tree2, double s) :
     s(s), lb_(-1) // default (no lower bound)
 {
     VLOG(7) << "Constructing WSPD";
-    pairs = pairing(tree, tree);
+    pairs = pairing(tree1, tree2);
     collect_distances();
 		VLOG(7) << to_string();
 		VLOG(5) << "Total pairs found: " << pairs.size();

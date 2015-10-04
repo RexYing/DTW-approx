@@ -34,6 +34,15 @@ public:
 	
 	void print_grid();
 	
+	/*
+	 * Gets neighboring nodes for a given grid_idx and curve (1 or 2).
+	 * Returns the neighboring nodes that contain points from the other curve.
+	 */
+	vector<QuadTree*> neighbors(GridIndex grid_idx, short curve);
+	
+	GridMap::const_iterator begin();
+	GridMap::const_iterator end();
+	
 private:
 	Curve curve1_;
 	Curve curve2_;
@@ -43,4 +52,7 @@ private:
 	long len_cell_;
 	
 	GridMap grid_;
+	
+	// inserts points into grid at initialization
+	void insert_grid(Vector_2 offset_vector);
 };

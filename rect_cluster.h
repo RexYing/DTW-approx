@@ -10,6 +10,12 @@ class RectCluster
 {
 public:
 	RectCluster(const Curve &curve1, const Curve &curve2, double lb, double ub, double eps);
+	
+	/*
+	 * Partition DP integer coordinate point set into family of disjoint rectangles.
+	 * Each rectangle and its boundary points are stored.
+	 */
+	void partition();
 
 private:
 	Curve curve1_;
@@ -20,5 +26,5 @@ private:
 	// the side length of individual grid cells
 	long len_cell_;
 
-	Grid* grid;
+	Grid* grid_;
 };

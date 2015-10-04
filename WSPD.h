@@ -34,6 +34,7 @@ class WSPD
 	public:
 		WSPD(double s);
 		WSPD(QuadTree* tree, double s);
+		WSPD(QuadTree* tree1, QuadTree* tree2, double s);
     WSPD(QuadTreeTwoClasses* tree, double s, double lb);
     WSPD(QuadTreeTwoClasses* tree1, QuadTreeTwoClasses* tree2, double s, double lb);
 

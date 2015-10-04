@@ -104,6 +104,7 @@ int main(int argc, char* argv[])
     //outFile << sampling.view_samples();
 		
 		RectCluster rect(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
+		rect.partition();
 
     return 0;
 }

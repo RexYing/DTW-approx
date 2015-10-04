@@ -16,7 +16,7 @@ void Grid::print_grid()
 {
 	for (auto& x: grid_)
 	{
-		VLOG(5) << "(" << x.first.first << ", " << x.first.second << ") -> " <<
+		VLOG(6) << "(" << x.first.first << ", " << x.first.second << ") -> " <<
 				x.second.first->size() << " points curve1 " <<
 				x.second.second->size() << " points curve2 " << std::endl;
 	}
@@ -25,9 +25,8 @@ void Grid::print_grid()
 /*
  * Insert points on one curve into grid
  */
-void Grid::init(Vector_2 offset_vec)
+void Grid::insert_grid(Vector_2 offset_vec)
 {
-	VLOG(6) << "insert grid";
 	for (int k = 0; k < curve1_.size(); k++)
 	{
 		Point_2 pt = curve1_[k] + offset_vec;
@@ -78,12 +77,61 @@ void Grid::init(Vector_2 offset_vec)
 		}
 		else
 		{
-			QuadTree* treeNode = it->second.first;
+			QuadTree* treeNode = it->second.second;
 			treeNode->insert(pt, k);
 		}
+	}
+}
+
+void Grid::init(Vector_2 offset_vec)
+{
+	VLOG(6) << "Building grid";
+	insert_grid(offset_vec);
+	// initialize quadtrees
+	for (auto it = begin(); it != end(); it++)
+	{
+		it->second.first->init();
+		it->second.second->init();
 	}
 	print_grid();
 	VLOG(6) << "finish grid";
 }
 
+vector<QuadTree*> Grid::neighbors(GridIndex grid_idx, short curve)
+{
+	vector<QuadTree*> nbrs;
+	long x = grid_idx.first;
+	long y = grid_idx.second;
+	if (curve != 1 && curve != 2)
+	{
+		LOG(ERROR) << "Grid::neighbors: unrecognized curve number";
+		return nbrs;
+	}
+	for (int i = -1; i <= 1; i++)
+	{
+		for (int j = -1; j <=1; j++)
+		{
+			GridMap::const_iterator it = grid_.find(make_pair(x + i, y + j));
+			if (it != grid_.end())
+			{
+				// The number for paired_curve is 2 if curve is 1, and vice versa.
+				QuadTree* nbr_qt = curve == 1 ? it->second.second : it->second.first;
+				if (!nbr_qt->is_empty())
+				{
+					nbrs.push_back(nbr_qt);
+				}
+			}
+		}
+	}
+	return nbrs;
+}
 
+GridMap::const_iterator Grid::begin()
+{
+	return grid_.begin();
+}
+
+GridMap::const_iterator Grid::end()
+{
+	return grid_.end();
+}

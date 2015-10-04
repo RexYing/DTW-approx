@@ -59,7 +59,7 @@ void QuadTree::set_empty()
 
 void QuadTree::init()
 {
-    VLOG(7) << ("creating quad tree... (does not subdivide)");
+    VLOG(8) << ("initializing quad-tree... (does not subdivide)");
     switch (point_set1_.size())
     {
         case 0:
@@ -225,4 +225,9 @@ vector<int> QuadTree::indices()
 int QuadTree::size()
 {
 	return point_set1_.size();
+}
+
+bool QuadTree::is_empty()
+{
+	return node_type == EMPTY;
 }

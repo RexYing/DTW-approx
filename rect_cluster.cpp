@@ -16,8 +16,6 @@ RectCluster::RectCluster(
 {
   len_cell_ = 1 << (int)(round(ceil(log2(2 * ub_))));
   VLOG(6) << "Grid side length:   " << len_cell_;
-	// Build grid
-	grid = new Grid(curve1, curve2, lb, ub, len_cell_);
 	
 	// random shift
 	std::default_random_engine generator;
@@ -25,6 +23,29 @@ RectCluster::RectCluster(
 	double rand_shift_x = distribution(generator);
 	double rand_shift_y = distribution(generator);
 	Vector_2 vec(rand_shift_x, rand_shift_y);
-	VLOG(2) << "Random shift: " << vec;
+	LOG(INFO) << "Random shift: " << vec;
 	
+	// Build grid
+	grid_ = new Grid(curve1, curve2, lb, ub, len_cell_);
+	grid_->init(vec);
+}
+
+void RectCluster::partition()
+{
+	for (auto it = grid_->begin(); it != grid_->end(); it++)
+	{
+		// check if the node contains points from curve 1
+		if (it->second.first->is_empty())
+		{
+			continue;
+		}
+		// find the neighboring nodes that contain points from curve 2
+		vector<QuadTree*> nbrs = grid_->neighbors(it->first, 1);
+		//VLOG(7) << it->second.first->to_string() << " ---------- ";
+		for (auto& qt : nbrs)
+		{
+			//VLOG(7) << qt->to_string();
+			//WSPD wspd(&qt, 1 / eps);
+		}
+	}
 }
