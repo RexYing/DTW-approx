@@ -3,21 +3,17 @@
 FrechetDecider::FrechetDecider(const Curve &curve1, const Curve &curve2):
 		curve1_(curve1),
 		curve2_(curve2)
-{
-	//curve1_ = new Curve(curve1);
-	//curve2_ = new Curve(curve2);
-}
+{ }
 
-bool FrechetDecider::dfs(double sq_dist, Curve::iterator it1, Curve::iterator it2)
+bool FrechetDecider::dfs(double sq_dist, Curve::const_iterator it1, Curve::const_iterator it2)
 {
+	// base case
+	if (it1 == curve1_.end() && it2 == curve2_.end())
+	{
+			return true;
+	}
 	if (CGAL::squared_distance(*it1, *it2) <= sq_dist)
 	{
-			// base case
-			if (it1 == curve1_.end() && it2 == curve2_.end())
-			{
-					return true;
-			}
-
 			// go diagonally first
 			if (it1 != curve1_.end() && it2 != curve2_.end())
 			{

@@ -31,10 +31,10 @@ class FrechetDecider
 		pair<int, int> size();
 
   private:
-    vector<Point_2> curve1_;
-    vector<Point_2> curve2_;
+    const vector<Point_2> curve1_;
+    const vector<Point_2> curve2_;
 
-    bool dfs(double sq_dist, Curve::iterator it1, Curve::iterator it2);
+    bool dfs(double sq_dist, Curve::const_iterator it1, Curve::const_iterator it2);
 
 };
 
