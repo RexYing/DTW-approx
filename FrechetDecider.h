@@ -26,11 +26,13 @@ class FrechetDecider
      * Params:
      * dists: Vector of distance candidates, sorted in ascending order.
      */
-    double bin_search_frechet(vector<double> &dists);
+    double bin_search_frechet(const vector<double> &dists);
+		
+		pair<int, int> size();
 
   private:
-    vector<Point_2> curve1;
-    vector<Point_2> curve2;
+    vector<Point_2> curve1_;
+    vector<Point_2> curve2_;
 
     bool dfs(double sq_dist, Curve::iterator it1, Curve::iterator it2);
 

@@ -33,8 +33,11 @@ class QuadTree
 
 		QuadTree(const vector<Point_2> &point_set);
 		QuadTree(const vector<Point_2> &point_set, const vector<int> &indices);
+		QuadTree(const vector<Point_2> &point_set, const vector<int> &indices, short curve);
 
     virtual void init();
+		
+		void insert(Point_2 pt, int index);
 
     double quadtree_dist(QuadTree that);
 
@@ -82,7 +85,7 @@ class QuadTree
     vector<vector<Point_2>> partition(vector<Point_2> point_set,
                                       vector<int> indices,
                                       vector<vector<int>> &ch_indices);
-																			
+
   private:
 
     // each node has a unique id property.
@@ -91,9 +94,13 @@ class QuadTree
     int id_;
     double radius_;
     Point_2 center_;
+		// optional: 0 for unknown; 1 for first curve; 2 for second curve
+		short curve_;
 		
 		// flag indicating if the cell has been subdivided
 		bool has_subdivided_;
+		// flag indicating if the cell has be initialized
+		bool has_initialized_;
 
     Direction_2 pos_x_dir_;
     Direction_2 pos_y_dir_;

@@ -44,6 +44,9 @@ double dist_rectangles(BBox b1, BBox b2)
     return CGAL::sqrt(x_coord_dist * x_coord_dist + y_coord_dist * y_coord_dist);
 }
 
+// for subclasses
+WSPD::WSPD(double s) : s(s) {}
+
 WSPD::WSPD(QuadTree* tree, double s) :
     s(s), lb_(-1) // default (no lower bound)
 {
@@ -51,7 +54,7 @@ WSPD::WSPD(QuadTree* tree, double s) :
     pairs = pairing(tree, tree);
     collect_distances();
 		VLOG(7) << to_string();
-		VLOG(7) << "Total pairs found: " << pairs.size();
+		VLOG(5) << "Total pairs found: " << pairs.size();
 }
 
 // WSPD with lower bound using QuadTreeTwoClasses

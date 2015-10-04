@@ -18,9 +18,14 @@ vector<int> QuadTree::default_indices(int n)
 }
 
 QuadTree::QuadTree(const vector<Point_2> &point_set,
-                   const vector<int> & indices):
-		has_subdivided_(false)
+                   const vector<int> & indices,
+									 short curve):
+		has_subdivided_(false),
+		has_initialized_(false),
+		curve_(curve)
 {
+		LOG_IF(curve != 0 && curve != 1 && curve != 2, WARNING) 
+				<< "QuadTree: Curve number unrecognized";
     max_id_++;
     id_ = max_id_;
 
@@ -30,14 +35,17 @@ QuadTree::QuadTree(const vector<Point_2> &point_set,
     neg_y_dir_ = Direction_2(0, -1);
 
     point_set1_ = point_set;
-
     indices_ = indices;
 }
 
+QuadTree::QuadTree(const vector<Point_2> &point_set,
+                   const vector<int> & indices):
+		QuadTree(point_set, indices, 0)
+{ }
+
 QuadTree::QuadTree(const vector<Point_2> &point_set):
-    QuadTree(point_set, default_indices(point_set.size()))
-{
-}
+    QuadTree(point_set, default_indices(point_set.size()), 0)
+{ }
 
 /*
  * Set properties for empty tree
@@ -68,6 +76,18 @@ void QuadTree::init()
             p = point_set1_[0];
             //subdivide();
     }
+		has_initialized_ = true;
+}
+
+void QuadTree::insert(Point_2 pt, int index) {
+	
+	if (has_initialized_) {
+		LOG_IF(has_initialized_, WARNING) << "insert: QuadTree already initialized";
+	}
+	else {
+		point_set1_.push_back(pt);
+		indices_.push_back(index);
+	}
 }
 
 double QuadTree::quadtree_dist(QuadTree that)

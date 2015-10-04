@@ -5,8 +5,9 @@
 
 #include "QuadTree.h"
 #include "FrechetDecider.h"
-#include "Sampling.h"
 #include "easylogging++.h"
+#include "rect_cluster.h"
+
 using namespace std;
 
 INITIALIZE_EASYLOGGINGPP
@@ -76,7 +77,7 @@ int main(int argc, char* argv[])
     double s = 1; // need n-approx only
 
     WSPD wspd(&qt, s);
-    NodePairs pairs = wspd.pairs;
+    //NodePairs pairs = wspd.pairs;
     vector<double> dists = wspd.distances();
 
     VLOG(6) << "WSPD dists:";
@@ -84,7 +85,8 @@ int main(int argc, char* argv[])
     {
         VLOG(6) << dists[i];
     }
-
+		
+		//WSPD* kdtree_wspd = new KdTreeWSPD(all_points, s);
     FrechetDecider fd(alpha, beta);
     double approx_frechet = fd.bin_search_frechet(dists);
     LOG(INFO) << "Approximate Frechet distance: " << approx_frechet;
@@ -100,6 +102,8 @@ int main(int argc, char* argv[])
     //ofstream outFile;
     //outFile.open("samples.out");
     //outFile << sampling.view_samples();
+		
+		RectCluster rect(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
 
     return 0;
 }
