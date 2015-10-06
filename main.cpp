@@ -18,7 +18,7 @@ typedef Kernel::Segment_2 Segment_2;
 
 typedef vector<Point_2> Curve;
 
-const double DEFAULT_EPS = 0.1;
+const double DEFAULT_EPS = 0.3;
 
 void deallocDouble2D(double** arr, int l)
 {
@@ -105,6 +105,7 @@ int main(int argc, char* argv[])
 		
 		RectCluster rect(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
 		rect.partition();
+		rect.visualize();
 
     return 0;
 }

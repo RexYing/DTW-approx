@@ -34,8 +34,10 @@ void RectCluster::partition()
 {
 	for (auto it = grid_->begin(); it != grid_->end(); it++)
 	{
+		// quad-tree from containing points from curve1
+		QuadTree* curr_qt = it->second.first;
 		// check if the node contains points from curve 1
-		if (it->second.first->is_empty())
+		if (curr_qt->is_empty())
 		{
 			continue;
 		}
@@ -44,8 +46,71 @@ void RectCluster::partition()
 		//VLOG(7) << it->second.first->to_string() << " ---------- ";
 		for (auto& qt : nbrs)
 		{
-			//VLOG(7) << qt->to_string();
-			//WSPD wspd(&qt, 1 / eps);
+			WSPD wspd(curr_qt, qt, 1 / eps_, lb_);
+			gen_rect(wspd);
 		}
+	}
+	
+}
+
+void RectCluster::gen_rect(WSPD wspd)
+{
+	for (auto it = wspd.begin(); it != wspd.end(); it++)
+	{
+		for (IndexSegment seg1 : it->first->idx_segments())
+		{
+			for (IndexSegment seg2 : it->second->idx_segments())
+			{
+				Rectangle rect(seg1, seg2);
+				rects.push_back(rect);
+				// populate inv_rects
+				vector<pair<int, int>> coords;
+				for (int i = seg1.first; i < seg1.second; i++)
+				{
+					coords.push_back(make_pair(i, seg2.first));
+					if (seg2.second > seg2.first + 1)
+					{
+						coords.push_back(make_pair(i, seg2.second - 1));
+					}
+				}
+				for (int i = seg2.first + 1; i < seg2.second - 1; i++)
+				{
+					coords.push_back(make_pair(seg1.first, i));
+					if (seg1.second > seg1.first + 1)
+					{
+						coords.push_back(make_pair(seg1.second - 1, i));
+					}
+				}
+				
+				for (auto coord : coords)
+				{
+					VLOG(9) << coord.first << ", " << coord.second;
+					if (inv_rects.find(coord) != inv_rects.end())
+					{
+						LOG(ERROR) << "RectCluster: index (" << coord.first << ", " << coord.second 
+								<< ") is in multiple rectangels";
+					}
+					inv_rects.emplace(coord, rect);
+				}
+			}
+		}
+	}
+}
+
+void RectCluster::visualize()
+{
+	bool matrix[curve1_.size()][curve2_.size()] = {0};
+	for (auto it = inv_rects.begin(); it != inv_rects.end(); it++)
+	{
+		pair<int, int> idx = it->first;
+		matrix[idx.first][idx.second] = true;
+	}
+	for (int i = 0; i < curve1_.size(); i++)
+	{
+		for (int j = 0; j < curve2_.size(); j++)
+		{
+			cout << (matrix[i][j] ? "." : " ");
+		}
+		cout << endl;
 	}
 }

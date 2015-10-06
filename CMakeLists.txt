@@ -82,7 +82,6 @@ add_library( Frechet FrechetDecider.cpp FrechetDecider.h )
 
 add_executable(
   executable
-  Sampling.cpp Sampling.h
 	grid.cpp grid.h
 	rect_cluster.cpp rect_cluster.h
   main.cpp

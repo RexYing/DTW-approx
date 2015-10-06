@@ -48,11 +48,15 @@ double dist_rectangles(BBox b1, BBox b2)
 WSPD::WSPD(double s) : s(s) {}
 
 WSPD::WSPD(QuadTree* tree, double s) :
-    WSPD(tree, tree, s)
+    WSPD(tree, tree, s, -1.0)
 { }
 
 WSPD::WSPD(QuadTree* tree1, QuadTree* tree2, double s) :
-    s(s), lb_(-1) // default (no lower bound)
+    WSPD(tree1, tree2, s, -1.0) // lb_=-1 if no lower bound needed
+{ }
+
+WSPD::WSPD(QuadTree* tree1, QuadTree* tree2, double s, double lb) :
+    s(s), lb_(lb) // default (no lower bound)
 {
     VLOG(7) << "Constructing WSPD";
     pairs = pairing(tree1, tree2);
@@ -61,19 +65,6 @@ WSPD::WSPD(QuadTree* tree1, QuadTree* tree2, double s) :
 		VLOG(5) << "Total pairs found: " << pairs.size();
 }
 
-// WSPD with lower bound using QuadTreeTwoClasses
-WSPD::WSPD(QuadTreeTwoClasses* tree, double s, double lb):
-    WSPD(tree, tree, s, lb)
-{
-}
-
-WSPD::WSPD(QuadTreeTwoClasses* tree1, QuadTreeTwoClasses* tree2, double s, double lb):
-    s(s), lb_(lb)
-{
-    VLOG(7) << "Constructing WSPD";
-    pairs = pairing2(tree1, tree2);
-    collect_distances();
-}
 
 /* No longer needed.
  * use grid at the level of ub to avoid building the entire tree.
@@ -115,8 +106,8 @@ NodePairs WSPD::pairing(QuadTree* t1, QuadTree* t2)
         SWAP(t1, t2);
     }
 
-    // lower bound is defined
-    if (lb_ != -1)
+    // if lower bound is defined (-1 if undefined)
+    if (lb_ > 0)
     {
         dist = max(dist, lb_);
     }

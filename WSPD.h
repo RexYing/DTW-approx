@@ -35,8 +35,7 @@ class WSPD
 		WSPD(double s);
 		WSPD(QuadTree* tree, double s);
 		WSPD(QuadTree* tree1, QuadTree* tree2, double s);
-    WSPD(QuadTreeTwoClasses* tree, double s, double lb);
-    WSPD(QuadTreeTwoClasses* tree1, QuadTreeTwoClasses* tree2, double s, double lb);
+		WSPD(QuadTree* tree1, QuadTree* tree2, double s, double lb);
 
 		NodePairs pairing2(QuadTreeTwoClasses* t1, QuadTreeTwoClasses* t2);
 		//NodePairs traverse(QuadTreeTwoClasses* tree, double ub);
@@ -45,7 +44,18 @@ class WSPD
 		
     // separation constant
     double s;
-		NodePairs pairs;
+		
+		// the begin iterator of the node pairs after WSPD
+		NodePairs::const_iterator begin()
+		{
+			return pairs.begin();
+		}
+		
+		// the end iterator of the node pairs after WSPD
+		NodePairs::const_iterator end()
+		{
+			return pairs.end();
+		}
 		
 		virtual string to_string()
     {
@@ -59,6 +69,7 @@ class WSPD
 
   private:
     double lb_;
+		NodePairs pairs;
 
 		NodePairs pairing(QuadTree* t1, QuadTree* t2);
     vector<double> distances_;

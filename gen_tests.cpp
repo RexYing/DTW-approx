@@ -50,15 +50,15 @@ int main(int argc, char* argv[])
     ofstream outFile;
 
     // parallel equidistance
-    int n = 20000;
-    outFile.open("tests/t3.dtw");
+    int n = 500;
+    outFile.open("tests/t5.dtw");
     outFile << n << endl;
-    gen_x(outFile, n, 0, 50);
+    gen_x(outFile, n, 0, 10);
     outFile.close();
 
-    outFile.open("tests/t4.dtw");
+    outFile.open("tests/t6.dtw");
     outFile << n << endl;
-    gen_x(outFile, n, -5, 50);
+    gen_x(outFile, n, -5, 10);
     outFile.close();
 
     return 0;

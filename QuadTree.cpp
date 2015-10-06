@@ -76,6 +76,19 @@ void QuadTree::init()
             p = point_set1_[0];
             //subdivide();
     }
+		
+		// populate idx_segments with consecutive indices
+		int i = 0;
+		while (i < indices_.size())
+		{
+			int start = i;
+			do
+			{
+				i++;
+			} while (i < indices_.size() && indices_[i] - indices_[i-1] == 1);
+			idx_segments_.push_back(make_pair(indices_[start], indices_[i - 1] + 1));
+		}
+		
 		has_initialized_ = true;
 }
 
@@ -217,11 +230,6 @@ Point_2 QuadTree::center()
     return center_;
 }
 
-vector<int> QuadTree::indices()
-{
-    return indices_;
-}
-
 int QuadTree::size()
 {
 	return point_set1_.size();
@@ -230,4 +238,14 @@ int QuadTree::size()
 bool QuadTree::is_empty()
 {
 	return node_type == EMPTY;
+}
+
+vector<int> QuadTree::indices()
+{
+    return indices_;
+}
+
+vector<IndexSegment> QuadTree::idx_segments()
+{
+    return idx_segments_;
 }

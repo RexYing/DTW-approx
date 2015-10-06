@@ -11,6 +11,11 @@ typedef Kernel::Direction_2 Direction_2;
 typedef Kernel::Vector_2 Vector_2;
 typedef Kernel::Iso_rectangle_2 BBox; //bounding box for 2D point sets
 
+/* 
+ * A segment of consecutive indices from the first int to last int, 
+ * inclusive for the first index and exclusive for the second index.
+ */
+typedef pair<int, int> IndexSegment;
 
 class QuadTree
 {
@@ -56,21 +61,24 @@ class QuadTree
         sstm << "Bounding box: " << bbox;
         return sstm.str();
     }
+		
     virtual string to_string()
     {
         stringstream sstm;
         CGAL::set_pretty_mode(sstm);
         sstm << "QuadTree: {c=" << center_ << ", r=" << radius_ << ", size=" << size() 
-						<< ", rep_pt=" << p << "}";
+						<< ", idx_seg=" << stringify_idx_segments() << "} ";
         return sstm.str();
     }
 
     int id();
     double radius();
     Point_2 center();
-    vector<int> indices();
 		virtual int size();
 		bool is_empty();
+		
+		vector<int> indices();
+		vector<IndexSegment> idx_segments();
 		
 		virtual void subdivide();
 
@@ -78,6 +86,11 @@ class QuadTree
 
     vector<Point_2> point_set1_;
     vector<int> indices_;
+		/* 
+		 * segments of consecutive indices in this quadtree,
+		 * computed at init().
+		 */
+		vector<IndexSegment> idx_segments_;
 
     vector<int> default_indices(int n);
 
@@ -102,6 +115,45 @@ class QuadTree
 		bool has_subdivided_;
 		// flag indicating if the cell has be initialized
 		bool has_initialized_;
+		
+		string stringify_indices()
+		{
+			if (is_empty())
+			{
+				return "";
+			}
+			stringstream sstm;
+			sstm << "{" << indices_[0];
+			for (int i = 1; i < indices_.size(); i++)
+			{
+				sstm << "," << indices_[i];
+			}
+			sstm << "} ";
+			return sstm.str();
+		}
+		
+		string stringify_idx_segment(pair<int, int> seg)
+		{
+			stringstream sstm;
+			sstm << seg.first << "-" << seg.second;
+			return sstm.str();
+		}
+		
+		string stringify_idx_segments()
+		{
+			if (is_empty())
+			{
+				return "";
+			}
+			stringstream sstm;
+			sstm << "{" << stringify_idx_segment(idx_segments_[0]);
+			for (int i = 1; i < idx_segments_.size(); i++)\
+			{
+				sstm << "," << stringify_idx_segment(idx_segments_[i]);
+			}
+			sstm << "} ";
+			return sstm.str();
+		}
 
     Direction_2 pos_x_dir_;
     Direction_2 pos_y_dir_;
