@@ -105,7 +105,12 @@ int main(int argc, char* argv[])
 		
 		RectCluster rect(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
 		rect.partition();
-		rect.visualize();
+		LOG(INFO) << rect.summarize();
+		
+		ofstream rectVisFile;
+		rectVisFile.open ("results/rect_vis.txt");
+		rectVisFile << rect.visualize() << endl;
+		rectVisFile.close();
 
     return 0;
 }

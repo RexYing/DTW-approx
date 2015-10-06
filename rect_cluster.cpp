@@ -97,8 +97,9 @@ void RectCluster::gen_rect(WSPD wspd)
 	}
 }
 
-void RectCluster::visualize()
+string RectCluster::visualize()
 {
+	stringstream sstm;
 	bool matrix[curve1_.size()][curve2_.size()] = {0};
 	for (auto it = inv_rects.begin(); it != inv_rects.end(); it++)
 	{
@@ -109,8 +110,14 @@ void RectCluster::visualize()
 	{
 		for (int j = 0; j < curve2_.size(); j++)
 		{
-			cout << (matrix[i][j] ? "." : " ");
+			sstm << (matrix[i][j] ? "." : " ");
 		}
-		cout << endl;
+		sstm << endl;
 	}
+	return sstm.str();
+}
+
+string RectCluster::summarize()
+{
+	
 }

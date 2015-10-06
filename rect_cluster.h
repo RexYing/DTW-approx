@@ -27,7 +27,9 @@ public:
 	void partition();
 	
 	// Visualizes rectangles and boundary points
-	void visualize();
+	string visualize();
+	// summarize the ractangle partition
+	string summarize();
 
 private:
 	Curve curve1_;
