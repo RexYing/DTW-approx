@@ -1,7 +1,7 @@
 #include <unordered_map>
 
 #include "grid.h"
-using namespace std;
+#include "util/joiner.h"
 
 struct Rectangle {
 	Rectangle(IndexSegment segment1, IndexSegment segment2):
@@ -10,6 +10,35 @@ struct Rectangle {
 	
 	IndexSegment segment1;
 	IndexSegment segment2;
+	
+	vector<pair<int, int>> boundary_pts()
+	{
+		vector<pair<int, int>> coords;
+		for (int i = segment1.first; i < segment1.second; i++)
+		{
+			coords.push_back(make_pair(i, segment2.first));
+			if (segment2.second > segment2.first + 1)
+			{
+				coords.push_back(make_pair(i, segment2.second - 1));
+			}
+		}
+		for (int i = segment2.first + 1; i < segment2.second - 1; i++)
+		{
+			coords.push_back(make_pair(segment1.first, i));
+			if (segment1.second > segment1.first + 1)
+			{
+				coords.push_back(make_pair(segment1.second - 1, i));
+			}
+		}
+		return coords;
+	}
+	
+	string to_string()
+	{
+		stringstream sstm;
+		Joiner::on(" ").join({segment1.first, segment1.second, segment2.first, segment2.second});
+		return sstm.str();
+	}
 };
 
 /*
@@ -26,8 +55,8 @@ public:
 	 */
 	void partition();
 	
-	// Visualizes rectangles and boundary points
-	string visualize();
+	// export rectangles and their boundary points
+	string export_rects();
 	// summarize the ractangle partition
 	string summarize();
 
@@ -41,9 +70,9 @@ private:
 	long len_cell_;
 
 	Grid* grid_;
-	vector<Rectangle> rects;
-	// maps points to the rectangle they belong to
-	unordered_map<pair<int, int>, Rectangle, boost::hash<pair<int, int>> > inv_rects;
+	vector<Rectangle> rects_;
+	// maps boundary points to the rectangle they belong to
+	unordered_map<pair<int, int>, Rectangle, boost::hash<pair<int, int>> > inv_rects_;
 	
 	void gen_rect(WSPD wspd);
 };

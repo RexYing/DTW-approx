@@ -109,8 +109,14 @@ int main(int argc, char* argv[])
 		
 		ofstream rectVisFile;
 		rectVisFile.open ("results/rect_vis.txt");
-		rectVisFile << rect.visualize() << endl;
-		rectVisFile.close();
+		if (rectVisFile != NULL)
+		{
+			rectVisFile << rect.export_rects() << endl;
+			rectVisFile.close();
+		}
+		else {
+			LOG(ERROR) << "Error opening file for exporting rectangles";
+		}
 
     return 0;
 }

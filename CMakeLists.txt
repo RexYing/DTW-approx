@@ -78,7 +78,9 @@ add_library(
   WSPD.cpp WSPD.h
 )
 add_library( Frechet FrechetDecider.cpp FrechetDecider.h )
-#add_library( DTW Sampling.cpp Sampling.h)
+
+add_library( Util util/joiner.h)
+set_target_properties( Util PROPERTIES LINKER_LANGUAGE CXX)
 
 add_executable(
   executable
@@ -99,6 +101,7 @@ target_link_libraries(
 	executable   ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES}
 	WSPD
 	Frechet
+	Util
 )
 
 target_link_libraries(

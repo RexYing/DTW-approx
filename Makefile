@@ -124,6 +124,19 @@ Frechet/fast:
 .PHONY : Frechet/fast
 
 #=============================================================================
+# Target rules for targets named Util
+
+# Build rule for target.
+Util: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Util
+.PHONY : Util
+
+# fast build rule for target.
+Util/fast:
+	$(MAKE) -f CMakeFiles/Util.dir/build.make CMakeFiles/Util.dir/build
+.PHONY : Util/fast
+
+#=============================================================================
 # Target rules for targets named WSPD
 
 # Build rule for target.
@@ -384,9 +397,10 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... gen_tests"
 	@echo "... edit_cache"
 	@echo "... executable"
+	@echo "... gen_tests"
+	@echo "... Util"
 	@echo "... Frechet"
 	@echo "... rebuild_cache"
 	@echo "... WSPD"

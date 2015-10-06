@@ -62,46 +62,30 @@ void RectCluster::gen_rect(WSPD wspd)
 			for (IndexSegment seg2 : it->second->idx_segments())
 			{
 				Rectangle rect(seg1, seg2);
-				rects.push_back(rect);
+				rects_.push_back(rect);
 				// populate inv_rects
-				vector<pair<int, int>> coords;
-				for (int i = seg1.first; i < seg1.second; i++)
-				{
-					coords.push_back(make_pair(i, seg2.first));
-					if (seg2.second > seg2.first + 1)
-					{
-						coords.push_back(make_pair(i, seg2.second - 1));
-					}
-				}
-				for (int i = seg2.first + 1; i < seg2.second - 1; i++)
-				{
-					coords.push_back(make_pair(seg1.first, i));
-					if (seg1.second > seg1.first + 1)
-					{
-						coords.push_back(make_pair(seg1.second - 1, i));
-					}
-				}
+				vector<pair<int, int>> coords = rect.boundary_pts();
 				
 				for (auto coord : coords)
 				{
 					VLOG(9) << coord.first << ", " << coord.second;
-					if (inv_rects.find(coord) != inv_rects.end())
+					if (inv_rects_.find(coord) != inv_rects_.end())
 					{
 						LOG(ERROR) << "RectCluster: index (" << coord.first << ", " << coord.second 
 								<< ") is in multiple rectangels";
 					}
-					inv_rects.emplace(coord, rect);
+					inv_rects_.emplace(coord, rect);
 				}
 			}
 		}
 	}
 }
 
-string RectCluster::visualize()
+string RectCluster::export_rects()
 {
 	stringstream sstm;
-	bool matrix[curve1_.size()][curve2_.size()] = {0};
-	for (auto it = inv_rects.begin(); it != inv_rects.end(); it++)
+/* 	bool matrix[curve1_.size()][curve2_.size()] = {0};
+	for (auto it = inv_rects_.begin(); it != inv_rects_.end(); it++)
 	{
 		pair<int, int> idx = it->first;
 		matrix[idx.first][idx.second] = true;
@@ -114,10 +98,18 @@ string RectCluster::visualize()
 		}
 		sstm << endl;
 	}
-	return sstm.str();
+	return sstm.str(); */
+	sstm << curve1_.size() << " " << curve2_.size() << endl;
+	for (auto rect : rects_)
+	{
+		VLOG(7) << "export";
+		sstm << rect.to_string() << endl;
+	}
 }
 
 string RectCluster::summarize()
 {
-	
+	stringstream sstm;
+	sstm << "{nRects=" << rects_.size() << ", nBdPts=" << inv_rects_.size() << "} ";
+	return sstm.str();
 }
