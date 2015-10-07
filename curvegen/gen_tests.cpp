@@ -8,6 +8,7 @@ using namespace std;
 
 const string DEFAULT_OUTPUT_FILE = "tests/curve.dtw";
 const string DEFAULT_CURVE_TYPE = "line";
+const int DEFAULT_NUM_POINTS = 500;
 
 
 void gen_x(ofstream &outFile, int n, int offset, double step)
@@ -28,16 +29,21 @@ void gen_x_reverse(ofstream &outFile, int n, int offset, int step)
 
 int main(int argc, char* argv[])
 {
-	string filename = DEFAULT_OUTPUT_FILE;
-	string curve_type = DEFAULT_CURVE_TYPE;
+	string filename;
+	string curve_type;
+	int n;
 	
 	try {
 
 		po::options_description desc("Allowed options");
 		desc.add_options()
 			("help", "produce help message")
-			("output_file", po::value<string>(), "set output file for curve generated")
-			("curve_type", po::value<string>(), "set type of curves")
+			("output_file", po::value<string>(&filename)->default_value(DEFAULT_OUTPUT_FILE), 
+					"set output file for curve generated")
+			("curve_type", po::value<string>(&curve_type)->default_value(DEFAULT_CURVE_TYPE), 
+					"set type of curve")
+			("n", po::value<int>(&n)->default_value(DEFAULT_NUM_POINTS), 
+					"set number of points on curve")
 		;
 
 		po::variables_map vm;        
@@ -50,17 +56,21 @@ int main(int argc, char* argv[])
 		}
 
 		if (vm.count("output_file")) {
-			filename = vm["output_file"].as<string>();
-			cout << "Curve is output to " << filename << ".\n";
+			cout << "Curve is written to " << filename << ".\n";
 		} else {
-			cout << "Output file was not set.\n";
+			cout << "Use default output file " << filename << ".\n";
 		}
 		
 		if (vm.count("curve_type")) {
-			curve_type = vm["curve_type"].as<string>();
 			cout << "Curve type is set to " << curve_type << ".\n";
 		} else {
-			cout << "Curve type was not set.\n";
+			cout << "Use default curve type " << curve_type << ".\n";
+		}
+		
+		if (vm.count("n")) {
+			cout << "Number of points on curve is set to " << n << ".\n";
+		} else {
+			cout << "Use default number of points on curve " << n << ".\n";
 		}
 	}
 	catch(exception& e) {
@@ -75,8 +85,7 @@ int main(int argc, char* argv[])
 	ofstream outFile;
 
 	// parallel equidistance
-	int n = 500;
-	outFile.open("tests/t5.dtw");
+	outFile.open(filename);
 	outFile << n << endl;
 	gen_x(outFile, n, 0, 10);
 	outFile.close();
