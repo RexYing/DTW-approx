@@ -36,7 +36,8 @@ struct Rectangle {
 	string to_string()
 	{
 		stringstream sstm;
-		Joiner::on(" ").join({segment1.first, segment1.second, segment2.first, segment2.second});
+		sstm << Joiner::on(" ")->join(
+				{segment1.first, segment1.second, segment2.first, segment2.second});
 		return sstm.str();
 	}
 };

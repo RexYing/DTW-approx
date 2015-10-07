@@ -102,9 +102,9 @@ string RectCluster::export_rects()
 	sstm << curve1_.size() << " " << curve2_.size() << endl;
 	for (auto rect : rects_)
 	{
-		VLOG(7) << "export";
 		sstm << rect.to_string() << endl;
 	}
+	return sstm.str();
 }
 
 string RectCluster::summarize()

@@ -37,7 +37,7 @@ include( ${CGAL_USE_FILE} )
 
 
 # Boost and its components
-find_package( Boost REQUIRED )
+find_package( Boost COMPONENTS program_options REQUIRED )
 
 if ( NOT Boost_FOUND )
 
@@ -63,6 +63,11 @@ else()
 		use a different C++ compiler.")
 endif()
 
+# Output directory
+# ############################
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
+set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
 
 # Creating entries for target: executable
 # ############################
@@ -90,7 +95,7 @@ add_executable(
 )
 add_executable(
   gen_tests
-  gen_tests.cpp
+  curvegen/gen_tests.cpp
 )
 # target_compile_features(executable PRIVATE cxx_range_for)
 

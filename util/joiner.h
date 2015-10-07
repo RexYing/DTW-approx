@@ -4,10 +4,9 @@
 class Joiner
 {
 public:
-	Joiner static on(string separator)
+	static Joiner* on(string separator)
 	{
-		Joiner j(separator);
-		return j;
+		return new Joiner(separator);
 	}
 	
 	string join(std::initializer_list<int> list)
@@ -21,6 +20,7 @@ public:
         sstm << separator_ << *it;
 				it++;
     }
+		return sstm.str();
 	}
 
 		
