@@ -283,6 +283,33 @@ WSPD.cpp.s:
 	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/WSPD.cpp.s
 .PHONY : WSPD.cpp.s
 
+curvegen/curve_generator.o: curvegen/curve_generator.cpp.o
+
+.PHONY : curvegen/curve_generator.o
+
+# target to build an object file
+curvegen/curve_generator.cpp.o:
+	$(MAKE) -f CMakeFiles/gen_tests.dir/build.make CMakeFiles/gen_tests.dir/curvegen/curve_generator.cpp.o
+.PHONY : curvegen/curve_generator.cpp.o
+
+curvegen/curve_generator.i: curvegen/curve_generator.cpp.i
+
+.PHONY : curvegen/curve_generator.i
+
+# target to preprocess a source file
+curvegen/curve_generator.cpp.i:
+	$(MAKE) -f CMakeFiles/gen_tests.dir/build.make CMakeFiles/gen_tests.dir/curvegen/curve_generator.cpp.i
+.PHONY : curvegen/curve_generator.cpp.i
+
+curvegen/curve_generator.s: curvegen/curve_generator.cpp.s
+
+.PHONY : curvegen/curve_generator.s
+
+# target to generate assembly for a file
+curvegen/curve_generator.cpp.s:
+	$(MAKE) -f CMakeFiles/gen_tests.dir/build.make CMakeFiles/gen_tests.dir/curvegen/curve_generator.cpp.s
+.PHONY : curvegen/curve_generator.cpp.s
+
 curvegen/gen_tests.o: curvegen/gen_tests.cpp.o
 
 .PHONY : curvegen/gen_tests.o
@@ -416,6 +443,9 @@ help:
 	@echo "... WSPD.o"
 	@echo "... WSPD.i"
 	@echo "... WSPD.s"
+	@echo "... curvegen/curve_generator.o"
+	@echo "... curvegen/curve_generator.i"
+	@echo "... curvegen/curve_generator.s"
 	@echo "... curvegen/gen_tests.o"
 	@echo "... curvegen/gen_tests.i"
 	@echo "... curvegen/gen_tests.s"

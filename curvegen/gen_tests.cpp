@@ -4,11 +4,13 @@ namespace po = boost::program_options;
 #include<iostream>
 #include<fstream>
 
+#include "curvegen/curve_generator.h"
+
 using namespace std;
 
 const string DEFAULT_OUTPUT_FILE = "tests/curve.dtw";
 const string DEFAULT_CURVE_TYPE = "line";
-const int DEFAULT_NUM_POINTS = 500;
+const string DEFAULT_PARAMS = "start=(0,0) angle=0.5 step=1 n=500";
 
 
 void gen_x(ofstream &outFile, int n, int offset, double step)
@@ -27,11 +29,20 @@ void gen_x_reverse(ofstream &outFile, int n, int offset, int step)
     }
 }
 
+void export_points(ofstream &out_file, Points pts)
+{
+	out_file << pts.size() << endl;
+	for (auto pt : pts)
+	{
+		out_file << pt.first << " " << pt.second << endl;
+	}
+}
+
 int main(int argc, char* argv[])
 {
 	string filename;
 	string curve_type;
-	int n;
+	string params;
 	
 	try {
 
@@ -42,8 +53,8 @@ int main(int argc, char* argv[])
 					"set output file for curve generated")
 			("curve_type", po::value<string>(&curve_type)->default_value(DEFAULT_CURVE_TYPE), 
 					"set type of curve")
-			("n", po::value<int>(&n)->default_value(DEFAULT_NUM_POINTS), 
-					"set number of points on curve")
+			("params", po::value<string>(&params)->default_value(DEFAULT_PARAMS), 
+					"set parameters for the curve")
 		;
 
 		po::variables_map vm;        
@@ -67,10 +78,10 @@ int main(int argc, char* argv[])
 			cout << "Use default curve type " << curve_type << ".\n";
 		}
 		
-		if (vm.count("n")) {
-			cout << "Number of points on curve is set to " << n << ".\n";
+		if (vm.count("params")) {
+			cout << "Curve parameter is set to " << params << ".\n";
 		} else {
-			cout << "Use default number of points on curve " << n << ".\n";
+			cout << "Use default number of points on curve " << params << ".\n";
 		}
 	}
 	catch(exception& e) {
@@ -83,17 +94,30 @@ int main(int argc, char* argv[])
     
 
 	ofstream outFile;
+	CurveGenerator gen;
+	Points pts;
 
 	// parallel equidistance
 	outFile.open(filename);
-	outFile << n << endl;
+	switch (curve_type)
+	{
+		case "line":
+			pts = gen.line(params);
+			break;
+		case "rand":
+			pts = gen.rand(params);
+			break;
+		default:
+			LOG(ERROR) << "Unrecognized curve type";
+	}
+/* 	outFile << n << endl;
 	gen_x(outFile, n, 0, 10);
 	outFile.close();
 
 	outFile.open("tests/t6.dtw");
 	outFile << n << endl;
 	gen_x(outFile, n, -5, 10);
-	outFile.close();
+	outFile.close(); */
 
 	return 0;
 }

@@ -96,6 +96,7 @@ add_executable(
 add_executable(
   gen_tests
   curvegen/gen_tests.cpp
+	curvegen/curve_generator.cpp curvegen/curve_generator.h
 )
 # target_compile_features(executable PRIVATE cxx_range_for)
 
