@@ -1,12 +1,15 @@
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include<iostream>
-#include<fstream>
+#include <iostream>
+#include <fstream>
 
 #include "curvegen/curve_generator.h"
+#include "easylogging++.h"
 
 using namespace std;
+
+INITIALIZE_EASYLOGGINGPP
 
 const string DEFAULT_OUTPUT_FILE = "tests/curve.dtw";
 const string DEFAULT_CURVE_TYPE = "line";
@@ -99,17 +102,19 @@ int main(int argc, char* argv[])
 
 	// parallel equidistance
 	outFile.open(filename);
-	switch (curve_type)
+	if (curve_type == "line")
 	{
-		case "line":
-			pts = gen.line(params);
-			break;
-		case "rand":
-			pts = gen.rand(params);
-			break;
-		default:
-			LOG(ERROR) << "Unrecognized curve type";
+		pts = gen.line(params);
 	}
+	else if (curve_type == "rand")
+	{
+		pts = gen.rand(params);
+	} 
+	else
+	{
+		LOG(ERROR) << "Unrecognized curve type";
+	}
+	export_points(outFile, pts);
 /* 	outFile << n << endl;
 	gen_x(outFile, n, 0, 10);
 	outFile.close();
