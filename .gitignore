@@ -38,6 +38,7 @@ CMakeCache.txt
 # temp files
 *.~
 *.sw?
+*.asv
 
 # log files
 logs/*
