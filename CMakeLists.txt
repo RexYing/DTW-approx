@@ -91,6 +91,7 @@ add_executable(
   executable
 	grid.cpp grid.h
 	rect_cluster.cpp rect_cluster.h
+	rectangle.h
   main.cpp
 )
 add_executable(
