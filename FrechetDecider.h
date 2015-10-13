@@ -1,4 +1,7 @@
-#include<vector>
+#include <boost/functional/hash.hpp>
+#include <queue>
+#include <vector>
+#include <unordered_set>
 
 #include "easylogging++.h"
 #include "QuadTree.h"
@@ -33,8 +36,12 @@ class FrechetDecider
   private:
     const vector<Point_2> curve1_;
     const vector<Point_2> curve2_;
+		unordered_set<pair<int, int>, boost::hash<pair<int, int>> > index_set_;
+		/* The distance used by the previous run of the decision problem. */
+		double prev_dist_ = 0;
 
-    bool dfs(double sq_dist, Curve::const_iterator it1, Curve::const_iterator it2);
+    bool dfs(double sq_dist, int index1, int index2);
+		//bool bfs(double sq_dist, int index1, int index2);
 
 };
 

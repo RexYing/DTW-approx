@@ -5,6 +5,10 @@ function [ ] = drawCurves( filename )
 fid = fopen(filename);
 n = fscanf(fid, '%u\n', 1);
 C = fscanf(fid, '%f %f', [2, Inf]);
+fclose(fid);
+if size(C, 2) ~= n
+    error('Incorrect number of points');
+end
 
 plot(C(1, :), C(2, :));
 

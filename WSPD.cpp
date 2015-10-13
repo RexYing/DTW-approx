@@ -63,6 +63,7 @@ WSPD::WSPD(QuadTree* tree1, QuadTree* tree2, double s, double lb) :
     collect_distances();
 		VLOG(7) << to_string();
 		VLOG(5) << "Total pairs found: " << pairs.size();
+		VLOG(5) << "Number of distances: " << distances_.size();
 }
 
 

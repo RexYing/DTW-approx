@@ -1,13 +1,16 @@
+#include <boost/program_options.hpp>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <CGAL/Simple_cartesian.h>
+
 
 #include "QuadTree.h"
 #include "FrechetDecider.h"
 #include "easylogging++.h"
 #include "rect_cluster.h"
 
+namespace po = boost::program_options;
 using namespace std;
 
 INITIALIZE_EASYLOGGINGPP
@@ -51,72 +54,131 @@ Curve readCurve(ifstream &inFile, int dim)
 
 int main(int argc, char* argv[])
 {
-    START_EASYLOGGINGPP(argc, argv);
-
-    ifstream inFile;
-    inFile.open(argv[1]);
-
-    int d = 2; // dimension
-
-    //inFile >> d;
-    Curve alpha = readCurve(inFile, d);
-    inFile.close();
-
-    inFile.open(argv[2]);
-    Curve beta = readCurve(inFile, d);
-
-    int m = alpha.size();
-    int n = beta.size();
-
-    vector<Point_2> all_points(alpha);
-    all_points.reserve(alpha.size() + beta.size());
-    all_points.insert(all_points.end(), beta.begin(), beta.end());
-
-    QuadTree qt(all_points);
-    qt.init();
-    double s = 1; // need n-approx only
-
-    WSPD wspd(&qt, s);
-    //NodePairs pairs = wspd.pairs;
-    vector<double> dists = wspd.distances();
-
-    VLOG(6) << "WSPD dists:";
-    for (int i = 0; i < dists.size(); i++)
-    {
-        VLOG(6) << dists[i];
-    }
+	START_EASYLOGGINGPP(argc, argv);
 		
-		//WSPD* kdtree_wspd = new KdTreeWSPD(all_points, s);
-    FrechetDecider fd(alpha, beta);
-    double approx_frechet = fd.bin_search_frechet(dists);
-    LOG(INFO) << "Approximate Frechet distance: " << approx_frechet;
+	string curve1_filename;
+	string curve2_filename;
+	string rects_filename = "";
+	double eps;
 
-    double dtw_lb = approx_frechet / (s + 1);
-    double dtw_ub = approx_frechet * (s + 1) * max(m, n);
-    LOG(INFO) << "Dynamic Time Warping range: [" << dtw_lb << ", " << dtw_ub << "]";
+	try {
+		po::options_description desc("Allowed options");
+		desc.add_options()
+			("help", "produce help message")
+			("rects_output_file", po::value<string>(&rects_filename), "set output file for rectangles")
+			("curve1", po::value<string>(&curve1_filename), "set input file for curve1")
+			("curve2", po::value<string>(&curve2_filename), "set input file for curve2")
+			("eps", po::value<double>(&eps)->default_value(DEFAULT_EPS), "set approximation ratio")
+		;
 
-    //Sampling sampling(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
-    //sampling.init();
-    //sampling.sample();
+		po::variables_map vm;
+		po::parsed_options parsed = 
+				po::command_line_parser(argc, argv).options(desc).allow_unregistered().run();     
+		po::store(parsed, vm);
+		po::notify(vm);    
 
-    //ofstream outFile;
-    //outFile.open("samples.out");
-    //outFile << sampling.view_samples();
+		if (vm.count("help")) {
+			cout << desc << "\n";
+			return 0;
+		}
+
+		if (vm.count("rects_output_file")) {
+			cout << "Curve is written to " << rects_filename << ".\n";
+		} else {
+			cout << "Rectangles not exported" << ".\n";
+		}
 		
-		RectCluster rect(alpha, beta, dtw_lb, dtw_ub, DEFAULT_EPS);
-		rect.partition();
-		LOG(INFO) << rect.summarize();
+		if (vm.count("curve1")) {
+			cout << "Curve1 is read from " << curve1_filename << ".\n";
+		} else {
+			LOG(ERROR) << "curve1 not specified" << ".\n";
+		}
 		
-		ofstream rectVisFile;
-		rectVisFile.open ("results/rect_vis.txt");
-		if (rectVisFile != NULL)
+		if (vm.count("curve2")) {
+			cout << "Curve2 is read from " << curve2_filename << ".\n";
+		} else {
+			LOG(ERROR) << "curve2 not specified" << ".\n";
+		}
+	}
+	catch(exception& e) {
+		cerr << "error: " << e.what() << "\n";
+		return 1;
+	}
+	catch(...) {
+		cerr << "Exception of unknown type!\n";
+	}
+	
+	int d = 2; // dimension
+
+	ifstream inFile;
+	
+	inFile.open(curve1_filename);
+	Curve alpha = readCurve(inFile, d);
+	inFile.close();
+
+	inFile.open(curve2_filename);
+	Curve beta = readCurve(inFile, d);
+	inFile.close();
+
+	/* approximate Frechet */
+	
+	int m = alpha.size();
+	int n = beta.size();
+
+	vector<Point_2> all_points(alpha);
+	all_points.reserve(alpha.size() + beta.size());
+	all_points.insert(all_points.end(), beta.begin(), beta.end());
+
+	QuadTree qt(all_points);
+	qt.init();
+	double s = 1; // need n-approx only
+
+	WSPD wspd(&qt, s);
+	//NodePairs pairs = wspd.pairs;
+	vector<double> dists = wspd.distances();
+
+	VLOG(7) << "WSPD dists:";
+	for (int i = 0; i < dists.size(); i++)
+	{
+			VLOG(7) << dists[i];
+	}
+	
+	//WSPD* kdtree_wspd = new KdTreeWSPD(all_points, s);
+	FrechetDecider fd(alpha, beta);
+	double approx_frechet = fd.bin_search_frechet(dists);
+	LOG(INFO) << "Approximate Frechet distance: " << approx_frechet;
+
+	double dtw_lb = approx_frechet / (s + 1);
+	double dtw_ub = approx_frechet * (s + 1) * max(m, n);
+	LOG(INFO) << "Dynamic Time Warping range: [" << dtw_lb << ", " << dtw_ub << "]";
+
+	//Sampling sampling(alpha, beta, dtw_lb, dtw_ub, eps);
+	//sampling.init();
+	//sampling.sample();
+
+	//ofstream outFile;
+	//outFile.open("samples.out");
+	//outFile << sampling.view_samples();
+	
+	/* Compute approximate DTW */
+	
+	RectCluster rect(alpha, beta, dtw_lb, dtw_ub, eps);
+	rect.partition();
+	LOG(INFO) << rect.summarize();
+	
+	ofstream rect_file;
+	if (rects_filename.compare("") != 0)
+	{
+		rect_file.open (rects_filename);
+		if (rect_file != NULL)
 		{
-			rectVisFile << rect.export_rects() << endl;
-			rectVisFile.close();
+			rect_file << rect.export_rects() << endl;
+			rect_file.close();
 		}
 		else {
 			LOG(ERROR) << "Error opening file for exporting rectangles";
 		}
+	}
 
-    return 0;
+	return 0;
 }

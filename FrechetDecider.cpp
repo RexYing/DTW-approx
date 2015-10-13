@@ -5,40 +5,88 @@ FrechetDecider::FrechetDecider(const Curve &curve1, const Curve &curve2):
 		curve2_(curve2)
 { }
 
-bool FrechetDecider::dfs(double sq_dist, Curve::const_iterator it1, Curve::const_iterator it2)
+/* inefficient: didn't do memoization */
+bool FrechetDecider::dfs(double sq_dist, int index1, int index2)
 {
 	// base case
-	if (it1 == curve1_.end() && it2 == curve2_.end())
+	if (index1 == curve1_.size() - 1 && index2 == curve2_.size() - 1)
 	{
 			return true;
 	}
-	if (CGAL::squared_distance(*it1, *it2) <= sq_dist)
+	pair<int, int> index = make_pair(index1, index2);
+	
+	// if found, the index is NOT reachable
+	if (index_set_.find(index) != index_set_.end())
 	{
-			// go diagonally first
-			if (it1 != curve1_.end() && it2 != curve2_.end())
+		return false;
+	}
+	
+	if (CGAL::squared_distance(curve1_[index1], curve2_[index2]) <= sq_dist)
+	{
+		// go diagonally first
+		if (index1 < curve1_.size() - 1 && index2 < curve2_.size() - 1)
+		{
+			if (dfs(sq_dist, index1 + 1, index2 + 1))
 			{
-					if (dfs(sq_dist, it1 + 1, it2 + 1))
-							return true;
+				index_set_.insert(index);
+				return true;
 			}
+		}
 
-			// move iterator on one curve
-			if (it1 != curve1_.end())
+		// move index of one curve
+		if (index1 < curve1_.size() - 1)
+		{
+			if (dfs(sq_dist, index1 + 1, index2))
 			{
-					if (dfs(sq_dist, it1 + 1, it2))
-							return true;
+				index_set_.insert(index);
+				return true;
 			}
-			if (it2 != curve2_.end())
+		}
+		if (index2 < curve2_.size() - 1)
+		{
+			if (dfs(sq_dist, index1, index2 + 1))
 			{
-					if (dfs(sq_dist, it1, it2 + 1))
-							return true;
+				index_set_.insert(index);
+				return true;
 			}
+		}
 	}
 	return false;
 }
 
+/*
+bool bfs(double sq_dist)
+{
+	queue<pair<int, int> > q;
+	int k = 0;
+	if (CGAL::squared_distance(curve1_[0], curve2_[0]) > sq_dist)
+	{
+		return false;
+	}
+	q.push(make_pair(0, 0));
+	while (!q.empty())
+	{
+		pair<int, int> index = q.pop();
+		// repeated index
+		if (q.front() == index)
+		{
+			q.pop();
+		}
+		if (index.first < curve1_.size() - 1)
+		{
+			if (index.second < curve2_.size() - 1)
+			{
+				if (CGAL::squared_distance(curve1_[index.first + 1], curve2_[0])
+*/
+
 bool FrechetDecider::is_at_least_frechet(double dist)
 {
-  return dfs(dist * dist, curve1_.begin(), curve2_.begin());
+	if (dist > prev_dist_)
+	{
+		index_set_.clear();
+	}
+	prev_dist_ = dist;
+  return dfs(dist * dist, 0, 0);
 }
 
 double FrechetDecider::bin_search_frechet(const vector<double> &dists)

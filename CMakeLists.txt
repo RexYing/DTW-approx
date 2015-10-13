@@ -104,7 +104,7 @@ add_to_cached_list( CGAL_EXECUTABLE_TARGETS executable )
 
 # Link the executable to CGAL and third-party libraries
 target_link_libraries(
-	executable   ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES}
+	executable   ${Boost_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES}
 	WSPD
 	Frechet
 	Util
