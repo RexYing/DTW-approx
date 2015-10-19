@@ -61,10 +61,10 @@ void RectCluster::gen_rect(WSPD wspd)
 		{
 			for (IndexSegment seg2 : it->second->idx_segments())
 			{
-				Rectangle rect(seg1, seg2);
-				rects_.push_back(rect);
+				Rectangle* rect = new Rectangle(seg1, seg2);
+				rects_.insert(rect);
 				// populate inv_rects
-				vector<pair<int, int>> coords = rect.boundary_pts();
+				vector<pair<int, int>> coords = rect->boundary_pts();
 				
 				for (auto coord : coords)
 				{
@@ -102,7 +102,7 @@ string RectCluster::export_rects()
 	sstm << curve1_.size() << " " << curve2_.size() << endl;
 	for (auto rect : rects_)
 	{
-		sstm << rect.to_string() << endl;
+		sstm << rect->to_string() << endl;
 	}
 	return sstm.str();
 }
@@ -112,4 +112,69 @@ string RectCluster::summarize()
 	stringstream sstm;
 	sstm << "{nRects=" << rects_.size() << ", nBdPts=" << inv_rects_.size() << "} ";
 	return sstm.str();
+}
+
+void RectCluster::build_rect_graph()
+{
+	for (auto rect : rects_)
+	{
+		// add predecessors by finding the right and top elements of the right and top boundaries 
+		// respectively
+		for (pair<int, int> p : rect->top())
+		{
+			if (p.first < curve1_.size() - 1)
+			{
+				pair<int, int> next = make_pair(p.first + 1, p.second);
+				auto it = inv_rects_.find(next);
+				if (it == inv_rects_.end())
+				{
+					// points that are more than the upper bound of DTW away
+					VLOG(6) << "A point does not belong to any rectangle";
+				}
+				else
+				{
+					rect->add_successor(it->second);
+					it->second->add_predecessor(rect);
+				}
+			}
+		}
+		
+		for (pair<int, int> p : rect->right())
+		{
+			if (p.second < curve2_.size() - 1)
+			{
+				pair<int, int> next = make_pair(p.first, p.second + 1);
+				auto it = inv_rects_.find(next);
+				if (it == inv_rects_.end())
+				{
+					// points that are more than the upper bound of DTW away
+					VLOG(6) << "A point does not belong to any rectangle";
+				}
+				else
+				{
+					rect->add_successor(it->second);
+					it->second->add_predecessor(rect);
+				}
+			}
+		}
+		
+		// top-right corner: need to add the rectangle that contains the upper-right corner
+		pair<int, int> p = rect->right().front();
+		if ((p.first < curve1_.size() - 1) && (p.second < curve2_.size() - 1))
+		{
+			pair<int, int> next = make_pair(p.first + 1, p.second + 1);
+			auto it = inv_rects_.find(next);
+			if (it == inv_rects_.end())
+			{
+				// points that are more than the upper bound of DTW away
+				VLOG(6) << "A point does not belong to any rectangle";
+			}
+			else
+			{
+				rect->add_successor(it->second);
+				it->second->add_predecessor(rect);
+			}
+		}
+		
+	}
 }

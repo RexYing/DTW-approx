@@ -1,4 +1,5 @@
 #include <unordered_map>
+#include <unordered_set>
 
 #include "grid.h"
 #include "rectangle.h"
@@ -32,11 +33,14 @@ private:
 	long len_cell_;
 
 	Grid* grid_;
-	vector<Rectangle> rects_;
+	unordered_set<Rectangle*> rects_;
 	// maps boundary points to the rectangle they belong to
-	unordered_map<pair<int, int>, Rectangle, boost::hash<pair<int, int>> > inv_rects_;
+	unordered_map<pair<int, int>, Rectangle*, boost::hash<pair<int, int>> > inv_rects_;
+	
+	// contains the same elements as rects_, but is topologically sorted
+	vector<Rectangle*> sorted_rects_;
 	
 	void gen_rect(WSPD wspd);
 	
-	//void build_rect_graph();
+	void build_rect_graph();
 };
