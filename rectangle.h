@@ -10,7 +10,7 @@ using namespace std;
 class Rectangle {
 public:
 	Rectangle(IndexSegment segment1, IndexSegment segment2):
-			segment1(segment1), segment2(segment2)
+			segment1(segment1), segment2(segment2), mark_(0)
 	{ 
 		pair<int, int> p;
 		for (int i = segment1.first; i < segment1.second; i++)
@@ -36,14 +36,16 @@ public:
 		{
 			LOG(ERROR) << "Rectangle: upper bound (exclusive) not greater than lower bound";
 		}
-		// remove element that should be in bottom_
-		right_.pop_back();
+		// remove bottom right element that should be in bottom_
+		right_.pop_front();
+		// remove top left element that should be in top_
+		left_.pop_back();
 		
 		for (int i = segment2.first + 1; i < segment2.second - 1; i++)
 		{
 			p = make_pair(segment1.first, i);
 			boundary_pts_.push_back(p);
-			top_.push_back(p);
+			bottom_.push_back(p);
 		}
 		if (segment1.second > segment1.first + 1)
 		{
@@ -51,7 +53,7 @@ public:
 			{
 				p = make_pair(segment1.second - 1, i);
 				boundary_pts_.push_back(p);
-				bottom_.push_back(p);
+				top_.push_back(p);
 			}
 		}
 		else if (segment1.second == segment1.first + 1)
@@ -63,7 +65,9 @@ public:
 			LOG(ERROR) << "Rectangle: upper bound (exclusive) not greater than lower bound";
 		}
 		// add bottom right element to bottom_
-		bottom_.push_back(make_pair(segment1.second - 1, segment2.second - 1));
+		bottom_.push_back(make_pair(segment1.first, segment2.second - 1));
+		// add top left element to top_
+		top_.push_front(make_pair(segment1.second - 1, segment2.first));
 	}
 	
 	IndexSegment segment1;
@@ -93,6 +97,11 @@ public:
 		successors_.push_back(rect);
 	}
 	
+	vector<Rectangle*> successors()
+	{
+		return successors_;
+	}
+	
 	int indegree()
 	{
 		return predecessors_.size();
@@ -114,6 +123,26 @@ public:
 		return left_;
 	}
 	
+	bool is_temp_marked()
+	{
+		return mark_ == 1;
+	}
+	
+	bool is_not_marked()
+	{
+		return mark_ == 0;
+	}
+	
+	void mark_permanent()
+	{
+		mark_ = 2;
+	}
+	
+	void mark_temp()
+	{
+		mark_ = 1;
+	}
+	
 private:
 	vector<Rectangle*> predecessors_;
 	vector<Rectangle*> successors_;
@@ -123,7 +152,7 @@ private:
 	 * boundaries on 4 sides of the rectangle
 	 * All 4 lists are disjoint:
 	 *	bottom-left corner is in left_;
-	 * 	top-left corner is in left_;
+	 * 	top-left corner is in top_;
 	 *	bottom-right corner is in bottom_;
 	 *	top-right corner is in right_.
 	 * All are ordered in ascending order of row/column index
@@ -132,4 +161,6 @@ private:
 	list<pair<int, int>> right_;
 	list<pair<int, int>> bottom_;
 	list<pair<int, int>> left_;
+	
+	bool mark_;
 };

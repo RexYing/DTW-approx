@@ -38,9 +38,16 @@ private:
 	unordered_map<pair<int, int>, Rectangle*, boost::hash<pair<int, int>> > inv_rects_;
 	
 	// contains the same elements as rects_, but is topologically sorted
-	vector<Rectangle*> sorted_rects_;
+	list<Rectangle*> sorted_rects_;
 	
 	void gen_rect(WSPD wspd);
 	
 	void build_rect_graph();
+	
+  /*
+   * topologically sort the rectangles after having built the dependency graph.
+   */
+	void topo_sort();
+	// used for topological sort
+	void visit(Rectangle* rect);
 };

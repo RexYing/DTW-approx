@@ -51,6 +51,8 @@ void RectCluster::partition()
 		}
 	}
 	
+	// after generating all rectangles, build a dependency graph of them and topologically sort them
+	build_rect_graph();
 }
 
 void RectCluster::gen_rect(WSPD wspd)
@@ -128,8 +130,8 @@ void RectCluster::build_rect_graph()
 				auto it = inv_rects_.find(next);
 				if (it == inv_rects_.end())
 				{
-					// points that are more than the upper bound of DTW away
-					VLOG(6) << "A point does not belong to any rectangle";
+					VLOG(6) << "Upper neighbor is not a boundary point: (" 
+							<< next.first << ", " << next.second << ")";
 				}
 				else
 				{
@@ -147,8 +149,8 @@ void RectCluster::build_rect_graph()
 				auto it = inv_rects_.find(next);
 				if (it == inv_rects_.end())
 				{
-					// points that are more than the upper bound of DTW away
-					VLOG(6) << "A point does not belong to any rectangle";
+					VLOG(6) << "Right neighbor is not a boundary point: (" 
+							<< next.first << ", " << next.second << ")";
 				}
 				else
 				{
@@ -166,8 +168,8 @@ void RectCluster::build_rect_graph()
 			auto it = inv_rects_.find(next);
 			if (it == inv_rects_.end())
 			{
-				// points that are more than the upper bound of DTW away
-				VLOG(6) << "A point does not belong to any rectangle";
+				VLOG(6) << "Upper right neighbor is not a boundary point: (" 
+						<< next.first << ", " << next.second << ")";
 			}
 			else
 			{
@@ -176,5 +178,39 @@ void RectCluster::build_rect_graph()
 			}
 		}
 		
+	}
+}
+
+/*
+ * topologically sort the rectangles after having built the dependency graph
+ */
+void RectCluster::topo_sort()
+{
+	for (auto rect : rects_)
+	{
+		if (rect->is_not_marked())
+		{
+			visit(rect);
+		}
+	}
+}
+
+
+void RectCluster::visit(Rectangle* rect)
+{
+	if (rect->is_temp_marked())
+	{
+		LOG(ERROR) << "Rectangle graph is not a DAG!";
+		return;
+	}
+	if (rect->is_not_marked())
+	{
+		rect->mark_temp();
+		for (auto succ_rect : rect->successors())
+		{
+			visit(succ_rect);
+		}
+		rect->mark_permanent();
+		sorted_rects_.push_front(rect);
 	}
 }
