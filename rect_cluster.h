@@ -18,6 +18,11 @@ public:
 	 */
 	void partition();
 	
+	/*
+	 * compute shortest path for the graph of rectangles after partition
+	 */
+	void compute_shortest_path();
+	
 	// export rectangles and their boundary points
 	string export_rects();
 	// summarize the ractangle partition
@@ -36,6 +41,7 @@ private:
 	unordered_set<Rectangle*> rects_;
 	// maps boundary points to the rectangle they belong to
 	unordered_map<pair<int, int>, Rectangle*, boost::hash<pair<int, int>> > inv_rects_;
+	unordered_map<pair<int, int>, double, boost::hash<pair<int, int>> > shortest_path_;
 	
 	// contains the same elements as rects_, but is topologically sorted
 	list<Rectangle*> sorted_rects_;
@@ -50,4 +56,10 @@ private:
 	void topo_sort();
 	// used for topological sort
 	void visit(Rectangle* rect);
+	
+	// compute shortest path values for the boundary points of a given rectangle
+	void compute_left_edge(Rectangle* rect, double approx_val);
+	void compute_right_edge(Rectangle* rect, double approx_val);
+	void compute_top_edge(Rectangle* rect, double approx_val);
+	void compute_bottom_edge(Rectangle* rect, double approx_val);
 };

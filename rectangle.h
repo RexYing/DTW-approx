@@ -4,6 +4,7 @@
 #include <unordered_set>
 
 #include "util/joiner.h"
+#include "Quadtree.h"
 
 using namespace std;
 
@@ -121,6 +122,14 @@ public:
 	
 	list<pair<int, int>> left() {
 		return left_;
+	}
+	
+	/*
+	 * A sample point in rectangle (no guarantee of the point's relative position in the rectangle.
+	 */
+	pair<int, int> sample()
+	{
+		return make_pair(segment1.first, segment2.first);
 	}
 	
 	bool is_temp_marked()

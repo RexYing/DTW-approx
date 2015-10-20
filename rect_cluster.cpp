@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <limits>
 #include <math.h>
 #include <random>
 
@@ -187,18 +189,23 @@ void RectCluster::build_rect_graph()
  */
 void RectCluster::topo_sort()
 {
+	// start with the rectangle that contains (0, 0)
+	LOG_IF(!inv_rects_.count(make_pair(0, 0)), ERROR) << "Origin is not a boundary point";
+	Rectangle* base_rect = inv_rects_[make_pair(0, 0)];
+	visit(base_rect);
 	for (auto rect : rects_)
 	{
 		if (rect->is_not_marked())
 		{
-			visit(rect);
+			LOG(WARNING) << "There is a point from which origin cannot reach";
+			// these rectangles do not need to be included in graph
+			//visit(rect);
 		}
 	}
 }
 
 void RectCluster::visit(Rectangle* rect)
 {
-	VLOG(6) << rect->to_string();
 	if (rect->is_temp_marked())
 	{
 		LOG(ERROR) << "Rectangle graph is not a DAG!";
@@ -215,3 +222,82 @@ void RectCluster::visit(Rectangle* rect)
 		sorted_rects_.push_front(rect);
 	}
 }
+
+void RectCluster::compute_shortest_path()
+{
+	// put origin in the shortest path first
+	shortest_path_.emplace(make_pair(0, 0), 0.0);
+	
+	for (auto rect : sorted_rects_)
+	{
+		// all cells in the rectangle are assumed to have the same approximate value
+		pair<int, int> sample_pt = rect->sample();
+		double approx_val = 
+				CGAL::sqrt(CGAL::squared_distance(curve1_[sample_pt.first], curve2_[sample_pt.second]));
+		compute_left_edge(rect, approx_val);
+		// bottom is calculated after left because the bottom left corner is in rect->top()
+		compute_bottom_edge(rect, approx_val);
+	}
+}
+
+void RectCluster::compute_left_edge(Rectangle* rect, double approx_val)
+{
+	double prev_dist = numeric_limits<double>::max();
+	double prev_left_dist = numeric_limits<double>::max();
+	// the point below the current point (predecessor)
+	pair<int, int> st = rect->left().front();
+	auto it = shortest_path_.find(make_pair(st.first - 1, st.second));
+	if (it != shortest_path_.end())
+	{
+		prev_dist = it->second 
+				+ CGAL::sqrt(CGAL::squared_distance(curve1_[st.first - 1], curve2_[st.second]));
+	}
+	it = shortest_path_.find(make_pair(st.first - 1, st.second - 1));
+	if (it != shortest_path_.end())
+	{
+		prev_left_dist = it->second
+				+ CGAL::sqrt(CGAL::squared_distance(curve1_[st.first - 1], curve2_[st.second - 1]));
+	}
+	
+	for (auto pt : rect->left())
+	{
+		if ((pt.first == 0) && (pt.second == 0))
+		{
+			continue;
+		}
+		
+		double curr_dist = numeric_limits<double>::max();
+		double curr_left_dist = numeric_limits<double>::max();
+		it = shortest_path_.find(make_pair(pt.first, pt.second - 1));
+		if (it != shortest_path_.end())
+		{
+			curr_left_dist = it->second
+					+ CGAL::sqrt(CGAL::squared_distance(curve1_[pt.first], curve2_[pt.second - 1]));
+		}
+		
+		curr_dist = std::min(curr_dist, std::min(curr_left_dist, std::min(prev_left_dist, prev_dist)));
+		shortest_path_.emplace(pt, curr_dist);
+		
+		// update prev dists
+		prev_dist = curr_dist + approx_val;
+		prev_left_dist = curr_left_dist;
+	}
+}
+
+void RectCluster::compute_right_edge(Rectangle* rect, double approx_val)
+{
+	
+}
+
+void RectCluster::compute_top_edge(Rectangle* rect, double approx_val)
+{
+	
+}
+
+void RectCluster::compute_bottom_edge(Rectangle* rect, double approx_val)
+{
+	
+}
+
+
+	
