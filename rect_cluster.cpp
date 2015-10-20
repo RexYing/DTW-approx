@@ -53,6 +53,7 @@ void RectCluster::partition()
 	
 	// after generating all rectangles, build a dependency graph of them and topologically sort them
 	build_rect_graph();
+	topo_sort();
 }
 
 void RectCluster::gen_rect(WSPD wspd)
@@ -161,7 +162,7 @@ void RectCluster::build_rect_graph()
 		}
 		
 		// top-right corner: need to add the rectangle that contains the upper-right corner
-		pair<int, int> p = rect->right().front();
+		pair<int, int> p = rect->right().back();
 		if ((p.first < curve1_.size() - 1) && (p.second < curve2_.size() - 1))
 		{
 			pair<int, int> next = make_pair(p.first + 1, p.second + 1);
@@ -195,9 +196,9 @@ void RectCluster::topo_sort()
 	}
 }
 
-
 void RectCluster::visit(Rectangle* rect)
 {
+	VLOG(6) << rect->to_string();
 	if (rect->is_temp_marked())
 	{
 		LOG(ERROR) << "Rectangle graph is not a DAG!";

@@ -89,15 +89,15 @@ public:
 	
 	void add_predecessor(Rectangle* rect)
 	{
-		predecessors_.push_back(rect);
+		predecessors_.insert(rect);
 	}
 	
 	void add_successor(Rectangle* rect)
 	{
-		successors_.push_back(rect);
+		successors_.insert(rect);
 	}
 	
-	vector<Rectangle*> successors()
+	unordered_set<Rectangle*> successors()
 	{
 		return successors_;
 	}
@@ -144,8 +144,8 @@ public:
 	}
 	
 private:
-	vector<Rectangle*> predecessors_;
-	vector<Rectangle*> successors_;
+	unordered_set<Rectangle*> predecessors_;
+	unordered_set<Rectangle*> successors_;
 	vector<pair<int, int>> boundary_pts_;
 	
 	/* 
@@ -162,5 +162,5 @@ private:
 	list<pair<int, int>> bottom_;
 	list<pair<int, int>> left_;
 	
-	bool mark_;
+	int mark_;
 };
