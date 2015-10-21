@@ -1,5 +1,3 @@
-#pragma once
-
 #include <boost/functional/hash.hpp>
 #include <unordered_map>
 #include <unordered_set>
@@ -10,9 +8,6 @@
 
 #include "QuadTree.h"
 #include "QuadTreeTwoClasses.h"
-
-#endif
-
 
 /*
  * Hash an unordered pair of quad tree pointers
@@ -77,3 +72,4 @@ class WSPD
 
 };
 
+#endif

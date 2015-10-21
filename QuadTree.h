@@ -1,8 +1,11 @@
-#pragma once
+#ifndef QUADTREE
+#define QUADTREE
+
 #include <sstream>
 #include <vector>
 #include <CGAL/Simple_cartesian.h>
 #include "easylogging++.h"
+
 using namespace std;
 
 typedef CGAL::Simple_cartesian<double> Kernel;
@@ -161,3 +164,5 @@ class QuadTree
     Direction_2 neg_y_dir_;
 
 };
+
+#endif

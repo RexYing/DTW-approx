@@ -1,3 +1,6 @@
+#ifndef RECTANGLE
+#define RECTANGLE
+
 #include <boost/functional/hash.hpp>
 #include <vector>
 #include <utility>
@@ -186,3 +189,5 @@ private:
 	
 	int mark_;
 };
+
+#endif

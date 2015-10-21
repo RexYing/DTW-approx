@@ -1,7 +1,5 @@
-#include <unordered_map>
-#include <unordered_set>
-
 #include "grid.h"
+#include "rect_shortest_path.h"
 #include "rectangle.h"
 
 /*
@@ -56,24 +54,4 @@ private:
 	void topo_sort();
 	// used for topological sort
 	void visit(Rectangle* rect);
-	
-	// compute shortest path values for the boundary points of a given rectangle
-	void compute_left_edge(Rectangle* rect, double approx_val);
-	void compute_right_edge(Rectangle* rect, double approx_val);
-	void compute_top_edge(Rectangle* rect, double approx_val);
-	void compute_bottom_edge(Rectangle* rect, double approx_val);
-	
-	void compute_right_edge_case1(
-		const vector<pair<int, int>>& right, 
-		const vector<pair<int, int>>& left, 
-		int dist,
-		int num_pts, 
-		double approx_val);
-	void compute_right_edge_case2(
-		const vector<pair<int, int>>& right, 
-		const vector<pair<int, int>>& left, 
-		int dist,
-		int start_idx, 
-		double approx_val);
-	vector<double> find_window_min(const vector<pair<int, int>>& edge, int start_idx, int win_size);
 };

@@ -1,15 +1,18 @@
+#ifndef JOINER
+#define JOINER
+
 #include <iostream>
 #include <initializer_list>
 
 class Joiner
 {
 public:
-	static Joiner* on(string separator)
+	static Joiner* on(std::string separator)
 	{
 		return new Joiner(separator);
 	}
 	
-	string join(std::initializer_list<int> list)
+	std::string join(std::initializer_list<int> list)
 	{
 		std::stringstream sstm;
 		auto it = list.begin();
@@ -25,8 +28,10 @@ public:
 
 		
 private:
-	Joiner(string separator): separator_(separator) { };
+	Joiner(std::string separator): separator_(separator) { };
 		
-	string separator_;
+	std::string separator_;
 	
 };
+
+#endif

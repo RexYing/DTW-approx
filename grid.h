@@ -1,3 +1,6 @@
+#ifndef GRID
+#define GRID
+
 #include <unordered_map>
 
 #include "WSPD.h"
@@ -56,3 +59,5 @@ private:
 	// inserts points into grid at initialization
 	void insert_grid(Vector_2 offset_vector);
 };
+
+#endif

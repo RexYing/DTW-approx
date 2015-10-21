@@ -52,10 +52,15 @@ endif()
 # include for local package
 
 include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=gnu++11" COMPILER_SUPPORTS_GNUXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-if(COMPILER_SUPPORTS_CXX11)
+if(COMPILER_SUPPORTS_GNUXX11)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+	message(STATUS "Use GNU++11 standard")
+elseif(COMPILER_SUPPORTS_CXX11)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+	message(STATUS "Use C++11 standard")
 elseif(COMPILER_SUPPORTS_CXX0X)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 else()
@@ -69,12 +74,32 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
 
-# Creating entries for target: executable
+# Include Boost
 # ############################
 
-include_directories ("${PROJECT_SOURCE_DIR}")
-INCLUDE_DIRECTORIES("${Boost_INCLUDE_DIR}")
-link_directories("${Boost_LIBRARY_DIR}")
+include_directories ( "${PROJECT_SOURCE_DIR}" )
+INCLUDE_DIRECTORIES( "${Boost_INCLUDE_DIR}" )
+link_directories( "${Boost_LIBRARY_DIR}" )
+
+# Test
+# ############################
+enable_testing()
+find_package( GTest )
+
+if ( NOT GTEST_FOUND )
+
+  message(STATUS "This project requires the Google Test library to run the tests.")
+
+  return()
+
+endif()
+
+include_directories( ${GTEST_INCLUDE_DIRS} )
+
+
+# Source
+# Creating entries for target: executable
+# ############################
 
 add_library(
   WSPD
@@ -84,13 +109,14 @@ add_library(
 )
 add_library( Frechet FrechetDecider.cpp FrechetDecider.h )
 
-add_library( Util util/joiner.h)
+add_library( Util util/joiner.h )
 set_target_properties( Util PROPERTIES LINKER_LANGUAGE CXX)
 
 add_executable(
   executable
 	grid.cpp grid.h
 	rect_cluster.cpp rect_cluster.h
+	rect_shortest_path.cpp rect_shortest_path.h
 	rectangle.h
   main.cpp
 )
@@ -115,3 +141,25 @@ target_link_libraries(
 	gen_tests   ${Boost_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES}
 )
 
+
+# Test targets
+# ############################
+if( COMPILER_SUPPORTS_GNUXX11 )
+	add_executable( 
+		RectClusterTest 
+		tests/rect_cluster_test.cpp
+		grid.cpp grid.h
+		rect_cluster.cpp rect_cluster.h
+		rect_shortest_path.cpp rect_shortest_path.h
+		rectangle.h
+	)
+
+	target_link_libraries(
+		RectClusterTest 
+		${Boost_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES} ${GTEST_BOTH_LIBRARIES}
+		WSPD
+		Util
+	)
+
+	add_test(AllTestsInDTWApprox RectClusterTest)
+endif()

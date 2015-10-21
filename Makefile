@@ -56,10 +56,21 @@ CMAKE_BINARY_DIR = /home/rex.ying0923/main/CS/algo/research/DTW-approx
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest.exe --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
+
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake.exe -E echo No\ interactive\ CMake\ dialog\ available.
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/ccmake.exe -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -122,6 +133,19 @@ Frechet: cmake_check_build_system
 Frechet/fast:
 	$(MAKE) -f CMakeFiles/Frechet.dir/build.make CMakeFiles/Frechet.dir/build
 .PHONY : Frechet/fast
+
+#=============================================================================
+# Target rules for targets named RectClusterTest
+
+# Build rule for target.
+RectClusterTest: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 RectClusterTest
+.PHONY : RectClusterTest
+
+# fast build rule for target.
+RectClusterTest/fast:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/build
+.PHONY : RectClusterTest/fast
 
 #=============================================================================
 # Target rules for targets named Util
@@ -343,6 +367,7 @@ grid.o: grid.cpp.o
 
 # target to build an object file
 grid.cpp.o:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/grid.cpp.o
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/grid.cpp.o
 .PHONY : grid.cpp.o
 
@@ -352,6 +377,7 @@ grid.i: grid.cpp.i
 
 # target to preprocess a source file
 grid.cpp.i:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/grid.cpp.i
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/grid.cpp.i
 .PHONY : grid.cpp.i
 
@@ -361,6 +387,7 @@ grid.s: grid.cpp.s
 
 # target to generate assembly for a file
 grid.cpp.s:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/grid.cpp.s
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/grid.cpp.s
 .PHONY : grid.cpp.s
 
@@ -397,6 +424,7 @@ rect_cluster.o: rect_cluster.cpp.o
 
 # target to build an object file
 rect_cluster.cpp.o:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_cluster.cpp.o
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_cluster.cpp.o
 .PHONY : rect_cluster.cpp.o
 
@@ -406,6 +434,7 @@ rect_cluster.i: rect_cluster.cpp.i
 
 # target to preprocess a source file
 rect_cluster.cpp.i:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_cluster.cpp.i
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_cluster.cpp.i
 .PHONY : rect_cluster.cpp.i
 
@@ -415,8 +444,66 @@ rect_cluster.s: rect_cluster.cpp.s
 
 # target to generate assembly for a file
 rect_cluster.cpp.s:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_cluster.cpp.s
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_cluster.cpp.s
 .PHONY : rect_cluster.cpp.s
+
+rect_shortest_path.o: rect_shortest_path.cpp.o
+
+.PHONY : rect_shortest_path.o
+
+# target to build an object file
+rect_shortest_path.cpp.o:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_shortest_path.cpp.o
+	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_shortest_path.cpp.o
+.PHONY : rect_shortest_path.cpp.o
+
+rect_shortest_path.i: rect_shortest_path.cpp.i
+
+.PHONY : rect_shortest_path.i
+
+# target to preprocess a source file
+rect_shortest_path.cpp.i:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_shortest_path.cpp.i
+	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_shortest_path.cpp.i
+.PHONY : rect_shortest_path.cpp.i
+
+rect_shortest_path.s: rect_shortest_path.cpp.s
+
+.PHONY : rect_shortest_path.s
+
+# target to generate assembly for a file
+rect_shortest_path.cpp.s:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_shortest_path.cpp.s
+	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_shortest_path.cpp.s
+.PHONY : rect_shortest_path.cpp.s
+
+tests/rect_cluster_test.o: tests/rect_cluster_test.cpp.o
+
+.PHONY : tests/rect_cluster_test.o
+
+# target to build an object file
+tests/rect_cluster_test.cpp.o:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/tests/rect_cluster_test.cpp.o
+.PHONY : tests/rect_cluster_test.cpp.o
+
+tests/rect_cluster_test.i: tests/rect_cluster_test.cpp.i
+
+.PHONY : tests/rect_cluster_test.i
+
+# target to preprocess a source file
+tests/rect_cluster_test.cpp.i:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/tests/rect_cluster_test.cpp.i
+.PHONY : tests/rect_cluster_test.cpp.i
+
+tests/rect_cluster_test.s: tests/rect_cluster_test.cpp.s
+
+.PHONY : tests/rect_cluster_test.s
+
+# target to generate assembly for a file
+tests/rect_cluster_test.cpp.s:
+	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/tests/rect_cluster_test.cpp.s
+.PHONY : tests/rect_cluster_test.cpp.s
 
 # Help Target
 help:
@@ -424,6 +511,8 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... test"
+	@echo "... RectClusterTest"
 	@echo "... edit_cache"
 	@echo "... executable"
 	@echo "... gen_tests"
@@ -458,6 +547,12 @@ help:
 	@echo "... rect_cluster.o"
 	@echo "... rect_cluster.i"
 	@echo "... rect_cluster.s"
+	@echo "... rect_shortest_path.o"
+	@echo "... rect_shortest_path.i"
+	@echo "... rect_shortest_path.s"
+	@echo "... tests/rect_cluster_test.o"
+	@echo "... tests/rect_cluster_test.i"
+	@echo "... tests/rect_cluster_test.s"
 .PHONY : help
 
 
