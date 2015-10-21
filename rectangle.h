@@ -12,7 +12,10 @@ class Rectangle {
 public:
 	Rectangle(IndexSegment segment1, IndexSegment segment2):
 			segment1(segment1), segment2(segment2), mark_(0)
-	{ 
+	{
+		height_ = segment1.second - segment1.first;
+		width_ = segment2.second - segment2.first;
+		
 		pair<int, int> p;
 		for (int i = segment1.first; i < segment1.second; i++)
 		{
@@ -37,10 +40,11 @@ public:
 		{
 			LOG(ERROR) << "Rectangle: upper bound (exclusive) not greater than lower bound";
 		}
-		// remove bottom right element that should be in bottom_
-		right_.pop_front();
-		// remove top left element that should be in top_
-		left_.pop_back();
+		
+		// add bottom left corner to bottom_
+		bottom_.push_back(make_pair(segment1.first, segment2.first));
+		// add top left corner to top_
+		top_.push_back(make_pair(segment1.second - 1, segment2.first));
 		
 		for (int i = segment2.first + 1; i < segment2.second - 1; i++)
 		{
@@ -65,10 +69,11 @@ public:
 		{
 			LOG(ERROR) << "Rectangle: upper bound (exclusive) not greater than lower bound";
 		}
-		// add bottom right element to bottom_
+		
+		// add bottom right corner element to bottom_
 		bottom_.push_back(make_pair(segment1.first, segment2.second - 1));
-		// add top left element to top_
-		top_.push_front(make_pair(segment1.second - 1, segment2.first));
+		// add top right corner elements to top_
+		top_.push_back(make_pair(segment1.second - 1, segment2.second - 1));
 	}
 	
 	IndexSegment segment1;
@@ -108,20 +113,30 @@ public:
 		return predecessors_.size();
 	}
 	
-	list<pair<int, int>> top() {
+	vector<pair<int, int>> top() {
 		return top_;
 	}
 	
-	list<pair<int, int>> right() {
+	vector<pair<int, int>> right() {
 		return right_;
 	}
 	
-	list<pair<int, int>> bottom() {
+	vector<pair<int, int>> bottom() {
 		return bottom_;
 	}
 	
-	list<pair<int, int>> left() {
+	vector<pair<int, int>> left() {
 		return left_;
+	}
+	
+	int width()
+	{
+		return width_;
+	}
+	
+	int height()
+	{
+		return height_;
 	}
 	
 	/*
@@ -153,23 +168,21 @@ public:
 	}
 	
 private:
+	int width_;
+	int height_;
 	unordered_set<Rectangle*> predecessors_;
 	unordered_set<Rectangle*> successors_;
 	vector<pair<int, int>> boundary_pts_;
 	
 	/* 
 	 * boundaries on 4 sides of the rectangle
-	 * All 4 lists are disjoint:
-	 *	bottom-left corner is in left_;
-	 * 	top-left corner is in top_;
-	 *	bottom-right corner is in bottom_;
-	 *	top-right corner is in right_.
+	 * All 4 vectors are disjoint except at corners, which are contained in 2 of the lists
 	 * All are ordered in ascending order of row/column index
 	 */
-	list<pair<int, int>> top_;
-	list<pair<int, int>> right_;
-	list<pair<int, int>> bottom_;
-	list<pair<int, int>> left_;
+	vector<pair<int, int>> top_;
+	vector<pair<int, int>> right_;
+	vector<pair<int, int>> bottom_;
+	vector<pair<int, int>> left_;
 	
 	int mark_;
 };
