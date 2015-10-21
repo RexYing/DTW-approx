@@ -43,3 +43,8 @@ CMakeCache.txt
 # log files
 logs/*
 
+# eclipse
+.cproject
+.project
+.settings/*
+
