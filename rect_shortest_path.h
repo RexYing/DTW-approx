@@ -21,7 +21,6 @@ public:
 			
 	CellToDouble compute_shortest_path();
 	
-protected:
 	// compute shortest path values for the boundary points of a given rectangle
 	void compute_left_edge(Rectangle* rect, double approx_val);
 	void compute_right_edge(Rectangle* rect, double approx_val);
@@ -41,6 +40,17 @@ protected:
 		int start_idx, 
 		double approx_val);
 	vector<double> find_window_min(const vector<pair<int, int>>& edge, int start_idx, int win_size);
+	
+	CellToDouble shortest_path()
+	{
+		return shortest_path_;
+	}
+	
+	/* For tests only */
+	void set_shortest_path(CellToDouble shortest_path)
+	{
+		shortest_path_ = shortest_path;
+	}
 	
 private:
 	Curve curve1_;

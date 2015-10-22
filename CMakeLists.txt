@@ -161,5 +161,23 @@ if( COMPILER_SUPPORTS_GNUXX11 )
 		Util
 	)
 
-	add_test(AllTestsInDTWApprox RectClusterTest)
+	add_test(AllTestsInDTWApprox RectClusterTest)	
+	
+	add_executable( 
+		RectShortestPathTest 
+		tests/rect_shortest_path_test.cpp
+		grid.cpp grid.h
+		rect_cluster.cpp rect_cluster.h
+		rect_shortest_path.cpp rect_shortest_path.h
+		rectangle.h
+	)
+
+	target_link_libraries(
+		RectShortestPathTest 
+		${Boost_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES} ${GTEST_BOTH_LIBRARIES}
+		WSPD
+		Util
+	)
+
+	add_test(AllTestsInDTWApprox RectShortestPathTest)	
 endif()

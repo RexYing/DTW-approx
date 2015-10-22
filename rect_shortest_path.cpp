@@ -12,12 +12,13 @@ RectShortestPath::RectShortestPath(
 		const list<Rectangle*>& sorted_rects, 
 		const CellToRect& inv_rects):
 		curve1_(curve1), curve2_(curve2), sorted_rects_(sorted_rects), inv_rects_(inv_rects)
-{ }
+{ 
+	// put origin in the shortest path first
+	shortest_path_.emplace(make_pair(0, 0), 0.0);
+}
 
 CellToDouble RectShortestPath::compute_shortest_path()
 {
-	// put origin in the shortest path first
-	shortest_path_.emplace(make_pair(0, 0), 0.0);
 	
 	for (auto rect : sorted_rects_)
 	{
@@ -44,13 +45,18 @@ void RectShortestPath::compute_left_edge(Rectangle* rect, double approx_val)
 		prev_dist = it->second 
 				+ CGAL::sqrt(CGAL::squared_distance(curve1_[st.first - 1], curve2_[st.second]));
 	}
+	else if (st.first == 0 && st.second == 0) // special case: at starting point
+	{
+		prev_dist = CGAL::sqrt(CGAL::squared_distance(curve1_[st.first], curve2_[st.second]));
+	}
+	
 	it = shortest_path_.find(make_pair(st.first - 1, st.second - 1));
 	if (it != shortest_path_.end())
 	{
 		prev_left_dist = it->second
 				+ CGAL::sqrt(CGAL::squared_distance(curve1_[st.first - 1], curve2_[st.second - 1]));
 	}
-	
+
 	for (auto pt : rect->left())
 	{
 		if ((pt.first == 0) && (pt.second == 0))
@@ -88,6 +94,11 @@ void RectShortestPath::compute_bottom_edge(Rectangle* rect, double approx_val)
 		prev_dist = it->second 
 				+ CGAL::sqrt(CGAL::squared_distance(curve1_[st.first], curve2_[st.second - 1]));
 	}
+	else if (st.first == 0 && st.second == 0) // special case: at starting point
+	{
+		prev_dist = CGAL::sqrt(CGAL::squared_distance(curve1_[st.first], curve2_[st.second]));
+	}
+	
 	it = shortest_path_.find(make_pair(st.first - 1, st.second - 1));
 	if (it != shortest_path_.end())
 	{
@@ -95,7 +106,7 @@ void RectShortestPath::compute_bottom_edge(Rectangle* rect, double approx_val)
 				+ CGAL::sqrt(CGAL::squared_distance(curve1_[st.first - 1], curve2_[st.second - 1]));
 	}
 	
-	for (auto pt : rect->left())
+	for (auto pt : rect->bottom())
 	{
 		if ((pt.first == 0) && (pt.second == 0))
 		{
@@ -165,12 +176,22 @@ void RectShortestPath::compute_right_edge_case1(
 	{
 		LOG_IF(!shortest_path_.count(p), ERROR) 
 				<< "Left edge not computed yet when computing right edge";
-		left_mins.push_back(std::min(shortest_path_[p], left_mins.back()));
+		if (left_mins.empty())
+		{
+			left_mins.push_back(shortest_path_[p]);
+		}
+		else
+		{
+			left_mins.push_back(std::min(shortest_path_[p], left_mins.back()));
+		}
 	}
 	
-	int idx = 0;
+	// start from the second cell in the edge since we already have the first one when computing 
+	// left/bottom
+	int idx = 1;
 	pair<int, int> p = right.front();
 	double prev_val = shortest_path_[p];
+
 	// assume the bottom right corner is already computed when computing the bottom edge
 	for (int i = 1; i < num_pts; i++)
 	{
@@ -182,15 +203,17 @@ void RectShortestPath::compute_right_edge_case1(
 		// case 2: q on horizontal segment not after the diagonal that crosses p
 		pair<int, int> qj = make_pair(p.first - idx, p.second - idx);
 		LOG_IF(!shortest_path_.count(qj), ERROR)
-			<< "Bottom edge not computed yet when computing right edge";
+				<< "Bottom edge not computed yet when computing right edge: (" 
+				<< qj.first << ", " << qj.second << ")";
 		double min2 = shortest_path_[qj] + approx_val * idx;
 		
 		// case 3: q on horizontal segment after the diagonal that crosses p
 		double min3 = prev_val + approx_val;
 		
 		double curr_val = std::min(min1, std::min(min2, min3));
-		LOG_IF(!shortest_path_.count(p), ERROR)
-			<< "A value on right edge already exists";
+		LOG_IF(shortest_path_.count(p), ERROR)
+			<< "A value on edge already exists: (" << p.first << ", " << p.second 
+			<< ") -> " << shortest_path_[p];
 		shortest_path_.emplace(p, curr_val);
 		
 		// update
@@ -223,8 +246,9 @@ void RectShortestPath::compute_right_edge_case2(
 		
 		double curr_val = std::min(min1, min2);
 		
-		LOG_IF(!shortest_path_.count(p), ERROR)
-			<< "compute_edge_case2: A value on edge already exists";
+		LOG_IF(shortest_path_.count(p), ERROR)
+			<< "A value on edge already exists: (" << p.first << ", " << p.second 
+			<< ") -> " << shortest_path_[p];
 		shortest_path_.emplace(p, curr_val);
 		
 		// update
@@ -245,7 +269,8 @@ vector<double> RectShortestPath::find_window_min(
 	for (int i = start_idx - win_size + 1; i < start_idx; i++)
 	{
 		LOG_IF(!shortest_path_.count(edge[i]), ERROR)
-				<< "find_window_min: Opposing edge not computed yet when computing top/right edge";
+				<< "find_window_min: Opposing edge not computed yet when computing top/right edge (" 
+				<< edge[i].first << ", " << edge[i].second << ")";
 		double curr_val = shortest_path_[edge[i]];
 		while (!subseq.empty() && subseq.back() >= curr_val)
 		{
