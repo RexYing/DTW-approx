@@ -179,7 +179,7 @@ private:
 	
 	/* 
 	 * boundaries on 4 sides of the rectangle
-	 * All 4 vectors are disjoint except at corners, which are contained in 2 of the lists
+	 * All 4 vectors are disjoint except at corners, which are contained in 2 of the vectors
 	 * All are ordered in ascending order of row/column index
 	 */
 	vector<pair<int, int>> top_;

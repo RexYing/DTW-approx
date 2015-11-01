@@ -1,3 +1,5 @@
+#include "math.h"
+
 #include "easylogging++.h"
 #include "gtest/gtest.h"
 #include "rect_shortest_path.h"
@@ -135,7 +137,7 @@ TEST_F(RectShortestPathTest, MethodComputeBottomEdge) {
 	EXPECT_EQ(0, shortest_path.count(make_pair(0, 8)));
 }
 
-// Tests that RectShortestPath computes shortest path on left edges correctly
+// Tests that RectShortestPath computes shortest path on right edges correctly
 TEST_F(RectShortestPathTest, MethodComputeRightEdge) {
 	impl_single->compute_left_edge(single_rect, 1);
 	impl_single->compute_bottom_edge(single_rect, 1);
@@ -157,7 +159,56 @@ TEST_F(RectShortestPathTest, MethodComputeRightEdge) {
 				<< "The shortest path to (" << i << ", 7) is not correct";
 	}
 	
-	EXPECT_EQ(0, shortest_path.count(make_pair(10, 0)));
+	EXPECT_EQ(0, shortest_path.count(make_pair(10, 7)));
 }
 
+// Tests that RectShortestPath computes shortest path on right edges correctly
+TEST_F(RectShortestPathTest, MethodComputeTopEdge) {
+	impl_single->compute_left_edge(single_rect, 1);
+	impl_single->compute_bottom_edge(single_rect, 1);
+	impl_single->compute_right_edge(single_rect, 1);
+	impl_single->compute_top_edge(single_rect, 1);
+
+	CellToDouble shortest_path = impl_single->shortest_path();
+	
+	// extract right edge values
+	vector<double> actual_val;
+	for (int i = 0; i < 8; i++)
+	{
+		actual_val.push_back(shortest_path[make_pair(9, i)]);
+	}
+	
+	vector<double> expected_val = {9, 9, 9, 9, 9, 9, 9, 9};
+	for (int i = 0; i < 8; i++)
+	{
+		EXPECT_EQ(expected_val[i], actual_val[i]) 
+				<< "The shortest path to (9, " << i << ") is not correct";
+	}
+	
+	EXPECT_EQ(0, shortest_path.count(make_pair(9, 8)));
+}
+
+// Test based on 2-by-2 rectangles
+TEST_F(RectShortestPathTest, MethodComputeShortestpath)
+{
+	CellToDouble shortest_path = impl_2_2->compute_shortest_path();
+	
+	EXPECT_EQ(9, shortest_path[make_pair(9, 7)]);
+	
+	// shortest path: through (8, 7), (9, 8)
+	EXPECT_EQ(8 + sqrt(2) + sqrt(2), shortest_path[make_pair(10, 8)]);
+	
+	// shortest path: through (7, 7), (8, 8)
+	EXPECT_EQ(8 + 11 * sqrt(65), shortest_path[make_pair(9, 19)]);
+	
+	// shortest path: through (9, 7), (10, 7)
+	EXPECT_EQ(9 + sqrt(5) + 9 * sqrt(101), shortest_path[make_pair(19, 7)]);
+	
+	// shortest path: through (8, 7), (9, 8), (10, 9)
+	EXPECT_EQ(8 + sqrt(2) + sqrt(2) + 10 * sqrt(5), shortest_path[make_pair(19, 19)]);
+	
+	EXPECT_EQ(0, shortest_path.count(make_pair(19, 20)));
+	EXPECT_EQ(0, shortest_path.count(make_pair(20, 19)));
+}
+	
 }  // namespace

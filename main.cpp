@@ -1,4 +1,5 @@
 #include <boost/program_options.hpp>
+#include <chrono>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -162,9 +163,20 @@ int main(int argc, char* argv[])
 	
 	/* Compute approximate DTW */
 	
+	const auto approx_dtw_begin = chrono::high_resolution_clock::now(); // or use steady_clock 
+	
 	RectCluster rect(alpha, beta, dtw_lb, dtw_ub, eps);
 	rect.partition();
 	LOG(INFO) << rect.summarize();
+	
+	// compute approximate DTW
+	double approx_dtw = rect.compute_approx_dtw();
+	
+	auto approx_dtw_time = chrono::high_resolution_clock::now() - approx_dtw_begin;
+	LOG(INFO) << "Finished approximate DTW computation\n" 
+			<< "Elapsed time: " << chrono::duration<double, std::milli>(approx_dtw_time).count() << ".\n";
+			
+	LOG(INFO) << "Approximate DTW distance between the given 2 curves: " << approx_dtw;
 	
 	ofstream rect_file;
 	if (rects_filename.compare("") != 0)

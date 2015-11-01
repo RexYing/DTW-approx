@@ -222,9 +222,11 @@ void RectCluster::visit(Rectangle* rect)
 	}
 }
 
-void RectCluster::compute_shortest_path()
+double RectCluster::compute_approx_dtw()
 {
 	RectShortestPath sp(curve1_, curve2_, sorted_rects_, inv_rects_);
 	shortest_path_ = sp.compute_shortest_path();
+	
+	return shortest_path_[make_pair(curve1_.size(), curve2_.size())];
 }
 	

@@ -17,9 +17,9 @@ public:
 	void partition();
 	
 	/*
-	 * compute shortest path for the graph of rectangles after partition
+	 * compute approximate DTW by computing shortest path for the graph of rectangles after partition
 	 */
-	void compute_shortest_path();
+	double compute_approx_dtw();
 	
 	// export rectangles and their boundary points
 	string export_rects();

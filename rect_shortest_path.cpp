@@ -29,6 +29,10 @@ CellToDouble RectShortestPath::compute_shortest_path()
 		compute_left_edge(rect, approx_val);
 		// bottom is calculated after left because the bottom left corner is in rect->top()
 		compute_bottom_edge(rect, approx_val);
+		
+		compute_right_edge(rect, approx_val);
+		
+		compute_top_edge(rect, approx_val);
 	}
 	return shortest_path_;
 }
@@ -211,10 +215,18 @@ void RectShortestPath::compute_right_edge_case1(
 		double min3 = prev_val + approx_val;
 		
 		double curr_val = std::min(min1, std::min(min2, min3));
-		LOG_IF(shortest_path_.count(p), ERROR)
-			<< "A value on edge already exists: (" << p.first << ", " << p.second 
-			<< ") -> " << shortest_path_[p];
-		shortest_path_.emplace(p, curr_val);
+		if (shortest_path_.count(p))
+		{
+			if (curr_val < shortest_path_[p])
+			{
+				LOG(INFO) << "replace corner value";
+				shortest_path_[p] = curr_val;
+			}
+		}
+		else
+		{
+			shortest_path_.emplace(p, curr_val);
+		}
 		
 		// update
 		idx++;
@@ -246,10 +258,18 @@ void RectShortestPath::compute_right_edge_case2(
 		
 		double curr_val = std::min(min1, min2);
 		
-		LOG_IF(shortest_path_.count(p), ERROR)
-			<< "A value on edge already exists: (" << p.first << ", " << p.second 
-			<< ") -> " << shortest_path_[p];
-		shortest_path_.emplace(p, curr_val);
+		if (shortest_path_.count(p))
+		{
+			if (curr_val < shortest_path_[p])
+			{
+				LOG(INFO) << "replace corner value";
+				shortest_path_[p] = curr_val;
+			}
+		}
+		else
+		{
+			shortest_path_.emplace(p, curr_val);
+		}
 		
 		// update
 		prev_val = curr_val;
