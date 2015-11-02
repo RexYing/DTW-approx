@@ -434,6 +434,33 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+naive_dtw.o: naive_dtw.cpp.o
+
+.PHONY : naive_dtw.o
+
+# target to build an object file
+naive_dtw.cpp.o:
+	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/naive_dtw.cpp.o
+.PHONY : naive_dtw.cpp.o
+
+naive_dtw.i: naive_dtw.cpp.i
+
+.PHONY : naive_dtw.i
+
+# target to preprocess a source file
+naive_dtw.cpp.i:
+	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/naive_dtw.cpp.i
+.PHONY : naive_dtw.cpp.i
+
+naive_dtw.s: naive_dtw.cpp.s
+
+.PHONY : naive_dtw.s
+
+# target to generate assembly for a file
+naive_dtw.cpp.s:
+	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/naive_dtw.cpp.s
+.PHONY : naive_dtw.cpp.s
+
 rect_cluster.o: rect_cluster.cpp.o
 
 .PHONY : rect_cluster.o
@@ -594,6 +621,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... naive_dtw.o"
+	@echo "... naive_dtw.i"
+	@echo "... naive_dtw.s"
 	@echo "... rect_cluster.o"
 	@echo "... rect_cluster.i"
 	@echo "... rect_cluster.s"

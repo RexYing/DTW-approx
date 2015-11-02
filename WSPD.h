@@ -1,10 +1,10 @@
+#ifndef WSPD_H
+#define WSPD_H
+
 #include <boost/functional/hash.hpp>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
-
-#ifndef QUADTREE_H
-#define QUADTREE_H
 
 #include "QuadTree.h"
 #include "QuadTreeTwoClasses.h"

@@ -6,9 +6,10 @@
 #include <CGAL/Simple_cartesian.h>
 
 
-#include "QuadTree.h"
-#include "FrechetDecider.h"
 #include "easylogging++.h"
+#include "FrechetDecider.h"
+#include "naive_dtw.h"
+#include "QuadTree.h"
 #include "rect_cluster.h"
 
 namespace po = boost::program_options;
@@ -163,21 +164,24 @@ int main(int argc, char* argv[])
 	
 	/* Compute approximate DTW */
 	
+	LOG(INFO) << "Computing shortest path through rectangles";
 	const auto approx_dtw_begin = chrono::high_resolution_clock::now(); // or use steady_clock 
 	
 	RectCluster rect(alpha, beta, dtw_lb, dtw_ub, eps);
 	rect.partition();
-	LOG(INFO) << rect.summarize();
 	
 	// compute approximate DTW
 	double approx_dtw = rect.compute_approx_dtw();
 	
 	auto approx_dtw_time = chrono::high_resolution_clock::now() - approx_dtw_begin;
 	LOG(INFO) << "Finished approximate DTW computation\n" 
-			<< "Elapsed time: " << chrono::duration<double, std::milli>(approx_dtw_time).count() << ".\n";
+			<< "Elapsed time: " << chrono::duration<double, std::milli>(approx_dtw_time).count() / 1000 
+			<< "seconds.\n";
 			
 	LOG(INFO) << "Approximate DTW distance between the given 2 curves: " << approx_dtw;
 	
+	LOG(INFO) << "Exporting rectangles ...";
+	LOG(INFO) << rect.summarize();
 	ofstream rect_file;
 	if (rects_filename.compare("") != 0)
 	{
@@ -191,6 +195,24 @@ int main(int argc, char* argv[])
 			LOG(ERROR) << "Error opening file for exporting rectangles";
 		}
 	}
+	
+	// ---------------- Run Naive DTW algorithm ---------------------------
+	
+	LOG(INFO) << "Computing exact DTW using the naive DP algorithm";
+	const auto exact_dtw_begin = chrono::high_resolution_clock::now(); // or use steady_clock 
+	
+	NaiveDTW naiveDtw(alpha, beta);
+	double exact_dtw = naiveDtw.compute_DTW();
+	
+	auto exact_dtw_time = chrono::high_resolution_clock::now() - exact_dtw_begin;
+	
+	LOG(INFO) << "Finished exact DTW computation\n" 
+			<< "Elapsed time: " << chrono::duration<double, std::milli>(exact_dtw_time).count() / 1000 
+			<< "seconds.\n";
+			
+	LOG(INFO) << "The exact DTW distance between the given 2 curves: " << exact_dtw;
+	
+	LOG(INFO) << "The approximation ratio: " << (approx_dtw - exact_dtw) / exact_dtw * 100 << "%.";
 
 	return 0;
 }

@@ -6,19 +6,13 @@
 #include <CGAL/Simple_cartesian.h>
 #include "easylogging++.h"
 
+#include "curve.h"
+
 using namespace std;
 
-typedef CGAL::Simple_cartesian<double> Kernel;
-typedef Kernel::Point_2 Point_2;
 typedef Kernel::Direction_2 Direction_2;
 typedef Kernel::Vector_2 Vector_2;
 typedef Kernel::Iso_rectangle_2 BBox; //bounding box for 2D point sets
-
-/* 
- * A segment of consecutive indices from the first int to last int, 
- * inclusive for the first index and exclusive for the second index.
- */
-typedef pair<int, int> IndexSegment;
 
 class QuadTree
 {

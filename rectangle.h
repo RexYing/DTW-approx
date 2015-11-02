@@ -66,7 +66,7 @@ public:
 		}
 		else if (segment1.second == segment1.first + 1)
 		{
-			bottom_ = top_;
+			top_ = bottom_;
 		}
 		else
 		{
@@ -140,6 +140,11 @@ public:
 	int height()
 	{
 		return height_;
+	}
+	
+	// upper-right corner of the rectangle
+	pair<int, int> upper_right() {
+		return top_.back();
 	}
 	
 	/*

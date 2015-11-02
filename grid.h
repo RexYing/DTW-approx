@@ -15,8 +15,6 @@ struct pairhash {
     }
 };
 
-typedef vector<Point_2> Curve;
-
 typedef pair<long, long> GridIndex;
 // a pair of point sets in grid
 typedef pair<Curve*, Curve*> SetPair;

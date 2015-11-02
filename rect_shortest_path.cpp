@@ -219,7 +219,7 @@ void RectShortestPath::compute_right_edge_case1(
 		{
 			if (curr_val < shortest_path_[p])
 			{
-				LOG(INFO) << "replace corner value";
+				//LOG(INFO) << "replace corner value";
 				shortest_path_[p] = curr_val;
 			}
 		}
@@ -262,7 +262,7 @@ void RectShortestPath::compute_right_edge_case2(
 		{
 			if (curr_val < shortest_path_[p])
 			{
-				LOG(INFO) << "replace corner value";
+				//LOG(INFO) << "replace corner value";
 				shortest_path_[p] = curr_val;
 			}
 		}

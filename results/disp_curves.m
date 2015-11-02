@@ -1,17 +1,17 @@
 figure
-drawCurves('tests/line1.dtw');
+drawCurves('data/line1.dtw');
 hold on
-drawCurves('tests/line2.dtw');
+drawCurves('data/line2.dtw');
 
 figure
-drawCurves('tests/rand1.dtw');
+drawCurves('data/rand1.dtw');
 hold on
-drawCurves('tests/rand2.dtw');
+drawCurves('data/rand2.dtw');
 
 figure
-drawCurves('tests/rand3.dtw');
+drawCurves('data/rand3.dtw');
 hold on
-drawCurves('tests/rand4.dtw');
+drawCurves('data/rand4.dtw');
 
 %% DTW matrix
 

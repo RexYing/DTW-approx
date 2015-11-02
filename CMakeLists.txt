@@ -106,6 +106,7 @@ add_library(
   QuadTree.cpp QuadTree.h
   QuadTreeTwoClasses.cpp QuadTreeTwoClasses.h
   WSPD.cpp WSPD.h
+	curve.h
 )
 add_library( Frechet FrechetDecider.cpp FrechetDecider.h )
 
@@ -118,6 +119,7 @@ add_executable(
 	rect_cluster.cpp rect_cluster.h
 	rect_shortest_path.cpp rect_shortest_path.h
 	rectangle.h
+	naive_dtw.cpp naive_dtw.h
   main.cpp
 )
 add_executable(

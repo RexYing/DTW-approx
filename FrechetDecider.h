@@ -4,14 +4,13 @@
 #include <unordered_set>
 
 #include "easylogging++.h"
-#include "QuadTree.h"
+#include "curve.h"
 using namespace std;
 
-typedef vector<Point_2> Curve;
 /*
  * Solver for discrete Frechet distance decision problem.
  *
- * Dependencies: QuadTree, WSPD
+ * Dependencies: curve.h, WSPD.h
  */
 class FrechetDecider
 {

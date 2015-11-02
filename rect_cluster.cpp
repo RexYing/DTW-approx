@@ -104,9 +104,20 @@ string RectCluster::export_rects()
 	}
 	return sstm.str(); */
 	sstm << curve1_.size() << " " << curve2_.size() << endl;
-	for (auto rect : rects_)
+	// export sorted list if possible
+	if (sorted_rects_.empty())
 	{
-		sstm << rect->to_string() << endl;
+		for (auto rect : rects_)
+		{
+			sstm << rect->to_string() << endl;
+		}
+	}
+	else
+	{
+		for (auto rect : sorted_rects_)
+		{
+			sstm << rect->to_string() << endl;
+		}
 	}
 	return sstm.str();
 }
@@ -227,6 +238,9 @@ double RectCluster::compute_approx_dtw()
 	RectShortestPath sp(curve1_, curve2_, sorted_rects_, inv_rects_);
 	shortest_path_ = sp.compute_shortest_path();
 	
-	return shortest_path_[make_pair(curve1_.size(), curve2_.size())];
+	LOG_IF(!shortest_path_.count(make_pair(curve1_.size() - 1, curve2_.size() - 1)), ERROR) 
+			<< "approximate DTW not computed";
+	
+	return shortest_path_[make_pair(curve1_.size() - 1, curve2_.size() - 1)];
 }
 	
