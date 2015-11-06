@@ -40,7 +40,7 @@ class FrechetDecider
 		double prev_dist_ = 0;
 
     bool dfs(double sq_dist, int index1, int index2);
-		//bool bfs(double sq_dist, int index1, int index2);
+		bool dp(double sq_dist);
 
 };
 

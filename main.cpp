@@ -146,8 +146,8 @@ int main(int argc, char* argv[])
 	}
 	
 	//WSPD* kdtree_wspd = new KdTreeWSPD(all_points, s);
+	LOG(INFO) << "Use Frechet decider... " ;
 	FrechetDecider fd(alpha, beta);
-	VLOG(6) << "HERE";
 	double approx_frechet = fd.bin_search_frechet(dists);
 	LOG(INFO) << "Approximate Frechet distance: " << approx_frechet;
 

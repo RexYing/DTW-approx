@@ -125,7 +125,7 @@ Points CurveGenerator::rand_monotonic(string spec)
 Points CurveGenerator::rand(
 		std::pair<double, double> start, 
 		pair<double, double> angle_normal,
-		double step_poisson_lambda,
+		pair<double, double> step_normal,
 		int n)
 {
 	Points pts;
@@ -136,7 +136,7 @@ Points CurveGenerator::rand(
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   default_random_engine generator (seed);
   normal_distribution<double> angle_distribution(angle_normal.first, angle_normal.second);
-	poisson_distribution<int> step_distribution(step_poisson_lambda);
+	normal_distribution<double> step_distribution(step_normal.first, step_normal.second);
 	
 	pts.push_back(start);
 	pair<double, double> prev = start;
@@ -144,11 +144,12 @@ Points CurveGenerator::rand(
 	for (int i = 0; i < n - 1; i++)
 	{
 		double angle = prev_angle + angle_distribution(generator);
-		double step = (double)(step_distribution(generator));
+		double step = step_distribution(generator);
 		pair<double, double> curr = 
 				make_pair(prev.first + step * cos(angle), prev.second + step * sin(angle));
 		pts.push_back(curr);
 		prev = curr;
+		prev_angle = angle;
 	}
 	return pts;
 }
@@ -161,7 +162,7 @@ Points CurveGenerator::rand(string spec)
 	int n;
 	pair<double, double> start;
 	pair<double, double> angle_normal;
-	double step_poisson_lambda;
+	pair<double, double> step_normal;
 	for (string flag : flags)
 	{
 		pair<string, string> flag_pair = parse_flag(flag);
@@ -175,7 +176,7 @@ Points CurveGenerator::rand(string spec)
 		}
 		else if (flag_pair.first == kStep)
 		{
-			step_poisson_lambda = strtod(flag_pair.second.c_str(), NULL);
+			step_normal = parse_point(flag_pair.second);
 		}
 		else if (flag_pair.first == kN)
 		{
@@ -186,7 +187,7 @@ Points CurveGenerator::rand(string spec)
 			LOG(ERROR) << "Unrecognized flag " << flag_pair.first;
 		}
 	}
-	return rand(start, angle_normal, step_poisson_lambda, n);
+	return rand(start, angle_normal, step_normal, n);
 }
 
 pair<double, double> CurveGenerator::parse_point(string pt_str)

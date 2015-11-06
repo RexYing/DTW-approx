@@ -15,5 +15,5 @@ $BIN $OPT_OUTPUT=data/rand4.dtw $OPT_TYPE=rand_monotonic $OPT_PARAM="start=(0,-1
 $BIN $OPT_OUTPUT=data/rand1.dtw $OPT_TYPE=rand_monotonic $OPT_PARAM="start=(0,0) angle=(-0.1,0.1) step=(2,4) n=5000"
 $BIN $OPT_OUTPUT=data/rand2.dtw $OPT_TYPE=rand_monotonic $OPT_PARAM="start=(0,-10) angle=(-0.1,0.1) step=(2,4) n=5000"
 
-$BIN $OPT_OUTPUT=data/rand5.dtw $OPT_TYPE=rand $OPT_PARAM="start=(0,0) angle=(0.05,0.05) step=6 n=5000"
-$BIN $OPT_OUTPUT=data/rand6.dtw $OPT_TYPE=rand $OPT_PARAM="start=(0,5) angle=(0.05,0.05) step=6 n=5000"
+$BIN $OPT_OUTPUT=data/rand5.dtw $OPT_TYPE=rand $OPT_PARAM="start=(0,0) angle=(0.03,0.8) step=(5,1) n=5000"
+$BIN $OPT_OUTPUT=data/rand6.dtw $OPT_TYPE=rand $OPT_PARAM="start=(0,0) angle=(0.03,0.7) step=(5,1) n=5000"

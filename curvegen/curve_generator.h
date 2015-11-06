@@ -23,7 +23,7 @@ public:
 	Points rand(
 			pair<double, double> start, 
 			pair<double, double> angle_normal,
-			double step_poisson_lambda,
+			pair<double, double> step_normal,
 			int n);
 	Points rand(string spec);
 	

@@ -55,39 +55,61 @@ bool FrechetDecider::dfs(double sq_dist, int index1, int index2)
 	return false;
 }
 
-/*
-bool bfs(double sq_dist)
+bool FrechetDecider::dp(double sq_dist)
 {
-	queue<pair<int, int> > q;
-	int k = 0;
-	if (CGAL::squared_distance(curve1_[0], curve2_[0]) > sq_dist)
+	bool* curr = new bool[curve2_.size()];
+	bool* prev = new bool[curve2_.size()];
+	
+	// first row
+	prev[0] = true;
+	for (int i = 1; i < curve2_.size(); i++)
 	{
-		return false;
-	}
-	q.push(make_pair(0, 0));
-	while (!q.empty())
-	{
-		pair<int, int> index = q.pop();
-		// repeated index
-		if (q.front() == index)
+		if (prev[i - 1] && CGAL::squared_distance(curve1_[0], curve2_[i]) <= sq_dist)
 		{
-			q.pop();
+			prev[i] = true;
 		}
-		if (index.first < curve1_.size() - 1)
+		else
 		{
-			if (index.second < curve2_.size() - 1)
+			prev[i] = false;
+		}
+	}
+	
+	for (int i = 1; i < curve1_.size(); i++)
+	{
+		for (int j = 0; j < curve2_.size(); j++)
+		{
+			curr[j] = false;
+			if (CGAL::squared_distance(curve1_[i - 1], curve2_[i]) <= sq_dist)
 			{
-				if (CGAL::squared_distance(curve1_[index.first + 1], curve2_[0])
-*/
+				if (prev[j] || (j > 0 && prev[j - 1]) || (j > 0 && curr[j - 1]))
+				{
+					curr[j] = true;
+				}
+			}
+		}
+		
+		delete[] prev;
+		prev = curr;
+		curr = new bool[curve2_.size()];
+	}
+	
+	bool feasible = prev[curve2_.size() - 1];
+	delete[] prev;
+	delete[] curr;
+	return feasible;
+}
 
 bool FrechetDecider::is_at_least_frechet(double dist)
 {
+	/*
 	if (dist > prev_dist_)
 	{
 		index_set_.clear();
 	}
 	prev_dist_ = dist;
   return dfs(dist * dist, 0, 0);
+	*/
+	return dp(dist * dist);
 }
 
 double FrechetDecider::bin_search_frechet(const vector<double> &dists)
