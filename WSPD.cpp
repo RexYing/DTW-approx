@@ -118,7 +118,8 @@ NodePairs WSPD::pairing(QuadTree* t1, QuadTree* t2)
     if (2 * s * t1->radius() <= dist)
     {
 				LOG_IF(dist == 0 && t1->node_type != QuadTree::LEAF, WARNING) 
-						<< "none leaf node pairs satisfy the well-separated condition but has distance 0";
+						<< "none leaf node pairs satisfy the well-separated condition but has distance 0:\n"
+						<< t1->to_string() << ";   " << t2->to_string();
 				// for the pair of two trivial quadtrees with 1 point that is the same
 				// (the only case when radius = dist = 0), we do not insert the pair
 				if (dist != 0)

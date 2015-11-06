@@ -5,7 +5,7 @@ FrechetDecider::FrechetDecider(const Curve &curve1, const Curve &curve2):
 		curve2_(curve2)
 { }
 
-/* inefficient: didn't do memoization */
+/* inefficient: use bottom up instead */
 bool FrechetDecider::dfs(double sq_dist, int index1, int index2)
 {
 	// base case
@@ -51,6 +51,7 @@ bool FrechetDecider::dfs(double sq_dist, int index1, int index2)
 			}
 		}
 	}
+	index_set_.insert(index);
 	return false;
 }
 

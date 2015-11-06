@@ -56,7 +56,7 @@ Points CurveGenerator::line(string spec)
 	return line(start, angle, step, n);
 }
 
-Points CurveGenerator::rand(
+Points CurveGenerator::rand_monotonic(
 		std::pair<double, double> start, 
 		std::pair<double, double> angle_range,
 		std::pair<double, double> step_range,
@@ -86,7 +86,7 @@ Points CurveGenerator::rand(
 	return pts;
 }
 
-Points CurveGenerator::rand(string spec)
+Points CurveGenerator::rand_monotonic(string spec)
 {
 	vector<string> flags;
   split_regex(flags, spec, boost::regex(kDelimiter));
@@ -119,7 +119,74 @@ Points CurveGenerator::rand(string spec)
 			LOG(ERROR) << "Unrecognized flag " << flag_pair.first;
 		}
 	}
-	return rand(start, angle_range, step_range, n);
+	return rand_monotonic(start, angle_range, step_range, n);
+}
+
+Points CurveGenerator::rand(
+		std::pair<double, double> start, 
+		pair<double, double> angle_normal,
+		double step_poisson_lambda,
+		int n)
+{
+	Points pts;
+	pts.reserve(n);
+	double x = start.first;
+	double y = start.second;
+	
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  default_random_engine generator (seed);
+  normal_distribution<double> angle_distribution(angle_normal.first, angle_normal.second);
+	poisson_distribution<int> step_distribution(step_poisson_lambda);
+	
+	pts.push_back(start);
+	pair<double, double> prev = start;
+	double prev_angle = 0.0;
+	for (int i = 0; i < n - 1; i++)
+	{
+		double angle = prev_angle + angle_distribution(generator);
+		double step = (double)(step_distribution(generator));
+		pair<double, double> curr = 
+				make_pair(prev.first + step * cos(angle), prev.second + step * sin(angle));
+		pts.push_back(curr);
+		prev = curr;
+	}
+	return pts;
+}
+
+Points CurveGenerator::rand(string spec)
+{
+	vector<string> flags;
+  split_regex(flags, spec, boost::regex(kDelimiter));
+	
+	int n;
+	pair<double, double> start;
+	pair<double, double> angle_normal;
+	double step_poisson_lambda;
+	for (string flag : flags)
+	{
+		pair<string, string> flag_pair = parse_flag(flag);
+		if (flag_pair.first == kStart)
+		{
+			start = parse_point(flag_pair.second);
+		}
+		else if (flag_pair.first == kAngle)
+		{
+			angle_normal = parse_point(flag_pair.second);
+		}
+		else if (flag_pair.first == kStep)
+		{
+			step_poisson_lambda = strtod(flag_pair.second.c_str(), NULL);
+		}
+		else if (flag_pair.first == kN)
+		{
+			n = (int)(strtol(flag_pair.second.c_str(), NULL, 10));
+		}
+		else
+		{
+			LOG(ERROR) << "Unrecognized flag " << flag_pair.first;
+		}
+	}
+	return rand(start, angle_normal, step_poisson_lambda, n);
 }
 
 pair<double, double> CurveGenerator::parse_point(string pt_str)

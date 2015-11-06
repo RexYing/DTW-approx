@@ -13,10 +13,17 @@ public:
 	Points line(pair<double, double> start, double angle, double step, int n);
 	Points line(string spec);
 	
-	Points rand(
+	Points rand_monotonic(
 			pair<double, double> start, 
 			pair<double, double> angle_range,
 			pair<double, double> step_range,
+			int n);
+	Points rand_monotonic(string spec);
+	
+	Points rand(
+			pair<double, double> start, 
+			pair<double, double> angle_normal,
+			double step_poisson_lambda,
 			int n);
 	Points rand(string spec);
 	

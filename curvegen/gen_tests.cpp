@@ -106,24 +106,20 @@ int main(int argc, char* argv[])
 	{
 		pts = gen.line(params);
 	}
+	else if (curve_type == "rand_monotonic")
+	{
+		pts = gen.rand_monotonic(params);
+	}
 	else if (curve_type == "rand")
 	{
 		pts = gen.rand(params);
-	} 
+	}
 	else
 	{
 		LOG(ERROR) << "Unrecognized curve type";
 	}
 	export_points(outFile, pts);
-/* 	outFile << n << endl;
-	gen_x(outFile, n, 0, 10);
-	outFile.close();
-
-	outFile.open("tests/t6.dtw");
-	outFile << n << endl;
-	gen_x(outFile, n, -5, 10);
-	outFile.close(); */
-
+	
 	return 0;
 }
 

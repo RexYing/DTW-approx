@@ -73,8 +73,11 @@ void QuadTree::init()
         default:
             node_type = NODE;
             calc_bbox(point_set1_);
+						if (radius_ == 0)
+						{
+							node_type = LEAF;
+						}
             p = point_set1_[0];
-            //subdivide();
     }
 		
 		// populate idx_segments with consecutive indices
@@ -169,7 +172,7 @@ vector<vector<Point_2>> QuadTree::partition(vector<Point_2> point_set,
  * Currently point_set1_ will not be used after calling this function
  */
 void QuadTree::subdivide() {
-		if (has_subdivided_) {
+		if (has_subdivided_ || node_type == LEAF) {
 			return;
 		}
 	
