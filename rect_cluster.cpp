@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <chrono>
 #include <math.h>
 #include <random>
 
@@ -19,7 +20,8 @@ RectCluster::RectCluster(
   VLOG(6) << "Grid side length:   " << len_cell_;
 	
 	// random shift
-	std::default_random_engine generator;
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::default_random_engine generator(seed);
   std::uniform_real_distribution<double> distribution(0.0, (double) len_cell_);
 	double rand_shift_x = distribution(generator);
 	double rand_shift_y = distribution(generator);
