@@ -108,10 +108,10 @@ NodePairs WSPD::pairing(QuadTree* t1, QuadTree* t2)
     }
 
     // if lower bound is defined (-1 if undefined)
-    if (lb_ > 0)
+    /*if (lb_ > 0)
     {
         dist = max(dist, lb_);
-    }
+    }*/
 
     // t1 has larger radius by now
     // Well-separated condition: diameter * s <= dist between bbox
@@ -130,21 +130,30 @@ NodePairs WSPD::pairing(QuadTree* t1, QuadTree* t2)
     }
     else
     {
-				// find the children of this quadtree node
-				t1->subdivide();
-        // pairing the children of t1 with t2
-        for (auto& qt : t1->ch_)
-        {
-            if (qt->node_type == QuadTree::EMPTY)
-            {
-                VLOG(9) << "EMPTY";
-                continue;
-            }
-            NodePairs p = swapped ? pairing(t2, qt) : pairing(qt, t2);
+				// if t1->radius() has size lb_, no need to subdivide since its children are not active
+				if (t1->radius() <= lb_)
+				{
+					pair<QuadTree*, QuadTree*> pair = swapped ? make_pair(t2, t1) : make_pair(t1, t2);
+					pairs.insert(pair);
+				}
+				else
+				{
+					// find the children of this quadtree node
+					t1->subdivide();
+					// pairing the children of t1 with t2
+					for (auto& qt : t1->ch_)
+					{
+							if (qt->node_type == QuadTree::EMPTY)
+							{
+									VLOG(9) << "EMPTY";
+									continue;
+							}
+							NodePairs p = swapped ? pairing(t2, qt) : pairing(qt, t2);
 
-            pairs.insert(p.begin(), p.end());
-            p.clear();
-        }
+							pairs.insert(p.begin(), p.end());
+							p.clear();
+					}
+				}
     }
     return pairs;
 }

@@ -151,12 +151,12 @@ void RectShortestPath::compute_right_edge(Rectangle* rect, double approx_val)
 	if (rect->width() >= rect->height())
 	{
 		compute_right_edge_case1(
-				rect->right(), rect->left(), rect->width(), rect->right().size(), approx_val);
+				rect->right(), rect->left(), rect->width(), rect->right().size(), approx_val, rect);
 	}
 	else
 	{
 		compute_right_edge_case1(
-				rect->right(), rect->left(), rect->width(), rect->width(), approx_val);
+				rect->right(), rect->left(), rect->width(), rect->width(), approx_val, rect);
 		// the upper part of right edge exceeding the width
 		compute_right_edge_case2(
 				rect->right(), rect->left(), rect->width(), rect->width(), approx_val);
@@ -173,7 +173,7 @@ void RectShortestPath::compute_right_edge_case1(
 		const vector<pair<int, int>>& left, 
 		int dist,
 		int num_pts, 
-		double approx_val)
+		double approx_val, Rectangle* rect)
 {
 	vector<double> left_mins;
 	for (auto p : left)
@@ -208,7 +208,7 @@ void RectShortestPath::compute_right_edge_case1(
 		pair<int, int> qj = make_pair(p.first - idx, p.second - idx);
 		LOG_IF(!shortest_path_.count(qj), ERROR)
 				<< "Bottom edge not computed yet when computing right edge: (" 
-				<< qj.first << ", " << qj.second << ")";
+				<< qj.first << ", " << qj.second << ")  --" << rect->to_string();
 		double min2 = shortest_path_[qj] + approx_val * idx;
 		
 		// case 3: q on horizontal segment after the diagonal that crosses p
@@ -342,12 +342,12 @@ void RectShortestPath::compute_top_edge(Rectangle* rect, double approx_val)
 	if (rect->height() >= rect->width())
 	{
 		compute_right_edge_case1(
-				rect->top(), rect->bottom(), rect->height(), rect->top().size(), approx_val);
+				rect->top(), rect->bottom(), rect->height(), rect->top().size(), approx_val, rect);
 	}
 	else
 	{
 		compute_right_edge_case1(
-				rect->top(), rect->bottom(), rect->height(), rect->height(), approx_val);
+				rect->top(), rect->bottom(), rect->height(), rect->height(), approx_val, rect);
 		// the upper part of right edge exceeding the width
 		compute_right_edge_case2(
 				rect->top(), rect->bottom(), rect->height(), rect->height(), approx_val);

@@ -32,7 +32,7 @@ public:
 		const vector<pair<int, int>>& left, 
 		int dist,
 		int num_pts, 
-		double approx_val);
+		double approx_val, Rectangle* rect);
 	void compute_right_edge_case2(
 		const vector<pair<int, int>>& right, 
 		const vector<pair<int, int>>& left, 

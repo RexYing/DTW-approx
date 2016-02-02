@@ -73,10 +73,13 @@ public:
 			LOG(ERROR) << "Rectangle: upper bound (exclusive) not greater than lower bound";
 		}
 		
-		// add bottom right corner element to bottom_
-		bottom_.push_back(make_pair(segment1.first, segment2.second - 1));
-		// add top right corner elements to top_
-		top_.push_back(make_pair(segment1.second - 1, segment2.second - 1));
+		if (segment2.second > segment2.first + 1)
+		{
+			// add bottom right corner element to bottom_
+			bottom_.push_back(make_pair(segment1.first, segment2.second - 1));
+			// add top right corner elements to top_
+			top_.push_back(make_pair(segment1.second - 1, segment2.second - 1));
+		}
 	}
 	
 	IndexSegment segment1;

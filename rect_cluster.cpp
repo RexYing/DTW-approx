@@ -49,7 +49,7 @@ void RectCluster::partition()
 		//VLOG(7) << it->second.first->to_string() << " ---------- ";
 		for (auto& qt : nbrs)
 		{
-			WSPD wspd(curr_qt, qt, 1 / eps_, lb_);
+			WSPD wspd(curr_qt, qt, 1 / eps_, lb_ / max(curve1_.size(), curve2_.size()));
 			gen_rect(wspd);
 		}
 	}
