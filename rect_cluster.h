@@ -25,6 +25,9 @@ public:
 	string export_rects();
 	// summarize the ractangle partition
 	string summarize();
+	
+protected:
+	void gen_rect(vector<IndexSegment> segs1, vector<IndexSegment> segs2);
 
 private:
 	Curve curve1_;
@@ -43,8 +46,6 @@ private:
 	
 	// contains the same elements as rects_, but is topologically sorted
 	list<Rectangle*> sorted_rects_;
-	
-	void gen_rect(WSPD wspd);
 	
 	void build_rect_graph();
 	

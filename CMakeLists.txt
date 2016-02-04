@@ -106,6 +106,7 @@ add_library(
   QuadTree.cpp QuadTree.h
   QuadTreeTwoClasses.cpp QuadTreeTwoClasses.h
   WSPD.cpp WSPD.h
+	sequentialWSPD.cpp sequentialWSPD.h
 	curve.h
 )
 add_library( Frechet FrechetDecider.cpp FrechetDecider.h )

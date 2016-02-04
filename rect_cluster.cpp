@@ -50,7 +50,10 @@ void RectCluster::partition()
 		for (auto& qt : nbrs)
 		{
 			WSPD wspd(curr_qt, qt, 1 / eps_, lb_ / max(curve1_.size(), curve2_.size()));
-			gen_rect(wspd);
+			for (auto it = wspd.begin(); it != wspd.end(); it++)
+			{
+				gen_rect(it->first->idx_segments(), it->second->idx_segments());
+			}
 		}
 	}
 	
@@ -59,29 +62,27 @@ void RectCluster::partition()
 	topo_sort();
 }
 
-void RectCluster::gen_rect(WSPD wspd)
+void RectCluster::gen_rect(vector<IndexSegment> segs1, vector<IndexSegment> segs2)
 {
-	for (auto it = wspd.begin(); it != wspd.end(); it++)
+	
+	for (IndexSegment seg1 : segs1)
 	{
-		for (IndexSegment seg1 : it->first->idx_segments())
+		for (IndexSegment seg2 : segs2)
 		{
-			for (IndexSegment seg2 : it->second->idx_segments())
+			Rectangle* rect = new Rectangle(seg1, seg2);
+			rects_.insert(rect);
+			// populate inv_rects
+			vector<pair<int, int>> coords = rect->boundary_pts();
+			
+			for (auto coord : coords)
 			{
-				Rectangle* rect = new Rectangle(seg1, seg2);
-				rects_.insert(rect);
-				// populate inv_rects
-				vector<pair<int, int>> coords = rect->boundary_pts();
-				
-				for (auto coord : coords)
+				VLOG(9) << coord.first << ", " << coord.second;
+				if (inv_rects_.find(coord) != inv_rects_.end())
 				{
-					VLOG(9) << coord.first << ", " << coord.second;
-					if (inv_rects_.find(coord) != inv_rects_.end())
-					{
-						LOG(ERROR) << "RectCluster: index (" << coord.first << ", " << coord.second 
-								<< ") is in multiple rectangels";
-					}
-					inv_rects_.emplace(coord, rect);
+					LOG(ERROR) << "RectCluster: index (" << coord.first << ", " << coord.second 
+							<< ") is in multiple rectangels";
 				}
+				inv_rects_.emplace(coord, rect);
 			}
 		}
 	}

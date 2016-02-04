@@ -166,11 +166,11 @@ int main(int argc, char* argv[])
 	/* Compute approximate DTW */
 	
 	LOG(INFO) << "Computing shortest path through rectangles";
-	const auto approx_dtw_begin = chrono::high_resolution_clock::now(); // or use steady_clock 
 	
 	RectCluster rect(alpha, beta, dtw_lb, dtw_ub, eps);
 	rect.partition();
 	
+	const auto approx_dtw_begin = chrono::high_resolution_clock::now(); // or use steady_clock 
 	// compute approximate DTW
 	double approx_dtw = rect.compute_approx_dtw();
 	
