@@ -106,7 +106,7 @@ add_library(
   QuadTree.cpp QuadTree.h
   QuadTreeTwoClasses.cpp QuadTreeTwoClasses.h
   WSPD.cpp WSPD.h
-	sequentialWSPD.cpp sequentialWSPD.h
+	sequential_wspd.cpp sequential_wspd.h
 	curve.h
 )
 add_library( Frechet FrechetDecider.cpp FrechetDecider.h )
@@ -183,4 +183,22 @@ if( COMPILER_SUPPORTS_GNUXX11 )
 	)
 
 	add_test(AllTestsInDTWApprox RectShortestPathTest)	
+	
+	add_executable( 
+		SequentialWSPDTest 
+		tests/sequential_wspd_test.cpp
+		grid.cpp grid.h
+		rect_cluster.cpp rect_cluster.h
+		rect_shortest_path.cpp rect_shortest_path.h
+		rectangle.h
+	)
+
+	target_link_libraries(
+		SequentialWSPDTest 
+		${Boost_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES} ${GTEST_BOTH_LIBRARIES}
+		WSPD
+		Util
+	)
+
+	add_test(AllTestsInDTWApprox SequentialWSPDTest)	
 endif()

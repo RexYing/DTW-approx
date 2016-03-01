@@ -1,0 +1,19 @@
+Start testing: Mar 01 12:46 CST
+----------------------------------------------------------
+Unable to find executable: SequentialWSPDTest
+1/1 Testing: AllTestsInDTWApprox
+1/1 Test: AllTestsInDTWApprox
+Command: ""
+Directory: /home/rex.ying0923/main/CS/algo/research/DTW-approx
+"AllTestsInDTWApprox" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"AllTestsInDTWApprox" end time: Mar 01 12:46 CST
+"AllTestsInDTWApprox" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Mar 01 12:46 CST

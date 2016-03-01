@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
+#include <vector>
 
 #include "curve.h"
 
@@ -16,22 +17,22 @@ class SequentialWSPD
     // separation constant
     double s;
 		
-		vector<IndexSegment> segs1()
+		std::vector<IndexSegment> segs1()
 		{
 			return segs1_;
 		}
 		
-		vector<IndexSegment> segs2()
+		std::vector<IndexSegment> segs2()
 		{
 			return segs2_;
 		}
 
   private:
 		Curve curve1_;
-		Curve curve2_;
+		Curve curve2_;  
 	
-		vector<IndexSegment> segs1_;
-		vector<IndexSegment> segs2_;
+		std::vector<IndexSegment> segs1_;
+		std::vector<IndexSegment> segs2_;
 
 		void pairing(IndexSegment seg1, IndexSegment seg2);
 		bool is_well_separated(IndexSegment seg1, IndexSegment seg2);

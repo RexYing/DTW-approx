@@ -17,6 +17,11 @@ public:
 	void partition();
 	
 	/*
+	 * Partition by sequential WSPD
+	 */
+	void sequential_partition();
+	
+	/*
 	 * compute approximate DTW by computing shortest path for the graph of rectangles after partition
 	 */
 	double compute_approx_dtw();

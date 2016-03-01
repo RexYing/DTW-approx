@@ -67,17 +67,6 @@ test/fast: test
 
 .PHONY : test/fast
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/bin/ccmake.exe -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -88,6 +77,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/ccmake.exe -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -159,6 +159,19 @@ RectShortestPathTest: cmake_check_build_system
 RectShortestPathTest/fast:
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/build
 .PHONY : RectShortestPathTest/fast
+
+#=============================================================================
+# Target rules for targets named SequentialWSPDTest
+
+# Build rule for target.
+SequentialWSPDTest: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 SequentialWSPDTest
+.PHONY : SequentialWSPDTest
+
+# fast build rule for target.
+SequentialWSPDTest/fast:
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/build
+.PHONY : SequentialWSPDTest/fast
 
 #=============================================================================
 # Target rules for targets named Util
@@ -382,6 +395,7 @@ grid.o: grid.cpp.o
 grid.cpp.o:
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/grid.cpp.o
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/grid.cpp.o
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/grid.cpp.o
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/grid.cpp.o
 .PHONY : grid.cpp.o
 
@@ -393,6 +407,7 @@ grid.i: grid.cpp.i
 grid.cpp.i:
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/grid.cpp.i
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/grid.cpp.i
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/grid.cpp.i
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/grid.cpp.i
 .PHONY : grid.cpp.i
 
@@ -404,6 +419,7 @@ grid.s: grid.cpp.s
 grid.cpp.s:
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/grid.cpp.s
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/grid.cpp.s
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/grid.cpp.s
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/grid.cpp.s
 .PHONY : grid.cpp.s
 
@@ -469,6 +485,7 @@ rect_cluster.o: rect_cluster.cpp.o
 rect_cluster.cpp.o:
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_cluster.cpp.o
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_cluster.cpp.o
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_cluster.cpp.o
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_cluster.cpp.o
 .PHONY : rect_cluster.cpp.o
 
@@ -480,6 +497,7 @@ rect_cluster.i: rect_cluster.cpp.i
 rect_cluster.cpp.i:
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_cluster.cpp.i
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_cluster.cpp.i
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_cluster.cpp.i
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_cluster.cpp.i
 .PHONY : rect_cluster.cpp.i
 
@@ -491,6 +509,7 @@ rect_cluster.s: rect_cluster.cpp.s
 rect_cluster.cpp.s:
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_cluster.cpp.s
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_cluster.cpp.s
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_cluster.cpp.s
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_cluster.cpp.s
 .PHONY : rect_cluster.cpp.s
 
@@ -502,6 +521,7 @@ rect_shortest_path.o: rect_shortest_path.cpp.o
 rect_shortest_path.cpp.o:
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_shortest_path.cpp.o
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_shortest_path.cpp.o
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_shortest_path.cpp.o
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_shortest_path.cpp.o
 .PHONY : rect_shortest_path.cpp.o
 
@@ -513,6 +533,7 @@ rect_shortest_path.i: rect_shortest_path.cpp.i
 rect_shortest_path.cpp.i:
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_shortest_path.cpp.i
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_shortest_path.cpp.i
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_shortest_path.cpp.i
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_shortest_path.cpp.i
 .PHONY : rect_shortest_path.cpp.i
 
@@ -524,8 +545,36 @@ rect_shortest_path.s: rect_shortest_path.cpp.s
 rect_shortest_path.cpp.s:
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_shortest_path.cpp.s
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_shortest_path.cpp.s
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_shortest_path.cpp.s
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_shortest_path.cpp.s
 .PHONY : rect_shortest_path.cpp.s
+
+sequential_wspd.o: sequential_wspd.cpp.o
+
+.PHONY : sequential_wspd.o
+
+# target to build an object file
+sequential_wspd.cpp.o:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/sequential_wspd.cpp.o
+.PHONY : sequential_wspd.cpp.o
+
+sequential_wspd.i: sequential_wspd.cpp.i
+
+.PHONY : sequential_wspd.i
+
+# target to preprocess a source file
+sequential_wspd.cpp.i:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/sequential_wspd.cpp.i
+.PHONY : sequential_wspd.cpp.i
+
+sequential_wspd.s: sequential_wspd.cpp.s
+
+.PHONY : sequential_wspd.s
+
+# target to generate assembly for a file
+sequential_wspd.cpp.s:
+	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/sequential_wspd.cpp.s
+.PHONY : sequential_wspd.cpp.s
 
 tests/rect_cluster_test.o: tests/rect_cluster_test.cpp.o
 
@@ -581,6 +630,33 @@ tests/rect_shortest_path_test.cpp.s:
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/tests/rect_shortest_path_test.cpp.s
 .PHONY : tests/rect_shortest_path_test.cpp.s
 
+tests/sequential_wspd_test.o: tests/sequential_wspd_test.cpp.o
+
+.PHONY : tests/sequential_wspd_test.o
+
+# target to build an object file
+tests/sequential_wspd_test.cpp.o:
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/tests/sequential_wspd_test.cpp.o
+.PHONY : tests/sequential_wspd_test.cpp.o
+
+tests/sequential_wspd_test.i: tests/sequential_wspd_test.cpp.i
+
+.PHONY : tests/sequential_wspd_test.i
+
+# target to preprocess a source file
+tests/sequential_wspd_test.cpp.i:
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/tests/sequential_wspd_test.cpp.i
+.PHONY : tests/sequential_wspd_test.cpp.i
+
+tests/sequential_wspd_test.s: tests/sequential_wspd_test.cpp.s
+
+.PHONY : tests/sequential_wspd_test.s
+
+# target to generate assembly for a file
+tests/sequential_wspd_test.cpp.s:
+	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/tests/sequential_wspd_test.cpp.s
+.PHONY : tests/sequential_wspd_test.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -588,15 +664,16 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... test"
-	@echo "... RectShortestPathTest"
-	@echo "... RectClusterTest"
-	@echo "... edit_cache"
-	@echo "... executable"
-	@echo "... gen_tests"
-	@echo "... Util"
-	@echo "... Frechet"
-	@echo "... rebuild_cache"
 	@echo "... WSPD"
+	@echo "... Frechet"
+	@echo "... Util"
+	@echo "... gen_tests"
+	@echo "... rebuild_cache"
+	@echo "... executable"
+	@echo "... SequentialWSPDTest"
+	@echo "... edit_cache"
+	@echo "... RectClusterTest"
+	@echo "... RectShortestPathTest"
 	@echo "... FrechetDecider.o"
 	@echo "... FrechetDecider.i"
 	@echo "... FrechetDecider.s"
@@ -630,12 +707,18 @@ help:
 	@echo "... rect_shortest_path.o"
 	@echo "... rect_shortest_path.i"
 	@echo "... rect_shortest_path.s"
+	@echo "... sequential_wspd.o"
+	@echo "... sequential_wspd.i"
+	@echo "... sequential_wspd.s"
 	@echo "... tests/rect_cluster_test.o"
 	@echo "... tests/rect_cluster_test.i"
 	@echo "... tests/rect_cluster_test.s"
 	@echo "... tests/rect_shortest_path_test.o"
 	@echo "... tests/rect_shortest_path_test.i"
 	@echo "... tests/rect_shortest_path_test.s"
+	@echo "... tests/sequential_wspd_test.o"
+	@echo "... tests/sequential_wspd_test.i"
+	@echo "... tests/sequential_wspd_test.s"
 .PHONY : help
 
 

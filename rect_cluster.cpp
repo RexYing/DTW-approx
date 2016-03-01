@@ -17,6 +17,10 @@ RectCluster::RectCluster(
     eps_(eps)
 {
   len_cell_ = 1 << (int)(round(ceil(log2(2 * ub_))));
+}
+
+void RectCluster::partition()
+{
   VLOG(6) << "Grid side length:   " << len_cell_;
 	
 	// random shift
@@ -29,12 +33,9 @@ RectCluster::RectCluster(
 	LOG(INFO) << "Random shift: " << vec;
 	
 	// Build grid
-	grid_ = new Grid(curve1, curve2, lb, ub, len_cell_);
+	grid_ = new Grid(curve1_, curve2_, lb_, ub_, len_cell_);
 	grid_->init(vec);
-}
-
-void RectCluster::partition()
-{
+	
 	for (auto it = grid_->begin(); it != grid_->end(); it++)
 	{
 		// quad-tree from containing points from curve1
@@ -60,6 +61,18 @@ void RectCluster::partition()
 	// after generating all rectangles, build a dependency graph of them and topologically sort them
 	build_rect_graph();
 	topo_sort();
+}
+
+void RectCluster::sequential_partition()
+{
+	SequentialWSPD seq_wspd(curve1_, curve2_, 1 / eps_);
+	std::vector<IndexSegment> segs1 = seq_wspd->segs1();
+	std::vector<IndexSegment> segs2 = seq_wspd->segs2();
+	
+	for (int i = 0; i < segs1.size(); i++)
+	{
+		gen_rect(segs1[i], segs2[i]);
+	}
 }
 
 void RectCluster::gen_rect(vector<IndexSegment> segs1, vector<IndexSegment> segs2)
