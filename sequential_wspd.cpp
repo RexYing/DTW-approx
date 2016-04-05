@@ -27,6 +27,7 @@ void SequentialWSPD::pairing(IndexSegment seg1, IndexSegment seg2)
 	{
 		segs1_.push_back(seg1);
 		segs2_.push_back(seg2);
+		return;
 	}
 	else
 	{

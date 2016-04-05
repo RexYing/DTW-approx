@@ -1,6 +1,7 @@
 #include "grid.h"
 #include "rect_shortest_path.h"
 #include "rectangle.h"
+#include "sequential_wspd.h"
 
 /*
  * Partition of Dynamic Programming integer coordinate points into family of disjoint rectangles
@@ -22,7 +23,7 @@ public:
 	void sequential_partition();
 	
 	/*
-	 * compute approximate DTW by computing shortest path for the graph of rectangles after partition
+	 * Computes approximate DTW by computing shortest path for the graph of rectangles after partition
 	 */
 	double compute_approx_dtw();
 	
@@ -32,7 +33,15 @@ public:
 	string summarize();
 	
 protected:
+	/*
+	 * Generates rectangles by taking cross product.
+	 */
 	void gen_rect(vector<IndexSegment> segs1, vector<IndexSegment> segs2);
+	
+	/*
+	 * Generates rectangles by taking a pair of segments from each vector of the same index.
+	 */
+	void gen_rect_from_pair(vector<IndexSegment> segs1, vector<IndexSegment> segs2);
 
 private:
 	Curve curve1_;

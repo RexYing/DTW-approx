@@ -43,7 +43,11 @@ double NaiveDTW::compute_DTW()
 		}
 		
 		// update
-		prev = std::move(curr);
+		//prev = std::move(curr);
+		for (int i = 0; i < curr.size(); i++) 
+		{
+			prev[i] = curr[i];
+		}
 		curr.clear();
 	}
 	return prev.back();

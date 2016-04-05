@@ -168,18 +168,8 @@ int main(int argc, char* argv[])
 	LOG(INFO) << "Computing shortest path through rectangles";
 	
 	RectCluster rect(alpha, beta, dtw_lb, dtw_ub, eps);
-	rect.partition();
-	
-	const auto approx_dtw_begin = chrono::high_resolution_clock::now(); // or use steady_clock 
-	// compute approximate DTW
-	double approx_dtw = rect.compute_approx_dtw();
-	
-	auto approx_dtw_time = chrono::high_resolution_clock::now() - approx_dtw_begin;
-	LOG(INFO) << "Finished approximate DTW computation\n" 
-			<< "Elapsed time: " << chrono::duration<double, std::milli>(approx_dtw_time).count() / 1000 
-			<< "seconds.\n";
-			
-	LOG(INFO) << "Approximate DTW distance between the given 2 curves: " << approx_dtw;
+	//rect.partition();
+	rect.sequential_partition();
 	
 	LOG(INFO) << "Exporting rectangles ...";
 	LOG(INFO) << rect.summarize();
@@ -196,6 +186,18 @@ int main(int argc, char* argv[])
 			LOG(ERROR) << "Error opening file for exporting rectangles";
 		}
 	}
+	
+	const auto approx_dtw_begin = chrono::high_resolution_clock::now(); // or use steady_clock 
+	// compute approximate DTW
+	double approx_dtw = rect.compute_approx_dtw();
+	
+	auto approx_dtw_time = chrono::high_resolution_clock::now() - approx_dtw_begin;
+	LOG(INFO) << "Finished approximate DTW computation\n" 
+			<< "Elapsed time: " << chrono::duration<double, std::milli>(approx_dtw_time).count() / 1000 
+			<< "seconds.\n";
+			
+	LOG(INFO) << "Approximate DTW distance between the give 2 curves: " << approx_dtw;
+	
 	
 	// ---------------- Run Naive DTW algorithm ---------------------------
 	

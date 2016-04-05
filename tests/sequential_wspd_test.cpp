@@ -13,8 +13,8 @@ protected:
 	SequentialWSPD* seq_wspd;
 
   SequentialWSPDTest() {
-    Curve curve1 = GenHorizontalCurve(16, 0);
-		Curve curve2 = GenHorizontalCurve(16, 8);
+    Curve curve1 = GenHorizontalCurve(130, 0);
+		Curve curve2 = GenHorizontalCurve(130, 8);
 		seq_wspd = new SequentialWSPD(curve1, curve2, 2);
   }
 
@@ -60,7 +60,7 @@ TEST_F(SequentialWSPDTest, MethodPairing) {
 		LOG(INFO) << "(" << segs1[i].first << ", " << segs1[i].second << ")  (" 
 				<< segs2[i].first << ", " << segs2[i].second << ")";
 	}
-  EXPECT_EQ(16, segs1.size());
+  EXPECT_EQ(250, segs1.size());
 }
 
 }  // namespace

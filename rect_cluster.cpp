@@ -66,13 +66,13 @@ void RectCluster::partition()
 void RectCluster::sequential_partition()
 {
 	SequentialWSPD seq_wspd(curve1_, curve2_, 1 / eps_);
-	std::vector<IndexSegment> segs1 = seq_wspd->segs1();
-	std::vector<IndexSegment> segs2 = seq_wspd->segs2();
+	std::vector<IndexSegment> segs1 = seq_wspd.segs1();
+	std::vector<IndexSegment> segs2 = seq_wspd.segs2();
 	
-	for (int i = 0; i < segs1.size(); i++)
-	{
-		gen_rect(segs1[i], segs2[i]);
-	}
+	gen_rect_from_pair(segs1, segs2);
+
+	build_rect_graph();
+	topo_sort();
 }
 
 void RectCluster::gen_rect(vector<IndexSegment> segs1, vector<IndexSegment> segs2)
@@ -97,6 +97,34 @@ void RectCluster::gen_rect(vector<IndexSegment> segs1, vector<IndexSegment> segs
 				}
 				inv_rects_.emplace(coord, rect);
 			}
+		}
+	}
+}
+
+void RectCluster::gen_rect_from_pair(vector<IndexSegment> segs1, vector<IndexSegment> segs2)
+{
+	
+	for (int i = 0; i < segs1.size(); i++)
+	{
+		IndexSegment seg1 = segs1[i];
+		IndexSegment seg2 = segs2[i];
+		
+		Rectangle* rect = new Rectangle(seg1, seg2);
+		rects_.insert(rect);
+		// populate inv_rects
+		vector<pair<int, int>> coords = rect->boundary_pts();
+		
+		for (auto coord : coords)
+		{
+			VLOG(9) << coord.first << ", " << coord.second;
+			if (inv_rects_.find(coord) != inv_rects_.end())
+			{
+				LOG(ERROR) << "RectCluster: index (" << coord.first << ", " << coord.second 
+						<< ") is in multiple rectangels";
+				//LOG(ERROR) << "(" << seg1.first << " " << seg1.second << " " << seg2.first << " " << seg2.second << " );   ";
+				//LOG(ERROR) << "(" << inv_rects_[coord]->segment1.first << " " << inv_rects_[coord]->segment1.second << " " << inv_rects_[coord]->segment2.first << " " << inv_rects_[coord]->segment2.second << " );   ";
+			}
+			inv_rects_.emplace(coord, rect);
 		}
 	}
 }
