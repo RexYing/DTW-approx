@@ -77,7 +77,6 @@ void RectCluster::sequential_partition()
 
 void RectCluster::gen_rect(vector<IndexSegment> segs1, vector<IndexSegment> segs2)
 {
-	
 	for (IndexSegment seg1 : segs1)
 	{
 		for (IndexSegment seg2 : segs2)
@@ -258,6 +257,9 @@ void RectCluster::topo_sort()
 	}
 }
 
+/*
+ * Routine called by topological sort
+ */
 void RectCluster::visit(Rectangle* rect)
 {
 	if (rect->is_temp_marked())
@@ -277,14 +279,19 @@ void RectCluster::visit(Rectangle* rect)
 	}
 }
 
-double RectCluster::compute_approx_dtw()
+vector<pair<int, int>> RectCluster::compute_approx_dtw(bool trace_alignment, double& approx_dtw)
 {
-	RectShortestPath sp(curve1_, curve2_, sorted_rects_, inv_rects_);
+	RectShortestPath sp(curve1_, curve2_, sorted_rects_, inv_rects_, trace_alignment);
 	shortest_path_ = sp.compute_shortest_path();
 	
 	LOG_IF(!shortest_path_.count(make_pair(curve1_.size() - 1, curve2_.size() - 1)), ERROR) 
 			<< "approximate DTW not computed";
 	
-	return shortest_path_[make_pair(curve1_.size() - 1, curve2_.size() - 1)];
+	approx_dtw = shortest_path_[make_pair(curve1_.size() - 1, curve2_.size() - 1)];
+	if (trace_alignment)
+	{
+		return sp.trace_alignment();
+	}
+	return {};
 }
 	

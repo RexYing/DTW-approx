@@ -10,11 +10,14 @@ RectShortestPath::RectShortestPath(
 		const Curve &curve1, 
 		const Curve &curve2, 
 		const list<Rectangle*>& sorted_rects, 
-		const CellToRect& inv_rects):
-		curve1_(curve1), curve2_(curve2), sorted_rects_(sorted_rects), inv_rects_(inv_rects)
+		const CellToRect& inv_rects,
+		bool trace_alignment):
+		curve1_(curve1), curve2_(curve2), sorted_rects_(sorted_rects), inv_rects_(inv_rects),
+		trace_alignment_(trace_alignment)
 { 
 	// put origin in the shortest path first
 	shortest_path_.emplace(make_pair(0, 0), 0.0);
+	precedents_.emplace(make_pair(0, 0), make_pair(0, 0));
 }
 
 CellToDouble RectShortestPath::compute_shortest_path()
@@ -80,6 +83,33 @@ void RectShortestPath::compute_left_edge(Rectangle* rect, double approx_val)
 		curr_dist = std::min(curr_dist, std::min(curr_left_dist, std::min(prev_left_dist, prev_dist)));
 		shortest_path_.emplace(pt, curr_dist);
 		
+		// alignment info
+		if (trace_alignment_) 
+		{
+			if (curr_left_dist < prev_left_dist)
+			{
+				if (curr_left_dist < prev_dist)
+				{
+					precedents_.emplace(pt, make_pair(pt.first, pt.second - 1)); // left
+				}
+				else
+				{
+					precedents_.emplace(pt, make_pair(pt.first - 1, pt.second)); // down
+				}
+			}
+			else
+			{
+				if (prev_left_dist > prev_dist)
+				{
+					precedents_.emplace(pt, make_pair(pt.first - 1, pt.second)); // down
+				}
+				else
+				{
+					precedents_.emplace(pt, make_pair(pt.first - 1, pt.second - 1)); // down-left
+				}
+			}
+		}
+		
 		// update prev dists
 		prev_dist = curr_dist + approx_val;
 		prev_left_dist = curr_left_dist;
@@ -129,6 +159,33 @@ void RectShortestPath::compute_bottom_edge(Rectangle* rect, double approx_val)
 		curr_dist = std::min(curr_dist, std::min(curr_down_dist, std::min(prev_down_dist, prev_dist)));
 		shortest_path_.emplace(pt, curr_dist);
 		
+		// alignment info
+		if (trace_alignment_) 
+		{
+			if (curr_down_dist < prev_down_dist)
+			{
+				if (curr_down_dist < prev_dist)
+				{
+					precedents_.emplace(pt, make_pair(pt.first - 1, pt.second)); // down
+				}
+				else
+				{
+					precedents_.emplace(pt, make_pair(pt.first, pt.second - 1)); // left
+				}
+			}
+			else
+			{
+				if (prev_down_dist > prev_dist)
+				{
+					precedents_.emplace(pt, make_pair(pt.first, pt.second - 1)); // left
+				}
+				else
+				{
+					precedents_.emplace(pt, make_pair(pt.first - 1, pt.second - 1)); // down-left
+				}
+			}
+		}
+		
 		// update prev dists
 		prev_dist = curr_dist + approx_val;
 		prev_down_dist = curr_down_dist;
@@ -173,9 +230,13 @@ void RectShortestPath::compute_right_edge_case1(
 		const vector<pair<int, int>>& left, 
 		int dist,
 		int num_pts, 
-		double approx_val, Rectangle* rect)
+		double approx_val, 
+		Rectangle* rect)
 {
 	vector<double> left_mins;
+	// cells that achieves the min on left edge among the first i cells
+	vector<pair<int, int>> left_min_indices;
+	
 	for (auto p : left)
 	{
 		LOG_IF(!shortest_path_.count(p), ERROR) 
@@ -183,10 +244,19 @@ void RectShortestPath::compute_right_edge_case1(
 		if (left_mins.empty())
 		{
 			left_mins.push_back(shortest_path_[p]);
+			left_min_indices.push_back(p);
 		}
 		else
 		{
 			left_mins.push_back(std::min(shortest_path_[p], left_mins.back()));
+			if (shortest_path_[p] < left_mins.back())
+			{
+				left_min_indices.push_back(p);
+			}
+			else
+			{
+				left_min_indices.push_back(left_min_indices.back());
+			}
 		}
 	}
 	
@@ -228,6 +298,33 @@ void RectShortestPath::compute_right_edge_case1(
 			shortest_path_.emplace(p, curr_val);
 		}
 		
+		// alignment info
+		if (trace_alignment_) 
+		{
+			if (min1 < min2)
+			{
+				if (min1 < min3)
+				{
+					precedents_.emplace(p, left_min_indices[i]); 
+				}
+				else
+				{
+					precedents_.emplace(p, right[i - 1]); 
+				}
+			}
+			else
+			{
+				if (min2 > min3)
+				{
+					precedents_.emplace(p, right[i - 1]);
+				}
+				else
+				{
+					precedents_.emplace(p, qj); 
+				}
+			}
+		}
+		
 		// update
 		idx++;
 		prev_val = curr_val;
@@ -241,7 +338,10 @@ void RectShortestPath::compute_right_edge_case2(
 		int start_idx, 
 		double approx_val)
 {
-	vector<double> window_mins = find_window_min(left, start_idx, dist);
+	vector<pair<int, int>> window_min_indices;
+	vector<double> window_mins = find_window_min(left, start_idx, dist, window_min_indices);
+	if (window_min_indices.size() != window_mins.size())
+		cout << "NOT EQUAL : " << window_min_indices.size();
 	
 	pair<int, int> p = right[start_idx - 1];
 	double prev_val = shortest_path_[p];
@@ -271,13 +371,29 @@ void RectShortestPath::compute_right_edge_case2(
 			shortest_path_.emplace(p, curr_val);
 		}
 		
+		// alignment info
+		if (trace_alignment_) 
+		{
+			if (min1 < min2)
+			{
+				precedents_.emplace(p, right[i - 1]);
+			}
+			else
+			{
+				precedents_.emplace(p, window_min_indices[i - start_idx]);
+			}
+		}
+		
 		// update
 		prev_val = curr_val;
 	}
 }
 
 vector<double> RectShortestPath::find_window_min(
-		const vector<pair<int, int>>& edge, int start_idx, int win_size)
+		const vector<pair<int, int>>& edge, 
+		int start_idx, 
+		int win_size, 
+		vector<pair<int, int>>& min_indices)
 {
 	// minimum value on the opposing edge within a sliding window
 	vector<double> window_min;
@@ -308,7 +424,7 @@ vector<double> RectShortestPath::find_window_min(
 				<< "find_window_min: Opposing edge not computed yet when computing top/right edge";
 		double curr_val = shortest_path_[edge[i]];
 		if (!subseq_indices.empty() && subseq_indices.front() == i - win_size)
-		{
+		{ 
 			subseq.pop_front();
 			subseq_indices.pop_front();
 		}
@@ -322,6 +438,7 @@ vector<double> RectShortestPath::find_window_min(
 		subseq_indices.push_back(i);
 		// min is the first element
 		window_min.push_back(subseq.front());
+		min_indices.push_back(edge[subseq_indices.front()]);
 	}
 	return window_min;
 }	
@@ -352,4 +469,22 @@ void RectShortestPath::compute_top_edge(Rectangle* rect, double approx_val)
 		compute_right_edge_case2(
 				rect->top(), rect->bottom(), rect->height(), rect->height(), approx_val);
 	}
+}
+
+vector<pair<int, int>> RectShortestPath::trace_alignment()
+{
+	vector<pair<int, int>> path;
+	if (precedents_.size() == 0)
+	{
+		LOG(ERROR) << "Attempt to trace alignment without computing the shortest path.";
+		return path;
+	}
+	pair<int, int> curr = make_pair(curve1_.size() - 1, curve2_.size() - 1);
+	path.push_back(curr);
+	while (curr.first != 0 || curr.second != 0)
+	{
+		curr = precedents_[curr];
+		path.push_back(curr);
+	}
+	return path;
 }

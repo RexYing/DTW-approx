@@ -78,6 +78,11 @@ Points CurveGenerator::rand_monotonic(
 	{
 		double angle = angle_distribution(generator);
 		double step = step_distribution(generator);
+		//if (i < 2*n/3)
+		//	step = step / 2;
+		//else
+		//	step = step * 2;
+		
 		pair<double, double> curr = 
 				make_pair(prev.first + step * cos(angle), prev.second + step * sin(angle));
 		pts.push_back(curr);

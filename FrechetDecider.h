@@ -30,6 +30,8 @@ class FrechetDecider
      */
     double bin_search_frechet(const vector<double> &dists);
 		
+		vector<pair<int, int>> trace_alignment();
+		
 		pair<int, int> size();
 
   private:
@@ -38,6 +40,16 @@ class FrechetDecider
 		unordered_set<pair<int, int>, boost::hash<pair<int, int>> > index_set_;
 		/* The distance used by the previous run of the decision problem. */
 		double prev_dist_ = 0;
+		
+		/* Initialize alignment_ to n rows of empty vector */
+		void init_alignment();
+		/* Records the alignment info.
+		 * Each entry is 
+		 *   1 if the path enters through left cell;
+		 *   2 if the path enters through cell below;
+		 *   3 if the path enters through lower-left cell.
+		 */
+		vector<vector<int>> alignment_;
 
     bool dfs(double sq_dist, int index1, int index2);
 		bool dp(double sq_dist);

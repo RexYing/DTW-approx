@@ -1,8 +1,12 @@
-function [  ] = visualizeRects( filename )
+function [  ] = visualizeRects( filename)
 %VISUALIZERECTS Visualize rectangles
 %   
 % Given a file containing a 2D matrix for dp, with '.' representing
 % boundary points and ' ' otherwise, visualize it as a binary image
+%
+% Optional param:
+%   alignmentFilename: the filename of file that contains alignment info.
+%       The file has to contain a pair of integers each line.
 %
 
 fid = fopen(filename);

@@ -50,7 +50,7 @@ protected:
 			inv_rects.emplace(pt, single_rect);
 		}
 		
-    impl_single = new RectShortestPath(curve1, curve2, sorted_rects, inv_rects);
+    impl_single = new RectShortestPath(curve1, curve2, sorted_rects, inv_rects, false);
 		
 		// 2-by-2 rectangles test
 		list<Rectangle*> sorted_rects_2_2 = {rect00, rect10, rect01, rect11};
@@ -65,7 +65,7 @@ protected:
 				inv_rects_2_2.emplace(pt, rect);
 			}
 		}
-    impl_2_2 = new RectShortestPath(curve3, curve4, sorted_rects_2_2, inv_rects_2_2);
+    impl_2_2 = new RectShortestPath(curve3, curve4, sorted_rects_2_2, inv_rects_2_2, false);
   }
 
   virtual void TearDown() {
@@ -101,8 +101,9 @@ TEST_F(RectShortestPathTest, MethodFindWindowWin) {
 	
 	impl_single->set_shortest_path(shortest_path);
 
+	vector<pair<int, int>> window_min_indices;
 	vector<double> window_min = 
-			impl_single->find_window_min(single_rect->left(), start_idx, win_size);
+			impl_single->find_window_min(single_rect->left(), start_idx, win_size, window_min_indices);
 	
 	vector<double> expected_window_min = {2, 2, 3, 3, 3};
 	ASSERT_EQ(expected_window_min.size(), window_min.size()) 

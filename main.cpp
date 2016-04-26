@@ -53,6 +53,22 @@ Curve readCurve(ifstream &inFile, int dim)
     return curve;
 }
 
+void export_alignment(string filename, vector<pair<int, int>> alignment)
+{
+	ofstream align_file;
+	align_file.open (filename);
+	if (align_file != NULL)
+	{
+		for (int i = alignment.size() - 1; i >= 0; i--)
+		{
+			align_file << alignment[i].first << " " << alignment[i].second << endl;
+		}
+		align_file.close();
+	}
+	else {
+		LOG(ERROR) << "Error opening file for exporting alignment info";
+	}
+}
 
 int main(int argc, char* argv[])
 {
@@ -61,13 +77,21 @@ int main(int argc, char* argv[])
 	string curve1_filename;
 	string curve2_filename;
 	string rects_filename = "";
+	string align_filename = "";
+	string exact_align_filename = "";
+	string approx_frechet_align_filename = "";
 	double eps;
+	// set to true to compute the DTW alignment of curves
+	bool trace_alignment = false;
 
 	try {
 		po::options_description desc("Allowed options");
 		desc.add_options()
 			("help", "produce help message")
 			("rects_output_file", po::value<string>(&rects_filename), "set output file for rectangles")
+			("align_output_file", po::value<string>(&align_filename), "set output file for DTW alignment info")
+			("exact_align_output_file", po::value<string>(&exact_align_filename), "set output file for exact DTW alignment info")
+			("approx_frechet_align_output_file", po::value<string>(&approx_frechet_align_filename), "set output file for approximate Frechet alignment info")
 			("curve1", po::value<string>(&curve1_filename), "set input file for curve1")
 			("curve2", po::value<string>(&curve2_filename), "set input file for curve2")
 			("eps", po::value<double>(&eps)->default_value(DEFAULT_EPS), "set approximation ratio")
@@ -80,24 +104,37 @@ int main(int argc, char* argv[])
 		po::notify(vm);    
 
 		if (vm.count("help")) {
-			cout << desc << "\n";
+			LOG(INFO) << desc << "\n";
 			return 0;
 		}
 
 		if (vm.count("rects_output_file")) {
-			cout << "Curve is written to " << rects_filename << ".\n";
+			LOG(INFO) << "Curve is written to " << rects_filename << ".\n";
 		} else {
-			cout << "Rectangles not exported" << ".\n";
+			LOG(INFO) << "Rectangles not exported" << ".\n";
+		}
+		
+		if (vm.count("align_output_file")) {
+			trace_alignment = true;
+			LOG(INFO) << "Alignment info is written to " << align_filename << ".\n";
+		}
+		
+		if (vm.count("exact_align_output_file")) {
+			LOG(INFO) << "Exact alignment info is written to " << exact_align_filename << ".\n";
+		}
+		
+		if (vm.count("approx_frechet_align_output_file")) {
+			LOG(INFO) << "Approximate Frechet alignment info is written to " << approx_frechet_align_filename << ".\n";
 		}
 		
 		if (vm.count("curve1")) {
-			cout << "Curve1 is read from " << curve1_filename << ".\n";
+			LOG(INFO) << "Curve1 is read from " << curve1_filename << ".\n";
 		} else {
 			LOG(ERROR) << "curve1 not specified" << ".\n";
 		}
 		
 		if (vm.count("curve2")) {
-			cout << "Curve2 is read from " << curve2_filename << ".\n";
+			LOG(INFO) << "Curve2 is read from " << curve2_filename << ".\n";
 		} else {
 			LOG(ERROR) << "curve2 not specified" << ".\n";
 		}
@@ -147,13 +184,23 @@ int main(int argc, char* argv[])
 	
 	//WSPD* kdtree_wspd = new KdTreeWSPD(all_points, s);
 	LOG(INFO) << "Use Frechet decider... " ;
-	FrechetDecider fd(alpha, beta);
+	/* FrechetDecider fd(alpha, beta);
 	double approx_frechet = fd.bin_search_frechet(dists);
 	LOG(INFO) << "Approximate Frechet distance: " << approx_frechet;
+	
+	// export approximate Frechet alignment
+	if (approx_frechet_align_filename.compare("") != 0)
+	{
+		vector<pair<int, int>> approx_frechet_alignment = fd.trace_alignment();
+		export_alignment(approx_frechet_align_filename, approx_frechet_alignment);
+		LOG(INFO) << "Finished exporting approximate Frechet alignment";
+	} 
 
 	double dtw_lb = approx_frechet / (s + 1);
-	double dtw_ub = approx_frechet * (s + 1) * max(m, n);
-	LOG(INFO) << "Dynamic Time Warping range: [" << dtw_lb << ", " << dtw_ub << "]";
+	double dtw_ub = approx_frechet * (s + 1) * max(m, n); */
+	double dtw_lb = 0.0001;
+	double dtw_ub = 1000000;
+	LOG(INFO) << "Dynamic Time Warping range: [" << dtw_lb << ", " << dtw_ub << "]"; 
 
 	//Sampling sampling(alpha, beta, dtw_lb, dtw_ub, eps);
 	//sampling.init();
@@ -187,17 +234,34 @@ int main(int argc, char* argv[])
 		}
 	}
 	
+	
+	double approx_dtw = 0; 
+	vector<pair<int, int>> approx_alignment;
 	const auto approx_dtw_begin = chrono::high_resolution_clock::now(); // or use steady_clock 
-	// compute approximate DTW
-	double approx_dtw = rect.compute_approx_dtw();
+
+	if (trace_alignment)
+	{
+		// compute approximate DTW with alignment info
+		approx_alignment = rect.compute_approx_dtw(true, approx_dtw);
+	}
+	else
+	{
+		// compute approximate DTW without alignment info
+		rect.compute_approx_dtw(false, approx_dtw);
+	}	
 	
 	auto approx_dtw_time = chrono::high_resolution_clock::now() - approx_dtw_begin;
+	LOG(INFO) << "Approximate DTW distance between the give 2 curves: " << approx_dtw;
 	LOG(INFO) << "Finished approximate DTW computation\n" 
 			<< "Elapsed time: " << chrono::duration<double, std::milli>(approx_dtw_time).count() / 1000 
 			<< "seconds.\n";
-			
-	LOG(INFO) << "Approximate DTW distance between the give 2 curves: " << approx_dtw;
 	
+	// export approximate DTW alignment
+	if (trace_alignment)
+	{ 
+		export_alignment(align_filename, approx_alignment);
+		LOG(INFO) << "Finished exporting approximate DTW alignment";
+	}
 	
 	// ---------------- Run Naive DTW algorithm ---------------------------
 	
@@ -206,14 +270,21 @@ int main(int argc, char* argv[])
 	
 	NaiveDTW naiveDtw(alpha, beta);
 	double exact_dtw = naiveDtw.compute_DTW();
+	vector<pair<int, int>> exact_alignment = naiveDtw.trace_alignment();
 	
 	auto exact_dtw_time = chrono::high_resolution_clock::now() - exact_dtw_begin;
 	
+	LOG(INFO) << "The exact DTW distance between the given 2 curves: " << exact_dtw;
 	LOG(INFO) << "Finished exact DTW computation\n" 
 			<< "Elapsed time: " << chrono::duration<double, std::milli>(exact_dtw_time).count() / 1000 
 			<< "seconds.\n";
 			
-	LOG(INFO) << "The exact DTW distance between the given 2 curves: " << exact_dtw;
+	// export exact DTW alignment
+	if (exact_align_filename.compare("") != 0)
+	{
+		export_alignment(exact_align_filename, exact_alignment);
+		LOG(INFO) << "Finished exporting exact DTW alignment";
+	}
 	
 	LOG(INFO) << "The approximation ratio: " << (approx_dtw - exact_dtw) / exact_dtw * 100 << "%.";
 

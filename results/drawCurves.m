@@ -10,7 +10,7 @@ if size(C, 2) ~= n
     error('Incorrect number of points');
 end
 
-plot(C(1, :), C(2, :));
-
+%plot(C(1, :)-1.12, C(2, :)-4.787);
+plot(C(1,:), C(2, :));
 end
 

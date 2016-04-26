@@ -35,7 +35,6 @@ endif()
 # include helper file
 include( ${CGAL_USE_FILE} )
 
-
 # Boost and its components
 find_package( Boost COMPONENTS program_options regex REQUIRED )
 
@@ -130,7 +129,7 @@ add_executable(
 )
 # target_compile_features(executable PRIVATE cxx_range_for)
 
-add_to_cached_list( CGAL_EXECUTABLE_TARGETS executable )
+#add_to_cached_list( CGAL_EXECUTABLE_TARGETS executable )
 
 # Link the executable to CGAL and third-party libraries
 target_link_libraries(

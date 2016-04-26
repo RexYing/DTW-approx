@@ -23,9 +23,10 @@ public:
 	void sequential_partition();
 	
 	/*
-	 * Computes approximate DTW by computing shortest path for the graph of rectangles after partition
+	 * Computes approximate DTW by computing shortest path for the graph of rectangles after partition.
+	 * The bool parameter trace_alignment is set to true if the DTW alignment is needed.
 	 */
-	double compute_approx_dtw();
+	vector<pair<int, int>> compute_approx_dtw(bool trace_alignment, double& approx_dtw);
 	
 	// export rectangles and their boundary points
 	string export_rects();
