@@ -10,7 +10,8 @@ if size(C, 2) ~= n
     error('Incorrect number of points');
 end
 
+dfactor = 10;
 %plot(C(1, :)-1.12, C(2, :)-4.787);
-plot(C(1,:), C(2, :));
+plot(C(1, 1:dfactor:n), C(2, 1:dfactor:n));
 end
 

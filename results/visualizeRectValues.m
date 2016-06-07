@@ -11,7 +11,7 @@ function [  ] = visualizeRectValues( rectFile,  curveFile1, curveFile2)
 %
 %
 %
-
+dfactor = 10;
 %% Read input
 
 fid = fopen(rectFile);
@@ -47,21 +47,30 @@ for i = 1: s(1)
     end
 end
 
+maxVal = max(DP(:));
+
 figure
-surf(DP(1:10:s(1), 1:10:s(2)), 'linestyle', 'none');
+surf(DP(1:dfactor:s(1), 1:dfactor:s(2)), 'linestyle', 'none');
+zlim([0, maxVal]);
 
 %% Compute approx DP values
-DP = ones(s(1), s(2)) / 2;
+approxDP = ones(s(1), s(2)) / 2;
 
 for i = 1: size(rects, 2)
     r = [rects(1, i) + 1, rects(2, i)];
     c = [rects(3, i) + 1, rects(4, i)];
-    v = norm(c1(:, r(1)) - c2(:, c(1)));
-    DP(r(1): r(2), c(1): c(2)) = v;
+    v = 0;
+    for j = r(1) : r(2)
+        for k = c(1): c(2)
+            v = v + norm(c1(:, j) - c2(:, k));
+        end
+    end
+    approxDP(r(1): r(2), c(1): c(2)) = v / ((r(2) - r(1) + 1) * (c(2) - c(1) + 1));
 end
 
 figure
-surf(DP(1:10:s(1), 1:10:s(2)), 'linestyle', 'none');
+surf(approxDP(1:dfactor:s(1), 1:dfactor:s(2)), 'linestyle', 'none');
+zlim([0, maxVal]);
 
 end
 

@@ -9,21 +9,35 @@ hold on
 drawCurves('data/rand2.dtw');
 
 figure
-drawCurves('data/rand3.dtw');
-hold on
-drawCurves('data/rand4.dtw');
-
-figure
 drawCurves('data/GeoLife/005/20090119101553.txt');
 hold on
 drawCurves('data/GeoLife/005/20090208045522.txt');
 title('Example trajectories');
+
+compressCurve('data/rand3.dtw', 'x', 100, 'data/input4_1.txt');
+compressCurve('data/rand7.dtw', 'x', 100, 'data/input4_2.txt');
+
+figure
+drawCurves('data/input4_1.txt');
+hold on
+drawCurves('data/input4_2.txt');
 
 %% example curves
 figure
 underlyingParamCurves;
 hold on
 underlyingParamCurves;
+
+x = 1: 2000;
+gpdf = normpdf((x-1000)/500, 0, 1)';
+noiseCov = diag([0.00000001, 0.0000001]);
+C1 = samplePerturbedCurve('data/GeoLife/005/20090119101553.txt', 'data/GeoLife/005/20090119101553_s1.txt', gpdf, noiseCov);
+C2 = samplePerturbedCurve('data/GeoLife/005/20090119101553.txt', 'data/GeoLife/005/20090119101553_s2.txt', 1/4, noiseCov);
+figure; 
+plot(C1(1, :), C1(2, :));
+hold on
+plot(C2(1, :), C2(2, :));
+
 
 %% DTW matrix
 
@@ -45,10 +59,10 @@ legend('approximate DTW alignment', 'exact DTW alignment', 'approximate Frechet 
 hold off
 title('Rectangles and alignments of two curves that differ in step size');
 
-visualizeRects('results/trajectories/20090119101553_20090208045522_translated_1.txt');
+visualizeRects('results/trajectories/20090119101553_20090208045522_translated.txt');
 hold on
-plotAlignment('results/trajectories/20090119101553_20090208045522_translated_1_approx_align.txt', 'r');
-plotAlignment('results/trajectories/20090119101553_20090208045522_translated_1_exact_align.txt', 'b');
+plotAlignment('results/trajectories/20090119101553_20090208045522_translated_approx_align.txt', 'r');
+plotAlignment('results/trajectories/20090119101553_20090208045522_translated_exact_align.txt', 'b');
 %plotAlignment('results/rects_rand_3_7_approx_frechet_align.txt', 'y');
 legend('approximate DTW alignment', 'exact DTW alignment');
 hold off
@@ -57,9 +71,13 @@ title('Rectangles and alignments of two curves that differ in step size');
 %% 3D DTW table
 visualizeRectValues('results/rects_line_1_2.txt', 'data/line1.dtw', 'data/line2.dtw');
 
-visualizeRectValues('results/rects_rand_3_7.txt', 'data/rand3.dtw', 'data/rand7.dtw');
+visualizeRectValues('results/rects_input4.txt', 'data/input4_1.txt', 'data/input4_2.txt');
 
 visualizeRectValues('results/rects_rand_5_6.txt', 'data/rand5.dtw', 'data/rand6.dtw');
+
+visualizeRectValues('results/trajectories/20090119101553_20090208045522_translated.txt', 'data/GeoLife/005/20090119101553.txt', 'data/GeoLife/005/20090208045522_translated.txt');
+
+visualizeRectValues('results/trajectories/20090119101553_s1_s2.txt', 'data/GeoLife/005/20090119101553_s1.txt', 'data/GeoLife/005/20090119101553_s2.txt');
 
 %%
 
@@ -67,13 +85,15 @@ visualizeRectValues('results/rects_rand_5_6.txt', 'data/rand5.dtw', 'data/rand6.
 eps = [0.3 0.5 0.6 0.7 0.8 0.9 1.0 1.5 2];
 
 % rand looping curve
-deviation = [0.05235, 0.046786, 0.053291, 0.07195, 0.0836992, 0.0759031, 0.0885458, 0.0968, 0.112];
+deviation = [0.05235, 0.056786, 0.059291, 0.07195, 0.0936992, 0.0989031, 0.1025458, 0.1468, 0.27];
 bpts = [7025817, 4346380, 4141482, 3724512, 2635669, 1912600, 1750080, 1283941, 934485] / 5;
 rect = [165227, 56896, 51384, 40701, 19230, 10032, 7980];
 
 figure
 plot(eps, deviation, 'r');
 title('Actual error vs. epsilon');
+xlabel('epsilon');
+ylabel('actual approximation error');
 
 figure
 plot(eps, bpts, 'b');

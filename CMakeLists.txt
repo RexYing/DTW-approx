@@ -22,6 +22,7 @@ if ( COMMAND cmake_policy )
 
 endif()
 
+# ============================== Libraries ==================================
 # CGAL and its components
 find_package( CGAL QUIET COMPONENTS  )
 
@@ -46,6 +47,7 @@ if ( NOT Boost_FOUND )
 
 endif()
 
+# =========================== Includes ================================
 # include for local directory
 
 # include for local package
@@ -80,7 +82,15 @@ include_directories ( "${PROJECT_SOURCE_DIR}" )
 INCLUDE_DIRECTORIES( "${Boost_INCLUDE_DIR}" )
 link_directories( "${Boost_LIBRARY_DIR}" )
 
-# Test
+# Eigen library which contains headers only
+# ############################
+SET( EIGEN3_INCLUDE_DIR "$ENV{EIGEN3_INCLUDE_DIR}" )
+IF( NOT EIGEN3_INCLUDE_DIR )
+    MESSAGE( FATAL_ERROR "Please point the environment variable EIGEN3_INCLUDE_DIR to the include directory of your Eigen3 installation.")
+ENDIF()
+INCLUDE_DIRECTORIES ( "${EIGEN3_INCLUDE_DIR}" )
+
+# ===================== Test =========================================
 # ############################
 enable_testing()
 find_package( GTest )
@@ -96,7 +106,7 @@ endif()
 include_directories( ${GTEST_INCLUDE_DIRS} )
 
 
-# Source
+# ====================== Source ======================================
 # Creating entries for target: executable
 # ############################
 
