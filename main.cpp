@@ -7,6 +7,7 @@
 
 
 #include "easylogging++.h"
+#include "frechet.h"
 #include "FrechetDecider.h"
 #include "naive_dtw.h"
 #include "QuadTree.h"
@@ -80,6 +81,7 @@ int main(int argc, char* argv[])
 	string align_filename = "";
 	string exact_align_filename = "";
 	string approx_frechet_align_filename = "";
+	string exact_frechet_align_filename = "";
 	double eps;
 	// set to true to compute the DTW alignment of curves
 	bool trace_alignment = false;
@@ -92,6 +94,7 @@ int main(int argc, char* argv[])
 			("align_output_file", po::value<string>(&align_filename), "set output file for DTW alignment info")
 			("exact_align_output_file", po::value<string>(&exact_align_filename), "set output file for exact DTW alignment info")
 			("approx_frechet_align_output_file", po::value<string>(&approx_frechet_align_filename), "set output file for approximate Frechet alignment info")
+			("exact_frechet_align_output_file", po::value<string>(&exact_frechet_align_filename), "set output file for exact Frechet alignment info")
 			("curve1", po::value<string>(&curve1_filename), "set input file for curve1")
 			("curve2", po::value<string>(&curve2_filename), "set input file for curve2")
 			("eps", po::value<double>(&eps)->default_value(DEFAULT_EPS), "set approximation ratio")
@@ -127,6 +130,10 @@ int main(int argc, char* argv[])
 			LOG(INFO) << "Approximate Frechet alignment info is written to " << approx_frechet_align_filename << ".\n";
 		}
 		
+		if (vm.count("exact_frechet_align_filename")) {
+			LOG(INFO) << "Exact Frechet alignment info is written to " << exact_frechet_align_filename << ".\n";
+		}
+		
 		if (vm.count("curve1")) {
 			LOG(INFO) << "Curve1 is read from " << curve1_filename << ".\n";
 		} else {
@@ -154,7 +161,7 @@ int main(int argc, char* argv[])
 	inFile.open(curve1_filename);
 	Curve alpha = readCurve(inFile, d);
 	inFile.close();
-
+	
 	inFile.open(curve2_filename);
 	Curve beta = readCurve(inFile, d);
 	inFile.close();
@@ -286,7 +293,30 @@ int main(int argc, char* argv[])
 		LOG(INFO) << "Finished exporting exact DTW alignment";
 	}
 	
-	LOG(INFO) << "The approximation ratio: " << (approx_dtw - exact_dtw) / exact_dtw * 100 << "%.";
+	// ---------------- Run Naive Frechet algorithm ---------------------------
+	
+	if (!exact_frechet_align_filename.empty()) {
+		LOG(INFO) << "Computing exact Frechet using the naive DP algorithm";
+		const auto exact_frechet_begin = chrono::high_resolution_clock::now(); // or use steady_clock 
+		
+		Frechet frechet(alpha, beta);
+		double exact_frechet = frechet.naive();
+		vector<pair<int, int>> exact_frechet_alignment = frechet.correspondence();
+		
+		auto exact_frechet_time = chrono::high_resolution_clock::now() - exact_frechet_begin;
+		
+		LOG(INFO) << "The exact Frechet distance between the given 2 curves: " << exact_frechet;
+		LOG(INFO) << "Finished exact Frechet computation\n" 
+				<< "Elapsed time: " 
+				<< chrono::duration<double, std::milli>(exact_frechet_time).count() / 1000 
+				<< "seconds.\n";
+				
+		// export exact frechet alignment
+		LOG(INFO) << exact_frechet_align_filename;
+		export_alignment(exact_frechet_align_filename, exact_frechet_alignment);
+		LOG(INFO) << "Finished exporting exact Frechet alignment";
+		
+	}
 
 	return 0;
 }

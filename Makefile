@@ -387,6 +387,33 @@ curvegen/gen_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/gen_tests.dir/build.make CMakeFiles/gen_tests.dir/curvegen/gen_tests.cpp.s
 .PHONY : curvegen/gen_tests.cpp.s
 
+frechet.o: frechet.cpp.o
+
+.PHONY : frechet.o
+
+# target to build an object file
+frechet.cpp.o:
+	$(MAKE) -f CMakeFiles/Frechet.dir/build.make CMakeFiles/Frechet.dir/frechet.cpp.o
+.PHONY : frechet.cpp.o
+
+frechet.i: frechet.cpp.i
+
+.PHONY : frechet.i
+
+# target to preprocess a source file
+frechet.cpp.i:
+	$(MAKE) -f CMakeFiles/Frechet.dir/build.make CMakeFiles/Frechet.dir/frechet.cpp.i
+.PHONY : frechet.cpp.i
+
+frechet.s: frechet.cpp.s
+
+.PHONY : frechet.s
+
+# target to generate assembly for a file
+frechet.cpp.s:
+	$(MAKE) -f CMakeFiles/Frechet.dir/build.make CMakeFiles/Frechet.dir/frechet.cpp.s
+.PHONY : frechet.cpp.s
+
 grid.o: grid.cpp.o
 
 .PHONY : grid.o
@@ -692,6 +719,9 @@ help:
 	@echo "... curvegen/gen_tests.o"
 	@echo "... curvegen/gen_tests.i"
 	@echo "... curvegen/gen_tests.s"
+	@echo "... frechet.o"
+	@echo "... frechet.i"
+	@echo "... frechet.s"
 	@echo "... grid.o"
 	@echo "... grid.i"
 	@echo "... grid.s"

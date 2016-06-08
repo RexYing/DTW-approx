@@ -118,7 +118,13 @@ add_library(
 	sequential_wspd.cpp sequential_wspd.h
 	curve.h
 )
-add_library( Frechet FrechetDecider.cpp FrechetDecider.h )
+add_library( 
+	Frechet 
+	frechet.cpp
+	frechet.h
+	FrechetDecider.cpp 
+	FrechetDecider.h 
+)
 
 add_library( Util util/joiner.h )
 set_target_properties( Util PROPERTIES LINKER_LANGUAGE CXX)
