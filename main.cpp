@@ -24,7 +24,7 @@ typedef Kernel::Segment_2 Segment_2;
 
 typedef vector<Point_2> Curve;
 
-const double DEFAULT_EPS = 0.3;
+const double DEFAULT_EPS = 0.5;
 
 void deallocDouble2D(double** arr, int l)
 {
@@ -35,24 +35,7 @@ void deallocDouble2D(double** arr, int l)
    delete[] arr;
 }
 
-Curve readCurve(ifstream &inFile, int dim)
-{
-    Curve curve;
-    int m; // curve length
-    inFile >> m;
 
-    for (int i = 0; i < m; i++)
-    {
-        double x, y;
-        if (dim == 2)
-        {
-            inFile >> x >> y;
-            Point_2 p(x, y);
-            curve.push_back(p);
-        }
-    }
-    return curve;
-}
 
 void export_alignment(string filename, vector<pair<int, int>> alignment)
 {

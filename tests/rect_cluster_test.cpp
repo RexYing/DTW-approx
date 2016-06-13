@@ -1,6 +1,5 @@
 #include "easylogging++.h"
 #include "gtest/gtest.h"
-#include "rectangle.h"
 #include "rect_cluster.h"
 
 INITIALIZE_EASYLOGGINGPP

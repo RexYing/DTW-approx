@@ -1,3 +1,6 @@
+#ifndef RECT_CLUSTER_H
+#define RECT_CLUSTER_H
+
 #include "grid.h"
 #include "rect_shortest_path.h"
 #include "rectangle.h"
@@ -9,7 +12,15 @@
 class RectCluster
 {
 public:
+	
 	RectCluster(const Curve &curve1, const Curve &curve2, double lb, double ub, double eps);
+	
+	/* 
+	 * simplified algorithm: no longer needs lb and ub if near-linear theoretical guarantee is not 
+	 * needed. As long as the spread of the input sequence points is polynomial, the runtime will be
+	 * good.
+	 */
+	RectCluster(const Curve &curve1, const Curve &curve2, double eps);
 	
 	/*
 	 * Partition DP integer coordinate point set into family of disjoint rectangles.
@@ -71,3 +82,5 @@ private:
 	// used for topological sort
 	void visit(Rectangle* rect);
 };
+
+#endif

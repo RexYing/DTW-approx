@@ -67,17 +67,6 @@ test/fast: test
 
 .PHONY : test/fast
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake.exe -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
@@ -88,6 +77,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake.exe -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -198,6 +198,19 @@ WSPD: cmake_check_build_system
 WSPD/fast:
 	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/build
 .PHONY : WSPD/fast
+
+#=============================================================================
+# Target rules for targets named curve_registration
+
+# Build rule for target.
+curve_registration: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 curve_registration
+.PHONY : curve_registration
+
+# fast build rule for target.
+curve_registration/fast:
+	$(MAKE) -f CMakeFiles/curve_registration.dir/build.make CMakeFiles/curve_registration.dir/build
+.PHONY : curve_registration/fast
 
 #=============================================================================
 # Target rules for targets named executable
@@ -333,6 +346,33 @@ WSPD.cpp.s:
 	$(MAKE) -f CMakeFiles/WSPD.dir/build.make CMakeFiles/WSPD.dir/WSPD.cpp.s
 .PHONY : WSPD.cpp.s
 
+curve_registration.o: curve_registration.cpp.o
+
+.PHONY : curve_registration.o
+
+# target to build an object file
+curve_registration.cpp.o:
+	$(MAKE) -f CMakeFiles/curve_registration.dir/build.make CMakeFiles/curve_registration.dir/curve_registration.cpp.o
+.PHONY : curve_registration.cpp.o
+
+curve_registration.i: curve_registration.cpp.i
+
+.PHONY : curve_registration.i
+
+# target to preprocess a source file
+curve_registration.cpp.i:
+	$(MAKE) -f CMakeFiles/curve_registration.dir/build.make CMakeFiles/curve_registration.dir/curve_registration.cpp.i
+.PHONY : curve_registration.cpp.i
+
+curve_registration.s: curve_registration.cpp.s
+
+.PHONY : curve_registration.s
+
+# target to generate assembly for a file
+curve_registration.cpp.s:
+	$(MAKE) -f CMakeFiles/curve_registration.dir/build.make CMakeFiles/curve_registration.dir/curve_registration.cpp.s
+.PHONY : curve_registration.cpp.s
+
 curvegen/curve_generator.o: curvegen/curve_generator.cpp.o
 
 .PHONY : curvegen/curve_generator.o
@@ -449,6 +489,33 @@ grid.cpp.s:
 	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/grid.cpp.s
 	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/grid.cpp.s
 .PHONY : grid.cpp.s
+
+icp.o: icp.cpp.o
+
+.PHONY : icp.o
+
+# target to build an object file
+icp.cpp.o:
+	$(MAKE) -f CMakeFiles/curve_registration.dir/build.make CMakeFiles/curve_registration.dir/icp.cpp.o
+.PHONY : icp.cpp.o
+
+icp.i: icp.cpp.i
+
+.PHONY : icp.i
+
+# target to preprocess a source file
+icp.cpp.i:
+	$(MAKE) -f CMakeFiles/curve_registration.dir/build.make CMakeFiles/curve_registration.dir/icp.cpp.i
+.PHONY : icp.cpp.i
+
+icp.s: icp.cpp.s
+
+.PHONY : icp.s
+
+# target to generate assembly for a file
+icp.cpp.s:
+	$(MAKE) -f CMakeFiles/curve_registration.dir/build.make CMakeFiles/curve_registration.dir/icp.cpp.s
+.PHONY : icp.cpp.s
 
 main.o: main.cpp.o
 
@@ -691,6 +758,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... test"
+	@echo "... edit_cache"
 	@echo "... WSPD"
 	@echo "... Frechet"
 	@echo "... Util"
@@ -698,8 +766,8 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... executable"
 	@echo "... SequentialWSPDTest"
-	@echo "... edit_cache"
 	@echo "... RectClusterTest"
+	@echo "... curve_registration"
 	@echo "... RectShortestPathTest"
 	@echo "... FrechetDecider.o"
 	@echo "... FrechetDecider.i"
@@ -713,6 +781,9 @@ help:
 	@echo "... WSPD.o"
 	@echo "... WSPD.i"
 	@echo "... WSPD.s"
+	@echo "... curve_registration.o"
+	@echo "... curve_registration.i"
+	@echo "... curve_registration.s"
 	@echo "... curvegen/curve_generator.o"
 	@echo "... curvegen/curve_generator.i"
 	@echo "... curvegen/curve_generator.s"
@@ -725,6 +796,9 @@ help:
 	@echo "... grid.o"
 	@echo "... grid.i"
 	@echo "... grid.s"
+	@echo "... icp.o"
+	@echo "... icp.i"
+	@echo "... icp.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

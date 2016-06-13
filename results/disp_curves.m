@@ -45,8 +45,8 @@ visualizeRects('results/rects_rand_5_6.txt');
 hold on
 plotAlignment('results/rects_rand_5_6_align.txt', 'r');
 plotAlignment('results/rects_rand_5_6_exact_align.txt', 'b');
-plotAlignment('results/rects_rand_5_6_approx_frechet_align.txt', 'y');
-legend('approximate DTW alignment', 'exact DTW alignment', 'approximate Frechet alignment');
+plotAlignment('results/rects_rand_5_6_exact_frechet_align.txt', 'y');
+legend('approximate DTW alignment', 'exact DTW alignment', 'exact Frechet alignment');
 hold off
 title('Rectangles and alignments of two curves that have random step sizes and angles');
 
@@ -83,6 +83,12 @@ visualizeRectValues('results/trajectories/20090119101553_s1_s2.txt', 'data/GeoLi
 
 % varying eps
 eps = [0.3 0.5 0.6 0.7 0.8 0.9 1.0 1.5 2];
+
+time = [ 6.535, 2.89, 2.2885,  1.631, 1.3997, 1.07698, 0.380915, 0.1998, 0.2022];
+timeStd = [0.5, 0.32, 0.36, 0.25, 0.22, 0.23, 0.18, 0.11, 0.09];
+
+figure
+errorbar(eps, time, timeStd);
 
 % rand looping curve
 deviation = [0.05235, 0.056786, 0.059291, 0.07195, 0.0936992, 0.0989031, 0.1025458, 0.1468, 0.27];

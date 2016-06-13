@@ -79,7 +79,7 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
 # ############################
 
 include_directories ( "${PROJECT_SOURCE_DIR}" )
-INCLUDE_DIRECTORIES( "${Boost_INCLUDE_DIR}" )
+include_directories( "${Boost_INCLUDE_DIR}" )
 link_directories( "${Boost_LIBRARY_DIR}" )
 
 # Eigen library which contains headers only
@@ -88,7 +88,7 @@ SET( EIGEN3_INCLUDE_DIR "$ENV{EIGEN3_INCLUDE_DIR}" )
 IF( NOT EIGEN3_INCLUDE_DIR )
     MESSAGE( FATAL_ERROR "Please point the environment variable EIGEN3_INCLUDE_DIR to the include directory of your Eigen3 installation.")
 ENDIF()
-INCLUDE_DIRECTORIES ( "${EIGEN3_INCLUDE_DIR}" )
+include_directories ( "${EIGEN3_INCLUDE_DIR}" )
 
 # ===================== Test =========================================
 # ############################
@@ -143,6 +143,12 @@ add_executable(
   curvegen/gen_tests.cpp
 	curvegen/curve_generator.cpp curvegen/curve_generator.h
 )
+
+add_executable(
+  curve_registration
+  icp.cpp icp.h
+	curve_registration.cpp
+)
 # target_compile_features(executable PRIVATE cxx_range_for)
 
 #add_to_cached_list( CGAL_EXECUTABLE_TARGETS executable )
@@ -159,6 +165,9 @@ target_link_libraries(
 	gen_tests   ${Boost_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES}
 )
 
+target_link_libraries(
+	curve_registration   ${Boost_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES}
+)
 
 # Test targets
 # ############################

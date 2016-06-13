@@ -1,3 +1,6 @@
+#ifndef SEQ_WSPD
+#define SEQ_WSPD
+
 #include <algorithm>
 #include <boost/functional/hash.hpp>
 #include <unordered_map>
@@ -38,3 +41,5 @@ class SequentialWSPD
 		bool is_well_separated(IndexSegment seg1, IndexSegment seg2);
 		double calc_side(BBox bbox);
 };
+
+#endif

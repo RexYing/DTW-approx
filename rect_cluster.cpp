@@ -19,6 +19,11 @@ RectCluster::RectCluster(
   len_cell_ = 1 << (int)(round(ceil(log2(2 * ub_))));
 }
 
+RectCluster::RectCluster(
+		const Curve &curve1, const Curve &curve2, double eps):
+    RectCluster(curve1, curve2, -1.0e32, 1.0e32, eps)
+{ }
+
 void RectCluster::partition()
 {
   VLOG(6) << "Grid side length:   " << len_cell_;

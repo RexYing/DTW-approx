@@ -1,3 +1,6 @@
+#ifndef RECT_SHORTEST_PATH_H
+#define RECT_SHORTEST_PATH_H
+
 #include <list>
 #include <unordered_map>
 
@@ -85,3 +88,5 @@ private:
 	// only used to trace the alignment (path in the DP table)
 	CellToPrecedent precedents_;
 };
+
+#endif
