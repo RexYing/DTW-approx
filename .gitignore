@@ -33,7 +33,7 @@ executable
 # CMake files
 CMakeFiles/*
 CMakeCache.txt
-
+CMakeCache.txt.bak
 
 # temp files
 *.~

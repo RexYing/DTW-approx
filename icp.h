@@ -1,10 +1,7 @@
 #ifndef ICP_H
 #define ICP_H
 
-#include <boost/program_options.hpp>
 #include <chrono>
-#include <iostream>
-#include <fstream>
 #include <vector>
 #include <CGAL/Simple_cartesian.h>
 #include <Eigen/Geometry>
@@ -26,7 +23,7 @@ public:
 	
 private:
 	// initialize curveMat1_ and curveMat2_ according to curve correspondence
-	void CorrespondenceToMatrix2D(vector<pair<int, int>> correspondence);
+	void CorrespondenceToMatrix2D(const vector<pair<int, int>> &correspondence);
 		
 	const string DTW_DP_METHOD = "DTW-DP";
 	const string DTW_APPROX_METHOD = "DTW-approx";

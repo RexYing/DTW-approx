@@ -1,4 +1,4 @@
-# Install script for directory: /home/rex.ying0923/main/CS/algo/research/DTW-approx
+# Install script for directory: /cygdrive/d/yunpan/main/CS/algo/research/DTW-approx
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,5 +35,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/rex.ying0923/main/CS/algo/research/DTW-approx/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/cygdrive/d/yunpan/main/CS/algo/research/DTW-approx/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -48,24 +48,13 @@ RM = /usr/bin/cmake.exe -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/rex.ying0923/main/CS/algo/research/DTW-approx
+CMAKE_SOURCE_DIR = /cygdrive/d/yunpan/main/CS/algo/research/DTW-approx
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/rex.ying0923/main/CS/algo/research/DTW-approx
+CMAKE_BINARY_DIR = /cygdrive/d/yunpan/main/CS/algo/research/DTW-approx
 
 #=============================================================================
 # Targets provided globally by CMake.
-
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/bin/ctest.exe --force-new-ctest-process $(ARGS)
-.PHONY : test
-
-# Special rule for the target test
-test/fast: test
-
-.PHONY : test/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest.exe --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
 
 # Special rule for the target rebuild_cache
 rebuild_cache:
@@ -91,9 +91,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/rex.ying0923/main/CS/algo/research/DTW-approx/CMakeFiles /home/rex.ying0923/main/CS/algo/research/DTW-approx/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /cygdrive/d/yunpan/main/CS/algo/research/DTW-approx/CMakeFiles /cygdrive/d/yunpan/main/CS/algo/research/DTW-approx/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/rex.ying0923/main/CS/algo/research/DTW-approx/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /cygdrive/d/yunpan/main/CS/algo/research/DTW-approx/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -120,6 +120,19 @@ preinstall/fast:
 depend:
 	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
+
+#=============================================================================
+# Target rules for targets named ADTW
+
+# Build rule for target.
+ADTW: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ADTW
+.PHONY : ADTW
+
+# fast build rule for target.
+ADTW/fast:
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/build
+.PHONY : ADTW/fast
 
 #=============================================================================
 # Target rules for targets named Frechet
@@ -460,10 +473,10 @@ grid.o: grid.cpp.o
 
 # target to build an object file
 grid.cpp.o:
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/grid.cpp.o
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/grid.cpp.o
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/grid.cpp.o
 	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/grid.cpp.o
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/grid.cpp.o
 .PHONY : grid.cpp.o
 
 grid.i: grid.cpp.i
@@ -472,10 +485,10 @@ grid.i: grid.cpp.i
 
 # target to preprocess a source file
 grid.cpp.i:
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/grid.cpp.i
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/grid.cpp.i
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/grid.cpp.i
 	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/grid.cpp.i
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/grid.cpp.i
 .PHONY : grid.cpp.i
 
 grid.s: grid.cpp.s
@@ -484,10 +497,10 @@ grid.s: grid.cpp.s
 
 # target to generate assembly for a file
 grid.cpp.s:
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/grid.cpp.s
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/grid.cpp.s
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/grid.cpp.s
 	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/grid.cpp.s
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/grid.cpp.s
 .PHONY : grid.cpp.s
 
 icp.o: icp.cpp.o
@@ -550,7 +563,7 @@ naive_dtw.o: naive_dtw.cpp.o
 
 # target to build an object file
 naive_dtw.cpp.o:
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/naive_dtw.cpp.o
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/naive_dtw.cpp.o
 .PHONY : naive_dtw.cpp.o
 
 naive_dtw.i: naive_dtw.cpp.i
@@ -559,7 +572,7 @@ naive_dtw.i: naive_dtw.cpp.i
 
 # target to preprocess a source file
 naive_dtw.cpp.i:
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/naive_dtw.cpp.i
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/naive_dtw.cpp.i
 .PHONY : naive_dtw.cpp.i
 
 naive_dtw.s: naive_dtw.cpp.s
@@ -568,7 +581,7 @@ naive_dtw.s: naive_dtw.cpp.s
 
 # target to generate assembly for a file
 naive_dtw.cpp.s:
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/naive_dtw.cpp.s
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/naive_dtw.cpp.s
 .PHONY : naive_dtw.cpp.s
 
 rect_cluster.o: rect_cluster.cpp.o
@@ -577,10 +590,10 @@ rect_cluster.o: rect_cluster.cpp.o
 
 # target to build an object file
 rect_cluster.cpp.o:
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/rect_cluster.cpp.o
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_cluster.cpp.o
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_cluster.cpp.o
 	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_cluster.cpp.o
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_cluster.cpp.o
 .PHONY : rect_cluster.cpp.o
 
 rect_cluster.i: rect_cluster.cpp.i
@@ -589,10 +602,10 @@ rect_cluster.i: rect_cluster.cpp.i
 
 # target to preprocess a source file
 rect_cluster.cpp.i:
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/rect_cluster.cpp.i
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_cluster.cpp.i
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_cluster.cpp.i
 	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_cluster.cpp.i
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_cluster.cpp.i
 .PHONY : rect_cluster.cpp.i
 
 rect_cluster.s: rect_cluster.cpp.s
@@ -601,10 +614,10 @@ rect_cluster.s: rect_cluster.cpp.s
 
 # target to generate assembly for a file
 rect_cluster.cpp.s:
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/rect_cluster.cpp.s
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_cluster.cpp.s
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_cluster.cpp.s
 	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_cluster.cpp.s
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_cluster.cpp.s
 .PHONY : rect_cluster.cpp.s
 
 rect_shortest_path.o: rect_shortest_path.cpp.o
@@ -613,10 +626,10 @@ rect_shortest_path.o: rect_shortest_path.cpp.o
 
 # target to build an object file
 rect_shortest_path.cpp.o:
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/rect_shortest_path.cpp.o
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_shortest_path.cpp.o
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_shortest_path.cpp.o
 	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_shortest_path.cpp.o
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_shortest_path.cpp.o
 .PHONY : rect_shortest_path.cpp.o
 
 rect_shortest_path.i: rect_shortest_path.cpp.i
@@ -625,10 +638,10 @@ rect_shortest_path.i: rect_shortest_path.cpp.i
 
 # target to preprocess a source file
 rect_shortest_path.cpp.i:
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/rect_shortest_path.cpp.i
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_shortest_path.cpp.i
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_shortest_path.cpp.i
 	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_shortest_path.cpp.i
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_shortest_path.cpp.i
 .PHONY : rect_shortest_path.cpp.i
 
 rect_shortest_path.s: rect_shortest_path.cpp.s
@@ -637,10 +650,10 @@ rect_shortest_path.s: rect_shortest_path.cpp.s
 
 # target to generate assembly for a file
 rect_shortest_path.cpp.s:
+	$(MAKE) -f CMakeFiles/ADTW.dir/build.make CMakeFiles/ADTW.dir/rect_shortest_path.cpp.s
 	$(MAKE) -f CMakeFiles/RectClusterTest.dir/build.make CMakeFiles/RectClusterTest.dir/rect_shortest_path.cpp.s
 	$(MAKE) -f CMakeFiles/RectShortestPathTest.dir/build.make CMakeFiles/RectShortestPathTest.dir/rect_shortest_path.cpp.s
 	$(MAKE) -f CMakeFiles/SequentialWSPDTest.dir/build.make CMakeFiles/SequentialWSPDTest.dir/rect_shortest_path.cpp.s
-	$(MAKE) -f CMakeFiles/executable.dir/build.make CMakeFiles/executable.dir/rect_shortest_path.cpp.s
 .PHONY : rect_shortest_path.cpp.s
 
 sequential_wspd.o: sequential_wspd.cpp.o
@@ -757,16 +770,17 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... test"
 	@echo "... edit_cache"
 	@echo "... WSPD"
 	@echo "... Frechet"
+	@echo "... test"
+	@echo "... ADTW"
+	@echo "... RectClusterTest"
 	@echo "... Util"
 	@echo "... gen_tests"
 	@echo "... rebuild_cache"
 	@echo "... executable"
 	@echo "... SequentialWSPDTest"
-	@echo "... RectClusterTest"
 	@echo "... curve_registration"
 	@echo "... RectShortestPathTest"
 	@echo "... FrechetDecider.o"

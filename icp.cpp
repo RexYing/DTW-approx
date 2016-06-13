@@ -1,3 +1,4 @@
+#include "easylogging++.h"
 #include "icp.h"
 
 ICP::ICP(const Curve &curve1, const Curve &curve2, string method, double eps):
@@ -11,7 +12,7 @@ ICP::ICP(const Curve &curve1, const Curve &curve2, string method):
 		ICP(curve1, curve2, method, DEFAULT_EPS)
 { }
 
-void ICP::CorrespondenceToMatrix2D(vector<pair<int, int>> correspondence)
+void ICP::CorrespondenceToMatrix2D(const vector<pair<int, int>> &correspondence)
 {
 	curveMat1_(2, correspondence.size());
 	curveMat2_(2, correspondence.size());
@@ -32,6 +33,7 @@ void ICP::CorrespondenceToMatrix2D(vector<pair<int, int>> correspondence)
  */
 Eigen::Affine2d ICP::FindBestRigidTransformation2D(Eigen::Matrix2Xd in, Eigen::Matrix2Xd out)
 {
+  vector<pair<int, int>> correspondence;
 	// curve alignment
 	if (method_.compare(DTW_APPROX_METHOD) != 0)
 	{
@@ -39,20 +41,22 @@ Eigen::Affine2d ICP::FindBestRigidTransformation2D(Eigen::Matrix2Xd in, Eigen::M
 		rect.sequential_partition();
 		
 		double approx_dtw = 0; 
-		vector<pair<int, int>> correspondence;
+		
 		const auto approx_dtw_begin = chrono::high_resolution_clock::now(); // or use steady_clock 
 
 		correspondence = rect.compute_approx_dtw(true, approx_dtw);
 		auto approx_dtw_time = chrono::high_resolution_clock::now() - approx_dtw_begin;
-		LOG(INFO) << "DTW: " << approx_dtw << " -- Time: " << approx_dtw_time;
+		LOG(INFO) << "DTW: " << approx_dtw << " -- Time: " 
+        << chrono::duration<double, std::milli>(approx_dtw_time).count() / 1000 
+        << "seconds.\n";
 	}
 	
 	// Kabsch algorithm
 	CorrespondenceToMatrix2D(correspondence);
 	
 	// substraction of centroid
-	Eigen::Vector3d ctr1 = Eigen::Vector3d::Zero();
-  Eigen::Vector3d ctr2 = Eigen::Vector3d::Zero();
+	Eigen::Vector2d ctr1 = Eigen::Vector2d::Zero();
+  Eigen::Vector2d ctr2 = Eigen::Vector2d::Zero();
   for (int col = 0; col < in.cols(); col++) {
     ctr1 += curveMat1_.col(col);
     ctr2 += curveMat2_.col(col);
@@ -74,13 +78,15 @@ Eigen::Affine2d ICP::FindBestRigidTransformation2D(Eigen::Matrix2Xd in, Eigen::M
     d = 1.0;
   else
     d = -1.0;
-  Eigen::Matrix3d I = Eigen::Matrix3d::Identity(3, 3);
-  I(2, 2) = d;
-  Eigen::Matrix3d R = svd.matrixV() * I * svd.matrixU().transpose();
+  Eigen::Matrix2d I = Eigen::Matrix2d::Identity(2, 2);
+  //I(2, 2) = d;
+  Eigen::Matrix2d R = svd.matrixV() * I * svd.matrixU().transpose();
 
   // The final transform
-  A.linear() = scale * R;
-  A.translation() = scale*(out_ctr - R*in_ctr);
+  Eigen::Affine2d affine2;
+  affine2.linear() = R;
+  affine2.translation() = ctr2 - R * ctr1;
+  return affine2;
 }
 
 Eigen::Affine2d ICP::RegisterCurves()

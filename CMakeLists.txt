@@ -30,7 +30,8 @@ if ( NOT CGAL_FOUND )
 
   message(STATUS "This project requires the CGAL library, and will not be compiled.")
   return()
-
+else()
+  message(STATUS "CGAL library is used for this project")
 endif()
 
 # include helper file
@@ -64,6 +65,7 @@ elseif(COMPILER_SUPPORTS_CXX11)
 	message(STATUS "Use C++11 standard")
 elseif(COMPILER_SUPPORTS_CXX0X)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+  message(STATUS "GNU++11 and C++11 standard are not available. Use C++0x")
 else()
   message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please
 		use a different C++ compiler.")
@@ -126,16 +128,20 @@ add_library(
 	FrechetDecider.h 
 )
 
+add_library(
+  ADTW
+  grid.cpp grid.h
+	rect_cluster.cpp rect_cluster.h
+	rect_shortest_path.cpp rect_shortest_path.h
+	rectangle.h
+	naive_dtw.cpp naive_dtw.h
+)
+
 add_library( Util util/joiner.h )
 set_target_properties( Util PROPERTIES LINKER_LANGUAGE CXX)
 
 add_executable(
   executable
-	grid.cpp grid.h
-	rect_cluster.cpp rect_cluster.h
-	rect_shortest_path.cpp rect_shortest_path.h
-	rectangle.h
-	naive_dtw.cpp naive_dtw.h
   main.cpp
 )
 add_executable(
@@ -156,6 +162,7 @@ add_executable(
 # Link the executable to CGAL and third-party libraries
 target_link_libraries(
 	executable   ${Boost_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES}
+  ADTW
 	WSPD
 	Frechet
 	Util
@@ -167,6 +174,10 @@ target_link_libraries(
 
 target_link_libraries(
 	curve_registration   ${Boost_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES}
+  ADTW
+	WSPD
+	Frechet
+	Util
 )
 
 # Test targets

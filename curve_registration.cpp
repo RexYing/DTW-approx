@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
 	Curve beta = readCurve(inFile, d);
 	inFile.close();
 	
-	ICP icp(alpha, beta);
+	ICP icp(alpha, beta, "DTW-approx", eps);
 	
 	
 }
