@@ -41,7 +41,7 @@ void export_alignment(string filename, vector<pair<int, int>> alignment)
 {
 	ofstream align_file;
 	align_file.open (filename);
-	if (align_file != NULL)
+	if (align_file)
 	{
 		for (int i = alignment.size() - 1; i >= 0; i--)
 		{
@@ -214,7 +214,7 @@ int main(int argc, char* argv[])
 	if (rects_filename.compare("") != 0)
 	{
 		rect_file.open (rects_filename);
-		if (rect_file != NULL)
+		if (rect_file)
 		{
 			rect_file << rect.export_rects() << endl;
 			rect_file.close();

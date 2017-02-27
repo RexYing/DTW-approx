@@ -7,7 +7,7 @@
 #include <unordered_set>
 
 #include "util/joiner.h"
-#include "Quadtree.h"
+#include "QuadTree.h"
 
 using namespace std;
 
